@@ -1,0 +1,8 @@
+{
+  "title": "AWSエンジニアのための Cloud Run ハンズオン",
+  "language": "ja",
+  "structure": {
+    "readme": "README.md",
+    "summary": "SUMMARY.md"
+  }
+}

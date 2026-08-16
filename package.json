@@ -1,0 +1,11 @@
+{
+  "name": "handson-cloudrun",
+  "private": true,
+  "scripts": {
+    "serve": "honkit serve",
+    "build": "honkit build"
+  },
+  "devDependencies": {
+    "honkit": "^6.0.0"
+  }
+}
