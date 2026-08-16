@@ -57,6 +57,16 @@ npm install
 npm run serve  # http://localhost:4000
 ```
 
+## PDF で読む・配布する
+
+全章を1冊にまとめた [handson-cloudrun.pdf](handson-cloudrun.pdf)(A4)を同梱しています。当日ネットワークが不安定な場合の保険や、事前配布に使ってください。
+
+教材を更新したあとは以下で再生成できます([Playwright](https://playwright.dev/) と Chromium が必要です)。
+
+```bash
+npm run pdf
+```
+
 ## 当日用サポートアプリ
 
 [`support/`](support/) に、この GitBook を iframe 表示しつつ「チャット・進捗共有・ヘルプ要請」ができるリアルタイムのサポートアプリがあります(TypeScript + Hono + WebSocket 製で、それ自体を Cloud Run で動かします)。イベントで使う場合は [support/README.md](support/README.md) を参照してください。GitBook 単体での利用には不要です。

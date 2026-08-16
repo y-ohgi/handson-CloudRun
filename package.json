@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "serve": "honkit serve",
-    "build": "honkit build"
+    "build": "honkit build",
+    "pdf": "node tools/build-pdf.js"
   },
   "devDependencies": {
     "honkit": "^6.0.0"
