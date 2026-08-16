@@ -1,0 +1,16 @@
+{
+  "name": "handson-support",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.0",
+    "@hono/node-ws": "^1.2.0",
+    "hono": "^4.9.0"
+  }
+}

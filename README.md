@@ -57,6 +57,10 @@ npm install
 npm run serve  # http://localhost:4000
 ```
 
+## 当日用サポートアプリ
+
+[`support/`](support/) に、この GitBook を iframe 表示しつつ「チャット・進捗共有・ヘルプ要請」ができるリアルタイムのサポートアプリがあります(TypeScript + Hono + WebSocket 製で、それ自体を Cloud Run で動かします)。イベントで使う場合は [support/README.md](support/README.md) を参照してください。GitBook 単体での利用には不要です。
+
 ## 関連リンク
 
 - [Docker 入門ハンズオン(introduction-docker)](https://github.com/y-ohgi/introduction-docker) — Docker をより深く学びたい人向け
