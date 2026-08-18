@@ -16,7 +16,9 @@
 
 ## ハンズオン: Webサーバーのイメージを作る
 
-アプリは TypeScript + [Hono](https://hono.dev/) で書きます。Hono は Web 標準 API ベースの軽量な Web フレームワークで、Node.js でも Cloudflare Workers でも Deno でも同じコードが動きます。今回は Node.js 24 が TypeScript をそのまま実行できる(実行時に型が剥がされる)ため、**ビルドステップなし**で動かします。
+アプリは TypeScript + [Hono](https://hono.dev/) で書きます。Hono は Web 標準 API ベースの軽量な Web フレームワークです(Hono 自体は Cloudflare Workers や Deno などマルチランタイム対応ですが、今回は Node.js アダプタと Node.js API を使います)。実行には Node.js 24 の組み込み type stripping ——型注釈を剥がして実行する機能——を使い、この教材で使う範囲の TypeScript を**ビルドステップなし**で動かします。ビルドを1段消すことで、今日の主役である Cloud Run に集中するためです。
+
+> type stripping は型チェックを行いません(`tsc` の代替ではありません)。enum など一部の構文にも制約がありますが、この教材のコードはすべて対応範囲内です。
 
 > TypeScript に詳しくなくても大丈夫です。書き換えるのは定数2行だけで、あとはコピー&ペーストで進められます。
 
@@ -39,14 +41,14 @@ cd ~/cloudrun-handson/app
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=24"
+    "node": "24.x"
   },
   "scripts": {
     "start": "node src/index.ts"
   },
   "dependencies": {
-    "@hono/node-server": "^1.19.0",
-    "hono": "^4.9.0"
+    "@hono/node-server": "1.19.17",
+    "hono": "4.13.2"
   }
 }
 ```
@@ -160,7 +162,8 @@ COPY . ./
 # Cloud Run は環境変数 PORT でリッスンすべきポートを渡してくる(デフォルト 8080)
 ENV PORT=8080
 
-# Node.js 24 は TypeScript をそのまま実行できる(型を剥がして実行される)
+# Node.js 24 の組み込み type stripping で TypeScript を直接実行する
+# (型注釈を剥がすだけで、型チェックは行われない)
 CMD ["node", "src/index.ts"]
 ```
 
