@@ -6,13 +6,14 @@ Cloud Run の非機能まわりの主役、オートスケールを実際に負�
 
 ## Cloud Run のスケールの仕組み
 
-Cloud Run は**同時に処理しているリクエスト数**を基準にインスタンス数を自動調整します。
+Cloud Run は**同時に処理しているリクエスト数**を主な基準にインスタンス数を自動調整します。
 
 ```
 必要インスタンス数 ≒ 同時リクエスト数 ÷ concurrency(1台が同時に受ける数)
 ```
 
-- `concurrency` はデフォルト80。**Lambda(1リクエスト=1環境)と違い、1台で複数リクエストを捌く**
+- この式は**キャパシティの直感をつかむための概算**です。実際のオートスケーラーはCPU使用率や起動状況も加味して判断するため、計算どおりの整数台になるとは限りません
+- `concurrency` はデフォルト80。**標準のLambda(1リクエスト=1環境)と違い、1台で複数リクエストを捌く**
 - 0台までスケールインする(スケールtoゼロ)
 - ECS のように CloudWatch アラーム+スケーリングポリシーを組む必要はなく、**設定不要で最初から動いている**
 
@@ -31,22 +32,49 @@ gcloud run services update handson-app \
 
 ## 2. 負荷をかける
 
-負荷試験ツール [hey](https://github.com/rakyll/hey) を使います(Cloud Shell に入れるだけ)。
+負荷試験スクリプトを作ります。Node.js の標準APIだけで動く30行のスクリプトで、外部ツールのダウンロードは不要です(Cloud Shell には Node.js が入っています)。
 
 ```bash
-curl -sL -o ~/hey https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64
-chmod +x ~/hey
+cat > ~/load.mjs <<'EOF'
+// 簡易負荷試験スクリプト。 node load.mjs <URL> [同時接続数=50] [継続秒数=30]
+const [url, concurrency = "50", duration = "30"] = process.argv.slice(2);
+
+if (!url) {
+  console.error("usage: node load.mjs <URL> [concurrency] [durationSec]");
+  process.exit(1);
+}
+
+const until = Date.now() + Number(duration) * 1000;
+let ok = 0;
+let ng = 0;
+
+const worker = async () => {
+  while (Date.now() < until) {
+    try {
+      const res = await fetch(url);
+      await res.arrayBuffer();
+      res.ok ? ok++ : ng++;
+    } catch {
+      ng++;
+    }
+  }
+};
+
+console.log(`load: ${url} concurrency=${concurrency} duration=${duration}s`);
+await Promise.all(Array.from({ length: Number(concurrency) }, worker));
+console.log(`done: success=${ok} failure=${ng}`);
+EOF
 ```
 
 アプリの `/heavy` は1秒かかる擬似的に重いエンドポイントです。同時50接続で30秒間叩きます。
 
+**実行する前に、何台までスケールアウトするか予想してみてください。** concurrency を10に絞ったので、1台で受けられる同時リクエストは10。50接続なら概算で5台——ただし実際のオートスケーラーはCPU使用率なども見て判断するため、3台や6台になることもあります。予想と違ったら「なぜ?」を考えるのがこの実験の面白いところです。
+
 ```bash
 URL=$(gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)')
 
-~/hey -z 30s -c 50 ${URL}/heavy
+node ~/load.mjs ${URL}/heavy 50 30
 ```
-
-同時50接続 ÷ concurrency 10 = **5台前後までスケールアウトする**はずです。
 
 ## 3. 観察する
 
