@@ -54,6 +54,26 @@ gcloud run deploy handson-support \
 
 発行された URL を当日の参加者に共有してください(QRコードにしておくと楽です)。
 
+## 後片付け(イベント終了後に必ず実行)
+
+上のデプロイは `--min-instances 1` を付けているため、**誰もアクセスしていない時間帯もインスタンスが起動したままで、課金され続けます**。ハンズオン本編のサービスと違ってスケールtoゼロが効かないので、イベントが終わったら必ず削除してください。
+
+> **根拠:** Cloud Run の公式ドキュメントは、最小インスタンス数の指定で起動し続けるインスタンスには課金が発生すると明記しています。リクエストベース課金ではアイドル中は低めの料金、インスタンスベース課金ではインスタンスのライフサイクル全体に通常料金がかかります([最小インスタンス数の構成](https://cloud.google.com/run/docs/configuring/min-instances?hl=ja))。
+
+ターミナルを開き直して環境変数が消えている場合は、先に「Cloud Run へデプロイする」の `export` 3行を実行し直してください。
+
+```bash
+# サポートアプリの Cloud Run サービス(これを消せばアイドル課金は止まります)
+gcloud run services delete handson-support --region ${REGION} --quiet
+
+# サポートアプリのコンテナイメージ(Artifact Registry の保管料がかかるため忘れずに)
+gcloud artifacts docker images delete ${IMAGE} --delete-tags --quiet
+```
+
+このアプリのデプロイ手順が作るリソースは、この2つ(`handson-support` サービスと `handson/support` イメージ)だけです。サービスアカウントや Pub/Sub は作りません。
+
+> **注意:** Artifact Registry のリポジトリ(本編の4章で作る `handson`)はハンズオン本編の `handson/app` イメージと共用しているため、ここでは削除しません。リポジトリごと消すと受講者向けの手順で作ったイメージも一緒に消えます。プロジェクトまるごと片付ける場合は本編の「99. 後片付け」を参照してください。
+
 ## 設定(環境変数)
 
 | 変数 | デフォルト | 説明 |
