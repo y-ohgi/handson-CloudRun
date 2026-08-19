@@ -26,7 +26,7 @@ gcloud artifacts repositories create ${REPO} \
   --description="Cloud Run handson"
 ```
 
-docker コマンドが GAR に push できるよう、認証ヘルパーを設定します(ECR の `aws ecr get-login-password` に相当。こちらは一度設定すれば期限切れがありません)。
+docker コマンドが GAR に push できるよう、認証ヘルパーを設定します(ECR の `aws ecr get-login-password` に相当。こちらは一度設定すれば、push のたびにトークンを取り直す必要はありません)。
 
 ```bash
 gcloud auth configure-docker ${REGION}-docker.pkg.dev
@@ -64,7 +64,7 @@ gcloud run deploy handson-app \
 - `handson-app` がサービス名になります
 - `--allow-unauthenticated` は「認証なしで公開」。デフォルトは IAM 認証必須(=閉じている)で、AWS と逆のデフォルトです
 
-30秒ほどで完了し、`Service URL: https://handson-app-xxxxx.a.run.app` が表示されます。
+30秒ほどで完了し、`Service URL: https://handson-app-<プロジェクト番号>.asia-northeast1.run.app` のような URL が表示されます。
 
 ## 4. アクセスして確認する
 
