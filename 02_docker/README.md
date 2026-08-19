@@ -18,7 +18,7 @@
 
 アプリは TypeScript + [Hono](https://hono.dev/) で書きます。Hono は Web 標準 API ベースの軽量な Web フレームワークです(Hono 自体は Cloudflare Workers や Deno などマルチランタイム対応ですが、今回は Node.js アダプタと Node.js API を使います)。実行には Node.js 24 の組み込み type stripping ——型注釈を剥がして実行する機能——を使い、この教材で使う範囲の TypeScript を**ビルドステップなし**で動かします。ビルドを1段消すことで、今日の主役である Cloud Run に集中するためです。
 
-> type stripping は型チェックを行いません(`tsc` の代替ではありません)。enum など一部の構文にも制約がありますが、この教材のコードはすべて対応範囲内です。
+> type stripping は型注釈を空白に置き換えるだけで、型チェックは行いません(`tsc` の代替ではありません)。`tsconfig.json` も読まれないため、enum や parameter properties のように「変換が必要な構文」は使えません。この教材のコードはすべて対応範囲内です。
 
 > TypeScript に詳しくなくても大丈夫です。書き換えるのは定数2行だけで、あとはコピー&ペーストで進められます。
 
@@ -193,7 +193,7 @@ docker run --rm -p 8080:8080 handson-app:v1
 
 ### 4. ブラウザで見る
 
-Cloud Shell の右上にある「ウェブでプレビュー」アイコン(目のマーク)→「ポート 8080 でプレビュー」をクリックします。
+Cloud Shell の右上にある[ウェブでプレビュー]ボタン(ウィンドウの中に目が描かれたアイコン)→[ポート 8080 でプレビュー]をクリックします。
 
 **青い画面に「Hello, Cloud Run!」と表示されれば成功です。** Revision と Service が `local` になっていることも見ておいてください——Cloud Run にデプロイすると、ここが自動で埋まります。
 
