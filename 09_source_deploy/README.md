@@ -16,7 +16,7 @@ gcloud run deploy handson-app-src \
 
 数分待つと、別サービス `handson-app-src` として同じアプリが公開されます。
 
-このディレクトリには Dockerfile があるのでそれが使われますが、**Dockerfile を消しても動きます**。その場合は [Cloud Native Buildpacks](https://buildpacks.io/) が `package.json` を見て「Node.js アプリだな」と判断し、`npm start` で起動する良い感じのイメージを自動生成します。
+このディレクトリには Dockerfile があるのでそれが使われますが、**Dockerfile を消しても動きます**。その場合は [Google Cloud の Buildpacks](https://cloud.google.com/docs/buildpacks/nodejs) が `package.json` を見て「Node.js アプリだな」と判断し、`scripts.start`(この教材では `node src/index.ts`)を起動コマンドにした良い感じのイメージを自動生成します。
 
 > **AWSとの比較:** App Runner のソースデプロイに相当しますが、できあがるものは今日ずっと触ってきた「普通の Cloud Run サービス」です。カナリアも、タグ付きURLも、スケール設定も全部同じように使えます。
 
