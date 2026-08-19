@@ -58,25 +58,26 @@
 | 章 | 本文パス | status (data-model.md) | フラグメント | 状態 |
 |---|---|---|---|---|
 | はじめに | `README.md` | — | 対象外(目次・導入。技術的主張は各章へ帰属) | — |
-| 0. 事前準備 | `00_preparation/README.md` | 修正済み | `fact-check/00_preparation.md` | 予定 |
-| 1. AWSとGoogle Cloudの考え方の違い | `01_aws_and_googlecloud/README.md` | 要再検証 | `fact-check/01_aws_and_googlecloud.md` | 予定 |
-| 2. Dockerのおさらいとコンテナ起動 | `02_docker/README.md` | 修正済み | `fact-check/02_docker.md` | 予定 |
-| 3. Cloud Runとは | `03_cloudrun/README.md` | 修正済み | `fact-check/03_cloudrun.md` | **完成**(正しい23件 / 要修正0件 / 未確認0件、本文変更なし) |
-| 4. Cloud Runへデプロイする | `04_deploy/README.md` | 要再検証 | `fact-check/04_deploy.md` | 予定 |
-| 5. 更新とロールバック | `05_revision/README.md` | 要再検証 | `fact-check/05_revision.md` | 予定 |
-| 6. カナリアリリースとタグ付きURL | `06_traffic/README.md` | 要再検証 | `fact-check/06_traffic.md` | 予定 |
-| 7. オートスケールを観察する | `07_scaling/README.md` | 修正済み | `fact-check/07_scaling.md` | 予定 |
-| 8. ログとメトリクスをのぞく | `08_observability/README.md` | 要再検証 | `fact-check/08_observability.md` | 予定 |
-| 9. 締め: Dockerfileすら書かないデプロイ | `09_source_deploy/README.md` | 要再検証 | `fact-check/09_source_deploy.md` | 予定 |
-| 10. 発展編(導入) | `10_advanced/README.md` | 修正済み | `fact-check/10_advanced.md` | 予定 |
-| 10-1. Pub/Subとつなぐ | `10_advanced/pubsub.md` | 修正済み | `fact-check/10_advanced_pubsub.md` | 予定 |
-| 10-2. WebSocketチャット | `10_advanced/websocket.md` | 修正済み | `fact-check/10_advanced_websocket.md` | 予定 |
-| 10-3. Cloud Run Jobs | `10_advanced/jobs.md` | 修正済み | `fact-check/10_advanced_jobs.md` | 予定 |
-| 99. 後片付け | `99_cleanup/README.md` | 要再検証 | `fact-check/99_cleanup.md` | 予定 |
-| サンプルアプリ | `code/app/*` | 要再検証 | `fact-check/code_app.md` | 予定 |
-| WebSocketサンプル | `code/websocket/*` | 要再検証 | `fact-check/code_websocket.md` | 予定 |
+| 0. 事前準備 | `00_preparation/README.md` | 修正済み | `fact-check/00_preparation.md` | 検証中 |
+| 1. AWSとGoogle Cloudの考え方の違い | `01_aws_and_googlecloud/README.md` | 要再検証 | `fact-check/01_aws_and_googlecloud.md` | **完成**(正しい27 / 要修正8 / 未確認1) |
+| 2. Dockerのおさらいとコンテナ起動 | `02_docker/README.md` | 修正済み | `fact-check/02_docker.md` | 検証中 |
+| 3. Cloud Runとは | `03_cloudrun/README.md` | 修正済み | `fact-check/03_cloudrun.md` | **完成**(正しい23 / 要修正0 / 未確認0、本文変更なし) |
+| 4. Cloud Runへデプロイする | `04_deploy/README.md` | 要再検証 | `fact-check/04_deploy.md` | **完成**(正しい12 / 要修正2 / 未確認6) |
+| 5. 更新とロールバック | `05_revision/README.md` | 要再検証 | `fact-check/05_revision.md` | **完成**(正しい13 / 要修正2 / 未確認3) |
+| 6. カナリアリリースとタグ付きURL | `06_traffic/README.md` | 要再検証 | `fact-check/06_traffic.md` | **完成**(正しい14 / 要修正1 / 未確認2) |
+| 7. オートスケールを観察する | `07_scaling/README.md` | 修正済み | `fact-check/07_scaling.md` | 検証中 |
+| 8. ログとメトリクスをのぞく | `08_observability/README.md` | 要再検証 | `fact-check/08_observability.md` | **完成**(正しい12 / 要修正0 / 未確認3) |
+| 9. 締め: Dockerfileすら書かないデプロイ | `09_source_deploy/README.md` | 要再検証 | `fact-check/09_source_deploy.md` | **完成**(正しい9 / 要修正1 / 未確認3) |
+| 10. 発展編(導入) | `10_advanced/README.md` | 修正済み | `fact-check/10_advanced.md` | 検証中 |
+| 10-1. Pub/Subとつなぐ | `10_advanced/pubsub.md` | 修正済み | `fact-check/10_advanced_pubsub.md` | **完成**(正しい17 / 要修正1 / 未確認2) |
+| 10-2. WebSocketチャット | `10_advanced/websocket.md` | 修正済み | `fact-check/10_advanced_websocket.md` | **完成**(正しい15 / 要修正2 / 未確認0) |
+| 10-3. Cloud Run Jobs | `10_advanced/jobs.md` | 修正済み | `fact-check/10_advanced_jobs.md` | **完成**(正しい28 / 要修正0 / 未確認1) |
+| 99. 後片付け | `99_cleanup/README.md` | 要再検証 | `fact-check/99_cleanup.md` | **完成**(正しい12 / 要修正6 / 未確認2) |
+| サンプルアプリ・WebSocketサンプル | `code/app/*`, `code/websocket/*` | 要再検証 | `fact-check/code_samples.md` | **完成**(正しい15 / 要修正1 / 未確認2、`code/` は変更不要) |
 
-`support/` 配下は `.bookignore` によりビルド対象外であり、本機能の対象外(spec.md Assumptions)。
+`code/app` と `code/websocket` は当初 `code_app.md` / `code_websocket.md` に分ける想定だったが、実際には両者をまとめた `code_samples.md` 1ファイルで検証された。実ファイル名を正とする。
+
+`support/` 配下は `.bookignore` によりビルド対象外のため spec.md Assumptions ではスコープ外としていたが、`--min-instances 1` による講師側のアイドル課金が後片付け手順の不在で放置される問題が判明したため、利用者の承認を得て今回のスコープへ追加した。
 
 **フラグメント完成状況(2026-08-19 時点)**
 
