@@ -52,7 +52,7 @@ gcloud pubsub topics publish handson-topic --message "Hello from Pub/Sub"
 gcloud run services logs read handson-app --region ${REGION} --limit 10
 ```
 
-`Pub/Sub message received: Hello from Pub/Sub` が出ていれば成功です。8章の Logs Explorer で見ると、構造化ログとして届いているのも確認できます。
+`Pub/Sub message received: Hello from Pub/Sub` が出ていれば成功です。8章の Logs Explorer で見ると、severity `INFO` のログとして届いているのも確認できます(このログは追加フィールドを持たないため、`jsonPayload` ではなく本文だけのログとして記録されます)。
 
 > **成功していれば:** publish が `messageIds:` を返し、数秒後のログに `Pub/Sub message received: Hello from Pub/Sub` の1行が出ます。
 > **詰まったら:** 配送とログの反映には少し時間がかかります。まず10〜20秒ほど待って `gcloud run services logs read handson-app --region ${REGION} --limit 10` をもう一度実行してください。それでも出ない場合は push 先が正しいかを確認します。`gcloud pubsub subscriptions describe handson-sub --format 'value(pushConfig.pushEndpoint)'` の出力が、`gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` の URL + `/pubsub` になっているかを見比べてください。ずれていたら `gcloud pubsub subscriptions delete handson-sub` してから「1. トピックとpushサブスクリプションを作る」をやり直します。なお、この節の後にある「本番に向けた補足」の認証付き push を試している場合は、IAM の反映に数分かかるため一時的に 403 が返ります。数分待ってから publish を再実行してください。

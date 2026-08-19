@@ -104,7 +104,7 @@ curl -s -o /dev/null -w "time_total: %{time_total}s\n" ${URL}/
 curl -s -o /dev/null -w "time_total: %{time_total}s\n" ${URL}/
 ```
 
-1回目だけ遅い(このアプリは軽いので数百ms程度。重いアプリでは数秒〜)のがわかります。対策は常時1台温めておくことです。
+1回目だけ遅い(このアプリは軽いですが、0台の状態からだと1秒〜1.5秒ほどかかります。重いアプリではさらに長くなります)のがわかります。対策は常時1台温めておくことです。
 
 ```bash
 gcloud run services update handson-app \
@@ -122,7 +122,7 @@ gcloud run services update handson-app \
   --min-instances 0
 ```
 
-> **成功していれば:** 1回目の `curl` の `time_total` が2回目より明確に大きくなります(このアプリなら1回目が数百ms、2回目は数十ms程度)。`--min-instances` の更新はどちらも新しいリビジョン名を出力して完了し、`gcloud run revisions list --service handson-app --region ${REGION}` の行が増えます。
+> **成功していれば:** 1回目の `curl` の `time_total` が2回目より明確に大きくなります(このアプリなら1回目が1秒〜1.5秒、2回目は数十ms程度)。`--min-instances` の更新はどちらも新しいリビジョン名を出力して完了し、`gcloud run revisions list --service handson-app --region ${REGION}` の行が増えます。
 > **詰まったら:** 1回目と2回目で差が出ない場合は、まだインスタンスがアイドルのまま残っています(Cloud Run は最大15分保持します)。時間を置いて試すか、差が出なくても「温まっていた」ということなので先へ進んでください。リージョンの入力を求められたり `--region` が空だと言われる場合は Cloud Shell の再接続で環境変数が消えているので、`export REGION=asia-northeast1` を実行し直します。更新が途中で失敗した場合は、同じコマンドをそのまま再実行すれば復旧します。**最後の `--min-instances 0` を実行し忘れるとアイドル時も課金が続きます。**不安なら上のコマンドをもう一度実行して構いません(同じ設定への更新は何度でも安全です)。
 
 ## まとめ
