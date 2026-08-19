@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "handson_CloudRun",
+  "project_id": "7666d147-d5f1-4f23-8764-ccf5a806e38b"
+}
