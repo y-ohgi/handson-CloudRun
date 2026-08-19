@@ -78,7 +78,7 @@ gcloud scheduler jobs create http handson-job-schedule \
 <!-- 引用ブロックの結合を防ぐ区切り -->
 
 > **成功していれば:** `gcloud scheduler jobs list --location ${REGION}` に `handson-job-schedule` が `ENABLED` で並びます。サービスアカウントは `gcloud iam service-accounts list` に `handson-scheduler@...` として出ます。
-> **詰まったら:** サービスアカウントと IAM 付与のコマンドは何度実行しても同じ結果になるので(`ALREADY_EXISTS` はそのまま次へ)、順番に再実行して構いません。Cloud Scheduler の API が有効でないというエラーが出た場合は `gcloud services enable cloudscheduler.googleapis.com` を実行してから、スケジューラー作成のコマンドをやり直してください。上記のとおり反映待ちで最初の起動が 403 になることがあるので、ジョブ自体が動く状態かを確かめたいときは数分待ってから `gcloud run jobs execute handson-job --region ${REGION} --wait` で手動実行が成功するかを見てください。`${PROJECT_ID}` や `${REGION}` が空のままだとメンバー名や URI が壊れるので、その場合は 4章の「0. 環境変数の準備」を再実行してからやり直します。この節は本編の内容ではないので、うまくいかなければコンソールの GUI 設定を見るだけにして次へ進んで構いません。
+> **詰まったら:** サービスアカウントと IAM 付与のコマンドは何度実行しても同じ結果になるので(`ALREADY_EXISTS` はそのまま次へ)、順番に再実行して構いません。作成した直後に IAM 付与を実行すると `INVALID_ARGUMENT: Service account handson-scheduler@... does not exist.` で失敗することがあります——これはサービスアカウント作成の反映待ちなので、数十秒おいて IAM 付与のコマンドだけをもう一度実行してください。Cloud Scheduler の API が有効でないというエラーが出た場合は `gcloud services enable cloudscheduler.googleapis.com` を実行してから、スケジューラー作成のコマンドをやり直してください。上記のとおり反映待ちで最初の起動が 403 になることがあるので、ジョブ自体が動く状態かを確かめたいときは数分待ってから `gcloud run jobs execute handson-job --region ${REGION} --wait` で手動実行が成功するかを見てください。`${PROJECT_ID}` や `${REGION}` が空のままだとメンバー名や URI が壊れるので、その場合は 4章の「0. 環境変数の準備」を再実行してからやり直します。この節は本編の内容ではないので、うまくいかなければコンソールの GUI 設定を見るだけにして次へ進んで構いません。
 
 ## 3. 並列実行
 
