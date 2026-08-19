@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloud Run ハンズオン サポート</title>
+  <style>
+    :root {
+      --blue: #4285F4;
+      --red: #EA4335;
+      --green: #34A853;
+      --yellow: #FBBC05;
+      --bg: #f6f8fa;
+      --border: #d0d7de;
+      --text: #1f2328;
+      --muted: #656d76;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.4rem 1rem;
+      background: var(--blue);
+      color: #fff;
+      flex: none;
+    }
+    header h1 { font-size: 1rem; margin: 0; flex: 1; }
+    #status { font-size: 0.75rem; opacity: 0.9; }
+    main { flex: 1; display: flex; min-height: 0; }
+    #book {
+      flex: 1;
+      border: none;
+      min-width: 0;
+    }
+    aside {
+      width: 360px;
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--border);
+      background: var(--bg);
+      min-height: 0;
+    }
+    section { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); }
+    section h2 {
+      font-size: 0.75rem;
+      margin: 0 0 0.4rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* 進捗 */
+    #chapters { display: flex; flex-direction: column; gap: 2px; max-height: 30vh; overflow-y: auto; }
+    .chapter {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      background: none;
+      text-align: left;
+      width: 100%;
+    }
+    .chapter:hover { background: #fff; border-color: var(--border); }
+    .chapter.mine { background: #fff; border-color: var(--blue); font-weight: bold; }
+    .chapter .label { flex: 1; }
+    .chapter .bar {
+      height: 8px;
+      background: var(--green);
+      border-radius: 4px;
+      min-width: 0;
+      transition: width 0.3s;
+    }
+    .chapter .count { font-size: 0.75rem; color: var(--muted); min-width: 2.5em; text-align: right; }
+
+    /* ヘルプ */
+    #helpToggle {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+    }
+    #helpToggle.active { background: var(--red); border-color: var(--red); color: #fff; font-weight: bold; }
+    #helpList { display: flex; flex-direction: column; gap: 4px; margin-top: 0.5rem; }
+    .help-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      background: #fff3f2;
+      border: 1px solid var(--red);
+      border-radius: 6px;
+      padding: 0.3rem 0.5rem;
+    }
+    .help-item .who { flex: 1; }
+    .help-item button {
+      font-size: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      padding: 0.15rem 0.5rem;
+    }
+
+    /* チャット */
+    #chatSection { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    #messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.35rem; padding: 0.2rem 0; }
+    .msg { font-size: 0.85rem; line-height: 1.4; }
+    .msg .name { font-weight: bold; margin-right: 0.4rem; }
+    .msg .time { color: var(--muted); font-size: 0.7rem; margin-left: 0.4rem; }
+    .msg.system { color: var(--muted); font-size: 0.78rem; }
+    #chatForm { display: flex; gap: 0.4rem; padding-top: 0.5rem; }
+    #chatInput {
+      flex: 1;
+      padding: 0.45rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    #chatForm button {
+      padding: 0.45rem 0.9rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* 参加ダイアログ */
+    #joinOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    #joinOverlay .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: min(90vw, 360px);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    #joinOverlay h2 { margin: 0; font-size: 1.1rem; }
+    #joinOverlay p { margin: 0; font-size: 0.85rem; color: var(--muted); }
+    #nameInput { padding: 0.55rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; }
+    #joinBtn {
+      padding: 0.55rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .hidden { display: none !important; }
+
+    @media (max-width: 800px) {
+      main { flex-direction: column; }
+      #book { min-height: 45vh; }
+      aside { width: 100%; flex: 1; border-left: none; border-top: 1px solid var(--border); }
+      #chapters { max-height: 20vh; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>☁️ Cloud Run ハンズオン サポート</h1>
+    <span id="online"></span>
+    <span id="status">接続中…</span>
+  </header>
+
+  <main>
+    <iframe id="book" src="__GITBOOK_URL__" title="ハンズオン資料"></iframe>
+
+    <aside>
+      <section>
+        <h2>進捗 — いまいる章をクリック</h2>
+        <div id="chapters"></div>
+      </section>
+
+      <section>
+        <h2>ヘルプ</h2>
+        <button id="helpToggle">🙋 助けが必要です</button>
+        <div id="helpList"></div>
+      </section>
+
+      <section id="chatSection">
+        <h2>チャット</h2>
+        <div id="messages"></div>
+        <form id="chatForm">
+          <input id="chatInput" autocomplete="off" placeholder="コメント・質問を入力">
+          <button>送信</button>
+        </form>
+      </section>
+    </aside>
+  </main>
+
+  <div id="joinOverlay">
+    <div class="card">
+      <h2>ハンズオンへようこそ!</h2>
+      <p>ニックネームを入力して参加してください。進捗の共有・チャット・ヘルプ要請に使われます。</p>
+      <input id="nameInput" maxlength="20" placeholder="ニックネーム">
+      <button id="joinBtn">参加する</button>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+    var $ = function (id) { return document.getElementById(id); };
+
+    var myId = localStorage.getItem("support:id") || "";
+    var myName = localStorage.getItem("support:name") || "";
+    var state = null;
+    var ws = null;
+    var joined = false;
+
+    if (myName) $("nameInput").value = myName;
+
+    function send(obj) {
+      if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj));
+    }
+
+    function connect() {
+      var proto = location.protocol === "https:" ? "wss:" : "ws:";
+      ws = new WebSocket(proto + "//" + location.host + "/ws");
+      ws.onopen = function () {
+        $("status").textContent = "オンライン";
+        if (joined) send({ type: "join", id: myId, name: myName });
+      };
+      ws.onmessage = function (e) {
+        var msg = JSON.parse(e.data);
+        if (msg.type === "joined") {
+          myId = msg.id;
+          localStorage.setItem("support:id", myId);
+        } else if (msg.type === "state") {
+          state = msg;
+          render();
+        }
+      };
+      ws.onclose = function () {
+        $("status").textContent = "再接続中…";
+        setTimeout(connect, 2000);  // 自動再接続
+      };
+    }
+
+    $("joinBtn").onclick = function () {
+      var name = $("nameInput").value.trim();
+      if (!name) { $("nameInput").focus(); return; }
+      myName = name;
+      localStorage.setItem("support:name", myName);
+      joined = true;
+      $("joinOverlay").classList.add("hidden");
+      send({ type: "join", id: myId, name: myName });
+    };
+    $("nameInput").onkeydown = function (e) { if (e.key === "Enter") $("joinBtn").click(); };
+
+    $("chatForm").onsubmit = function (e) {
+      e.preventDefault();
+      var text = $("chatInput").value.trim();
+      if (!text) return;
+      send({ type: "chat", text: text });
+      $("chatInput").value = "";
+    };
+
+    $("helpToggle").onclick = function () {
+      var me = findMe();
+      send({ type: "help", on: !(me && me.needsHelp) });
+    };
+
+    function findMe() {
+      if (!state) return null;
+      for (var i = 0; i < state.participants.length; i++) {
+        if (state.participants[i].id === myId) return state.participants[i];
+      }
+      return null;
+    }
+
+    function render() {
+      if (!state) return;
+      var me = findMe();
+      var online = state.participants.filter(function (p) { return p.online; });
+      $("online").textContent = "👥 " + online.length + "人";
+
+      // ---- 進捗(オンライン参加者の分布をバーで表示) ----
+      var counts = {};
+      online.forEach(function (p) { if (p.chapter) counts[p.chapter] = (counts[p.chapter] || 0) + 1; });
+      var max = Math.max(1, online.length);
+      var chaptersEl = $("chapters");
+      chaptersEl.textContent = "";
+      state.chapters.forEach(function (ch) {
+        var count = counts[ch.id] || 0;
+        var btn = document.createElement("button");
+        btn.className = "chapter" + (me && me.chapter === ch.id ? " mine" : "");
+        var label = document.createElement("span");
+        label.className = "label";
+        label.textContent = ch.label;
+        var bar = document.createElement("span");
+        bar.className = "bar";
+        bar.style.width = (count / max * 80) + "px";
+        var countEl = document.createElement("span");
+        countEl.className = "count";
+        countEl.textContent = count + "人";
+        btn.appendChild(label);
+        btn.appendChild(bar);
+        btn.appendChild(countEl);
+        btn.onclick = function () { send({ type: "progress", chapter: ch.id }); };
+        chaptersEl.appendChild(btn);
+      });
+
+      // ---- ヘルプ ----
+      var toggle = $("helpToggle");
+      if (me && me.needsHelp) {
+        toggle.classList.add("active");
+        toggle.textContent = "🙋 ヘルプ要請中(クリックで取り下げ)";
+      } else {
+        toggle.classList.remove("active");
+        toggle.textContent = "🙋 助けが必要です";
+      }
+      var helpList = $("helpList");
+      helpList.textContent = "";
+      state.participants.filter(function (p) { return p.needsHelp; }).forEach(function (p) {
+        var item = document.createElement("div");
+        item.className = "help-item";
+        var who = document.createElement("span");
+        who.className = "who";
+        var chLabel = "";
+        state.chapters.forEach(function (ch) { if (ch.id === p.chapter) chLabel = " @ " + ch.label; });
+        who.textContent = "🙋 " + p.name + chLabel;
+        var resolve = document.createElement("button");
+        resolve.textContent = "解決";
+        resolve.onclick = function () { send({ type: "resolveHelp", targetId: p.id }); };
+        item.appendChild(who);
+        item.appendChild(resolve);
+        helpList.appendChild(item);
+      });
+
+      // ---- チャット ----
+      var messagesEl = $("messages");
+      var atBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 40;
+      messagesEl.textContent = "";
+      state.messages.forEach(function (m) {
+        var div = document.createElement("div");
+        div.className = "msg" + (m.system ? " system" : "");
+        if (!m.system) {
+          var name = document.createElement("span");
+          name.className = "name";
+          name.textContent = m.name;
+          div.appendChild(name);
+        }
+        var text = document.createElement("span");
+        text.textContent = m.text;
+        div.appendChild(text);
+        var time = document.createElement("span");
+        time.className = "time";
+        time.textContent = new Date(m.at).toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" });
+        div.appendChild(time);
+        messagesEl.appendChild(div);
+      });
+      if (atBottom) messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    connect();
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+# support/Dockerfile のビルドコンテキスト(リポジトリルート)用
+.git
+node_modules
+_book
+support/node_modules

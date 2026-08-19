@@ -1,0 +1,73 @@
+# 1. AWSとGoogle Cloudの考え方の違い
+
+## ビルディングブロック vs SaaS的アプローチ
+
+AWS の思想は**ビルディングブロック**です。VPC・サブネット・セキュリティグループ・IAMロール・ALB・ターゲットグループ……小さな部品を積み上げて、自分のアーキテクチャを組み立てます。自由度が高い一方で、「Webアプリを1つ公開する」だけでも組み立てる部品の数は多くなります。
+
+Google Cloud のマネージドサービスは、どちらかというと **SaaS 的なアプローチ**です。「Webアプリを公開したい」という目的に対して、統合済みのサービスが1つ用意されていて、デフォルトで実用的な設定になっています。部品を組む代わりに、完成品の設定を必要な分だけ調整します。
+
+この違いが一番わかりやすいのが、今回扱う Cloud Run です。
+
+### 例: コンテナを1つ、HTTPSで公開するまで
+
+| | AWS (ECS/Fargate) | Google Cloud (Cloud Run) |
+|---|---|---|
+| ネットワーク | VPC・サブネット・SG を用意 | 不要(必要なら後から VPC 接続) |
+| 負荷分散 | ALB + ターゲットグループ + リスナー | 不要(組み込み) |
+| TLS証明書 | ACM で発行し ALB に紐付け | 不要(`*.run.app` のHTTPS URLが自動発行) |
+| オートスケール | Application Auto Scaling を設定 | デフォルトで有効(0〜自動) |
+| ログ | awslogs ドライバや FireLens を設定 | 不要(stdout が自動で Cloud Logging へ) |
+| デプロイ | タスク定義 + サービス更新 | `gcloud run deploy` 1コマンド |
+
+どちらが優れているという話ではありません。細かく制御したいなら AWS 的なアプローチが強く、素早く価値を出したいなら Google Cloud 的なアプローチが強い。**両方の目線を持っていると、状況に応じて最適な選択ができる**——それが今日のゴールです。
+
+## アカウント構造の違い
+
+| 概念 | AWS | Google Cloud |
+|---|---|---|
+| 分離の単位 | アカウント(Organizationsで束ねる) | **プロジェクト**(組織の下に複数作る) |
+| リージョンの扱い | コンソールでリージョンを切り替える | リソース作成時に指定(コンソールは全リージョン横断) |
+| 権限の主体 | IAMユーザー / ロール | Google アカウント / **サービスアカウント** |
+| API | 常に有効 | プロジェクトごとに**明示的に有効化** |
+
+特に「プロジェクト」は Google Cloud を触るうえで最初に慣れるべき概念です。dev / staging / prod をプロジェクトで分ける、実験用に使い捨てプロジェクトを作る、といった運用が気軽にできます。
+
+## サービス対応表
+
+ハンズオン中に「AWSでいうと何?」と思ったらここに戻ってきてください。
+
+### 今日使うサービス
+
+| Google Cloud | AWSでいうと | 補足 |
+|---|---|---|
+| **Cloud Run** | App Runner + Fargate + Lambda | どれとも微妙に違う。次章で詳しく |
+| **Artifact Registry (GAR)** | ECR | コンテナ以外(npm, Maven等)も置ける |
+| **Cloud Shell** | CloudShell | エディタ付き・Docker が動く |
+| **Cloud Build** | CodeBuild | ソースデプロイの裏側で動く |
+| **Cloud Logging** | CloudWatch Logs | 設定不要で stdout を収集 |
+| **Cloud Monitoring** | CloudWatch | メトリクスはデフォルトで収集済み |
+| **Pub/Sub** | SNS + SQS | 1サービスで pub/sub もキューも担う |
+
+### 今日は使わないが対応を知っておくと便利なサービス
+
+| Google Cloud | AWSでいうと | 補足 |
+|---|---|---|
+| Compute Engine | EC2 | |
+| GKE | EKS | Kubernetes 発祥の地だけあり完成度が高い |
+| Cloud Functions (Cloud Run functions) | Lambda | 現在は Cloud Run 基盤に統合された |
+| Cloud Storage | S3 | |
+| Cloud SQL | RDS | |
+| Spanner | (相当なし / 強いて言えば Aurora) | グローバル分散RDB |
+| BigQuery | Redshift + Athena | Google Cloud 最大の看板サービス |
+| Eventarc | EventBridge | 各サービスのイベントを Cloud Run へ配送 |
+| Cloud Tasks | SQS(遅延キュー用途) | HTTPターゲットに直接push |
+| Cloud Scheduler | EventBridge Scheduler | cron |
+| Secret Manager | Secrets Manager | |
+| Cloud Load Balancing | ALB/NLB + CloudFront の一部 | グローバル単一エニーキャストIP |
+| IAM サービスアカウント | IAM ロール | 「アカウント」だが実体はロールに近い |
+
+## まとめ
+
+- AWS は部品を組み立てる。Google Cloud は完成品を調整する
+- 分離単位は「アカウント」ではなく「プロジェクト」
+- 対応表は読み替えの入口。ただし思想が違うので1対1にはならない——それを体感するのがこの後のハンズオン
