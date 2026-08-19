@@ -42,7 +42,7 @@ Google Cloud のマネージドサービスは、どちらかというと **SaaS
 |---|---|---|
 | **Cloud Run** | App Runner + ECS on Fargate + Lambda | どれとも微妙に違う。次章で詳しく |
 | **Artifact Registry (GAR)** | ECR | コンテナ以外(npm, Maven等)も置ける |
-| **Cloud Shell** | CloudShell | エディタ付き・Docker が動く(AWS CloudShell も同等) |
+| **Cloud Shell** | CloudShell | エディタ付き・Docker が動く(AWS CloudShell も同様。ただし Docker は対応リージョン限定) |
 | **Cloud Build** | CodeBuild | ソースデプロイの裏側で動く |
 | **Cloud Logging** | CloudWatch Logs | 設定不要で stdout を収集 |
 | **Cloud Monitoring** | CloudWatch | メトリクスはデフォルトで収集済み |
