@@ -57,3 +57,4 @@ gcloud run deploy handson-chat \
 
 - 状態共有: インスタンス間のブロードキャストは **Memorystore (Redis) の Pub/Sub** を挟むのが定番。そうすれば `--max-instances` の制限は外せます
 - gRPC(双方向ストリーミング含む)や Server-Sent Events も同様にサポートされています。ただし gRPC のストリーミングには HTTP/2 が必要なので、デプロイ時に `--use-http2` を付けます。**「HTTPでできることは大体できる」**と覚えておけばOKです
+- `--use-http2` は WebSocket には不要です。WebSocket は HTTP/1.1 の Upgrade で確立するので、このチャットアプリに `--use-http2` を付けると逆に応答しなくなります(公式ドキュメントも WebSocket では HTTP/2 の end-to-end 有効化を避けるよう案内しています)
