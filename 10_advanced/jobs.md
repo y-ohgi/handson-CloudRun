@@ -45,6 +45,9 @@ gcloud run jobs logs read handson-job --region ${REGION}
 
 コンソールの [Cloud Run](https://console.cloud.google.com/run) では「ジョブ」タブに実行履歴・成功/失敗・ログが並びます。
 
+> **成功していれば:** `--wait` を付けた実行が完了まで戻ってこず、最後に実行が成功した旨のメッセージで終わります。`gcloud run jobs list --region ${REGION}` に `handson-job` が並び、ログに `Hello from Cloud Run Jobs` が出ます。
+> **詰まったら:** ジョブの実行は非同期なので、ログはすぐには出そろいません。`--wait` を付け忘れた場合は数十秒待ってから `gcloud run jobs logs read handson-job --region ${REGION}` をもう一度実行してください。`ALREADY_EXISTS` は作成済みという意味なので、そのまま実行のコマンドへ進みます。イメージが見つからないと言われる場合は、`echo ${IMAGE}` が空でないかを確認し、空なら 4章の「0. 環境変数の準備」を再実行してください。`:v3` が存在しない場合は `gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}` で push 済みのタグを確認し、そこにあるタグ(`:v1` など)に読み替えて作成コマンドを実行して構いません。作り直したいときは `gcloud run jobs delete handson-job --region ${REGION} --quiet` で消してから、この節の作成コマンドをもう一度実行します。
+
 ## 2. 定期実行(cron)にする
 
 Cloud Scheduler(EventBridge Scheduler 相当)から叩けば cron バッチになります。コンソールのジョブ詳細画面から「トリガー」→「スケジューラー トリガーを追加」で GUI からも設定できます。
@@ -71,6 +74,11 @@ gcloud scheduler jobs create http handson-job-schedule \
 ```
 
 > こちらはコマンドが少し長いので、イベントでは GUI での設定を見せるだけで十分です。IAM 付与の直後は反映まで数分かかり 403 が返ることがあります——初回実行が失敗したら少し待ってリトライしてください。
+
+<!-- 引用ブロックの結合を防ぐ区切り -->
+
+> **成功していれば:** `gcloud scheduler jobs list --location ${REGION}` に `handson-job-schedule` が `ENABLED` で並びます。サービスアカウントは `gcloud iam service-accounts list` に `handson-scheduler@...` として出ます。
+> **詰まったら:** サービスアカウントと IAM 付与のコマンドは何度実行しても同じ結果になるので(`ALREADY_EXISTS` はそのまま次へ)、順番に再実行して構いません。Cloud Scheduler の API が有効でないというエラーが出た場合は `gcloud services enable cloudscheduler.googleapis.com` を実行してから、スケジューラー作成のコマンドをやり直してください。上記のとおり反映待ちで最初の起動が 403 になることがあるので、ジョブ自体が動く状態かを確かめたいときは数分待ってから `gcloud run jobs execute handson-job --region ${REGION} --wait` で手動実行が成功するかを見てください。`${PROJECT_ID}` や `${REGION}` が空のままだとメンバー名や URI が壊れるので、その場合は 4章の「0. 環境変数の準備」を再実行してからやり直します。この節は本編の内容ではないので、うまくいかなければコンソールの GUI 設定を見るだけにして次へ進んで構いません。
 
 ## 3. 並列実行
 

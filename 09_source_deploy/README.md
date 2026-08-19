@@ -16,7 +16,28 @@ gcloud run deploy handson-app-src \
 
 数分待つと、別サービス `handson-app-src` として同じアプリが公開されます。
 
+> **成功していれば:** ビルドとデプロイに数分かかったあと、`Service URL: https://handson-app-src-...` が表示されます。開くと4章と同じ画面が出ます。初回はビルド済みイメージの置き場として `cloud-run-source-deploy` という Artifact Registry リポジトリが自動で作られます(確認を求められたらそのまま進めてください)。途中で出力が止まって見えても、ビルド待ちなので待って大丈夫です。
+>
+> **詰まったら:**
+>
+> - `${REGION}` が空だとエラーになります。Cloud Shell を開き直した場合は [4章の「0. 環境変数の準備」](../04_deploy/README.md)を再実行してください
+> - `cd ~/cloudrun-handson/app` の位置で実行しているか、`ls` に `package.json` があるかを確認してください
+> - 失敗したら**同じコマンドをもう一度実行して構いません**。何度実行しても新しいリビジョンが増えるだけです
+> - デプロイできたかどうかは `gcloud run services list --region ${REGION}` で確認できます
+
 このディレクトリには Dockerfile があるのでそれが使われますが、**Dockerfile を消しても動きます**。その場合は [Google Cloud の Buildpacks](https://cloud.google.com/docs/buildpacks/nodejs) が `package.json` を見て「Node.js アプリだな」と判断し、`scripts.start`(この教材では `node src/index.ts`)を起動コマンドにした良い感じのイメージを自動生成します。
+
+> **成功していれば:** Dockerfile を消して同じ `gcloud run deploy handson-app-src --source . --region ${REGION} --allow-unauthenticated` を実行しても、やはり数分後に同じ画面が返ってきます。
+>
+> **詰まったら:** Buildpacks は `package.json` の `scripts.start` をそのまま起動コマンドに使います。ビルドは通ったのに URL を開くとエラーになる場合は、`scripts.start` が `node src/index.ts` になっているかを確認してください。原因は次で確かめられます。
+>
+> ```bash
+> gcloud run services logs read handson-app-src --region ${REGION} --limit 20
+> ```
+>
+> Dockerfile を消したくない場合は、この節は読むだけで先に進んでも構いません。
+
+<!-- 引用ブロックの結合を防ぐ区切り -->
 
 > **AWSとの比較:** App Runner のソースデプロイに相当しますが、できあがるものは今日ずっと触ってきた「普通の Cloud Run サービス」です。カナリアも、タグ付きURLも、スケール設定も全部同じように使えます。
 

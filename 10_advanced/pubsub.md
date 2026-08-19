@@ -37,6 +37,9 @@ gcloud pubsub subscriptions create handson-sub \
 
 これで配線は完了です。SQSキューの作成、イベントソースマッピング、IAMロール、バッチ設定……に相当する作業はありません。
 
+> **成功していれば:** `Created topic [projects/.../topics/handson-topic].` と `Created subscription [projects/.../subscriptions/handson-sub].` が表示されます。`gcloud pubsub topics list` に `handson-topic`、`gcloud pubsub subscriptions list` に `handson-sub` が1行ずつ出れば配線できています。
+> **詰まったら:** `ALREADY_EXISTS` は作成済みという意味なので、そのまま次へ進んで構いません。`--push-endpoint /pubsub` のように URL が空で渡っている場合は `URL` の取得に失敗しています。まず `echo ${REGION}` が空でないか確認し、空なら 4章の「0. 環境変数の準備」を再実行してから `URL=$(gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)')` をやり直してください。`handson-app` が見つからないと言われる場合は `gcloud run services list --region ${REGION}` でサービス名を確認します。作り直したいときは `gcloud pubsub subscriptions delete handson-sub` で消してから、この節のコマンドをもう一度実行すれば同じ状態に戻せます。
+
 ## 2. メッセージを発行してみる
 
 ```bash
@@ -50,6 +53,9 @@ gcloud run services logs read handson-app --region ${REGION} --limit 10
 ```
 
 `Pub/Sub message received: Hello from Pub/Sub` が出ていれば成功です。8章の Logs Explorer で見ると、構造化ログとして届いているのも確認できます。
+
+> **成功していれば:** publish が `messageIds:` を返し、数秒後のログに `Pub/Sub message received: Hello from Pub/Sub` の1行が出ます。
+> **詰まったら:** 配送とログの反映には少し時間がかかります。まず10〜20秒ほど待って `gcloud run services logs read handson-app --region ${REGION} --limit 10` をもう一度実行してください。それでも出ない場合は push 先が正しいかを確認します。`gcloud pubsub subscriptions describe handson-sub --format 'value(pushConfig.pushEndpoint)'` の出力が、`gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` の URL + `/pubsub` になっているかを見比べてください。ずれていたら `gcloud pubsub subscriptions delete handson-sub` してから「1. トピックとpushサブスクリプションを作る」をやり直します。なお、この節の後にある「本番に向けた補足」の認証付き push を試している場合は、IAM の反映に数分かかるため一時的に 403 が返ります。数分待ってから publish を再実行してください。
 
 ## 3. ここで想像してほしいこと
 
