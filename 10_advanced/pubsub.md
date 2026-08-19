@@ -63,6 +63,7 @@ gcloud run services logs read handson-app --region ${REGION} --limit 10
 
 - サービスを `--no-allow-unauthenticated` にして、Pub/Sub 用のサービスアカウントに `roles/run.invoker` を付与
 - サブスクリプションに `--push-auth-service-account` を指定すると、Pub/Sub が OIDC トークン付きで POST してくれる
+- あわせて Pub/Sub のサービスエージェント(`service-<プロジェクト番号>@gcp-sa-pubsub.iam.gserviceaccount.com`)に `roles/iam.serviceAccountTokenCreator` を付与します。これがないと Pub/Sub が OIDC トークンを生成できません
 - IAM 付与の直後は反映まで数分かかり、その間 403 が返ることがあります(数分待ってリトライ)
 
 「サービス間の認証を IAM とIDトークンでやる」のは Cloud Run 全般のパターンで、内部マイクロサービス間の呼び出しも同じ仕組みで守れます(ALB の内部リスナーやセキュリティグループの代わりに、IAM で「誰が呼べるか」を制御するイメージです)。
