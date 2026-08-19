@@ -22,7 +22,7 @@ gcloud run deploy handson-app-src \
 
 このディレクトリには Dockerfile があるのでそれが使われますが、**Dockerfile を消しても動きます**。その場合は [Google Cloud の Buildpacks](https://cloud.google.com/docs/buildpacks/nodejs) が `package.json` を見て「Node.js アプリだな」と判断し、`scripts.start`(この教材では `node src/index.ts`)を起動コマンドにした良い感じのイメージを自動生成します。
 
-> **成功していれば:** Dockerfile を消して同じ `gcloud run deploy handson-app-src --source . --region ${REGION} --allow-unauthenticated` を実行しても、やはり数分後に同じ画面が返ってきます。
+> **成功していれば:** Dockerfile を消して同じ `gcloud run deploy handson-app-src --source . --region ${REGION} --allow-unauthenticated` を実行しても、やはり数分後に同じ画面が返ってきます。切り替わったかどうかは出力の1行目で分かります。Dockerfile があるときは `Building using Dockerfile and deploying container to Cloud Run service [handson-app-src]`、消したあとは `Building using Buildpacks and deploying container to Cloud Run service [handson-app-src]` になります。
 >
 > **詰まったら:** Buildpacks は `package.json` の `scripts.start` をそのまま起動コマンドに使います。ビルドは通ったのに URL を開くとエラーになる場合は、`scripts.start` が `node src/index.ts` になっているかを確認してください。原因は次で確かめられます。
 >
