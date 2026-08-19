@@ -15,7 +15,13 @@ CLI からも見られます:
 gcloud run services logs read handson-app --region ${REGION} --limit 20
 ```
 
-> **成功していれば:** `{"severity":"INFO","message":"index accessed",...}` のような行が、これまでのアクセス分だけ並びます。
+> **成功していれば:** `2026-01-01 12:34:56 GET 200 https://handson-app-.../` のようなリクエストログと、`listening on port 8080` のようなアプリの出力が時刻順に並びます。
+>
+> ただし `gcloud run services logs read` はログ本文を**プレーンテキストとしてしか表示しない**ため、アプリが出した1行JSON(`index accessed`)は**時刻だけの空行**に見えます。JSON の中身まで CLI で見たいときはこちらを使ってください。
+>
+> ```bash
+> gcloud logging read 'resource.type="cloud_run_revision" AND resource.labels.service_name="handson-app" AND jsonPayload.message="index accessed"' --limit 5 --format 'yaml(timestamp,severity,jsonPayload)'
+> ```
 >
 > **詰まったら:** 何も表示されない場合、まだリクエストが発生していないことがほとんどです。次を実行してアクセスを作ってから、もう一度ログを読み直してください。
 >
