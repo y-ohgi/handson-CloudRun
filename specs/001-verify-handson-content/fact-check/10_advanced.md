@@ -2,7 +2,8 @@
 
 **確認日**: 2026-08-19
 
-**判定サマリ**: 全18項目 — 正しい 17件 / 要修正 0件 / 未確認 1件(本文の修正は不要だった)
+**判定サマリ**: 全18項目 — 正しい 17件 / 要修正 0件 / 未確認 1件(#17 の所要時間。本文の修正は不要だった)
+2026-08-19 T026: #17 は所要時間・実測依存(カテゴリC)のため据え置き。
 
 検証方法: Google Cloud 公式ドキュメント(`docs.cloud.google.com`)および Cloud Run リリースノートの突き合わせのみ。`gcloud` は未実行。本ファイルは 10_advanced 配下の**インデックスページ(README.md)のみ**を対象とし、`pubsub.md` / `websocket.md` / `jobs.md` は別タスクの担当。
 
@@ -24,15 +25,15 @@
 | 14 | L27 | `compose.yaml` をそのまま Cloud Run へ。サイドカー構成も持ち込める | 正しい | https://docs.cloud.google.com/run/docs/deploy-run-compose | 公式手順は `gcloud run compose up compose.yaml`(`alpha` なし)。マルチコンテナについて「Compose deployment deploys a single Cloud Run service with multiple containers.」と明記され、Nginx プロキシ + Flask バックエンド + MongoDB の例が掲載。事前情報にあった「ドキュメントはGA表記だがCLIは `gcloud alpha run compose`」という不一致は、2026-08-19 時点の公式ページでは確認できなかった(現在は非alphaの `gcloud run compose up` で記載) |
 | 15 | L28 | **IAP 直接統合は2026年3月GA** | 正しい | https://docs.cloud.google.com/run/docs/release-notes | リリースノート **2026年3月13日**: 「Configuring Identity-Aware Proxy (IAP) directly on Cloud Run ... to secure your services without the need for load balancers is in General Availability (GA)」。本文の「2026年3月GA」と一致 |
 | 16 | L28 | ロードバランサーを組まずに社内向けアプリへ Google アカウント認証を付けられる | 正しい | https://docs.cloud.google.com/run/docs/release-notes | 同エントリの「without the need for load balancers」と一致 |
-| 17 | L3, L5-9 | 各節の形式・所要時間(20分/10分/10分)、2時間版は講師デモ | 未確認 | - | 教材運営上の設計値であり、公式ドキュメントで検証できる技術的主張ではない。当日の実測に委ねる |
+| 17 | L3, L5-9 | 各節の形式・所要時間(20分/10分/10分)、2時間版は講師デモ | 未確認 | - | 教材運営上の設計値であり、公式ドキュメントで検証できる技術的主張ではない。当日の実測に委ねる。**2026-08-19 T026: 未確認のまま残す(カテゴリC: 所要時間・実測依存)**。参考として実機の所要時間は、Jobs の `execute --wait` が約24秒(`live-jobs.md` #2)、Scheduler 起動から実行開始まで約64秒(#13)、`--tasks 5` の並列実行が約21秒(#15)、ソースデプロイが1〜2分(`live-source-deploy.md` #14)。個々の待ち時間は節の想定内だが、参加者20〜50人規模での節全体の所要時間は当日にしか測れない |
 | 18 | L19 | 「ただのコンテナ・ただのHTTP」という抽象を守っているから何とでもつながる | 正しい(解釈) | https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run | 公式はサービスを「Responds to HTTP requests sent to a unique and stable endpoint, using stateless instances that autoscale based on a variety of key metrics」と説明。コンテナ + HTTP という基本モデルと矛盾しない教材側の解釈 |
 
 ## 修正した箇所
 
 なし。**2026年の新機能4件(Worker pools / GPU / Docker Compose / IAP直接統合)のGA時期と内容はすべてリリースノートおよび機能ドキュメントの一次情報と一致していた。**
 
-## 実機確認が必要な残件・補足
+## 実機確認が必要な残件・補足(2026-08-19 T026 で棚卸し)
 
-- 所要時間と進行形式(#17)は当日運用の実測待ち
+- 所要時間と進行形式(#17)は当日運用の実測待ち — **T026 でも据え置き(カテゴリC: 所要時間・実測依存)**。個々のコマンドの所要時間は実機で計測済み(#17 の resolution 参照)だが、節全体の時間配分は環境・人数依存で単一の正解がない
 - Worker pools の既定スケーリングが手動である点(#9)は本文の誤りではないが、3章または本文で触れるかは編集判断の余地あり(今回は担当範囲外の追記を避け未変更)
 - `pubsub.md` / `websocket.md` / `jobs.md` の個別手順は本ファイルの対象外

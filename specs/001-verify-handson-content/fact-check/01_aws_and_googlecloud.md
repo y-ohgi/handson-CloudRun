@@ -16,7 +16,7 @@
 | 10 | 比較表 デプロイ行 | AWS: タスク定義 + サービス更新 / Cloud Run: `gcloud run deploy` 1コマンド | 正しい | https://docs.cloud.google.com/run/docs/deploying-source-code | 変更なし |
 | 11 | アカウント構造の違い 分離の単位 | AWS: アカウント(Organizationsで束ねる) | 要修正 | https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html | Google Cloud のフォルダに対応する概念がOUであることを読者が対比できるよう「Organizations の OU で階層化」へ変更(「An OU can also contain other OUs enabling you to create a hierarchy」) |
 | 12 | アカウント構造の違い 分離の単位 | Google Cloud: プロジェクト(組織の下に複数作る) | 要修正 | https://docs.cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy | フォルダ層の記載が欠けていたため「組織 > フォルダ > プロジェクトの階層。フォルダは任意」へ変更(「Folder resources are an optional grouping mechanism between organization resources and project resources」「The project resource is the fundamental organizing entity」) |
-| 13 | アカウント構造の違い リージョンの扱い | AWS はコンソールでリージョンを切り替える / Google Cloud はリソース作成時に指定しコンソールは全リージョン横断 | 未確認 | - | 一次情報で「コンソールが全リージョン横断」と断定する記述を見つけられなかった。ただし Cloud Run など主要サービスの一覧画面が全リージョンのリソースを表示するのは事実であり、教材上の表現として過大でないと判断し変更しない |
+| 13 | アカウント構造の違い リージョンの扱い | AWS はコンソールでリージョンを切り替える / Google Cloud はリソース作成時に指定しコンソールは全リージョン横断 | 未確認 | - | 一次情報で「コンソールが全リージョン横断」と断定する記述を見つけられなかった。ただし Cloud Run など主要サービスの一覧画面が全リージョンのリソースを表示するのは事実であり、教材上の表現として過大でないと判断し変更しない。**2026-08-19 T026: 未確認のまま残す(カテゴリB: コンソールUI)**。実機検証はヘッドレス環境で行い、コンソール画面の目視が未実施(`live-main-path.md` #43)。なお CLI 側は全リージョン横断ではなく `--region` / `--location` 指定が必要であることを実機で確認しており(`gcloud run services list --region asia-northeast1` 等)、コンソールの挙動とは別問題 |
 | 14 | アカウント構造の違い 権限の主体 | AWS: IAMユーザー / ロール、Google Cloud: Google アカウント / サービスアカウント | 正しい | https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html | 変更なし(AWS側は「an IAM user with long-term credentials or an IAM role with short-term credentials」と明記) |
 | 15 | アカウント構造の違い API | AWS: 常に有効 / Google Cloud: プロジェクトごとに明示的に有効化 | 正しい | https://docs.cloud.google.com/apis/docs/getting-started | 変更なし(「To use a Google Cloud API that is not enabled by default, you must enable it for your project」)。なおAWSにもリージョンのopt-inや一部サービスの有効化操作は存在するが、対比としての粒度では誤りではないと判断 |
 | 16 | 今日使うサービス Cloud Run行 | Cloud Run ≒ App Runner + Fargate + Lambda | 要修正 | https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-load-balancing.html | #2 と同じ理由で「App Runner + ECS on Fargate + Lambda」へ変更 |
@@ -64,10 +64,11 @@
 | Cloud Run と VPC | VPCは不要、必要なら後から接続 | `VPC 外(接続可)` | 一致 |
 | Cloud Run functions | 現在は Cloud Run 基盤に統合、名称も Cloud Run functions | (言及なし) | 矛盾なし |
 
-## 未確認として残した項目
+## 未確認として残した項目(2026-08-19 T026 で棚卸し)
 
-- #13 「Google Cloud のコンソールは全リージョン横断」: 一次情報に該当する断定的記述を見つけられなかった。実挙動としては妥当だが、公式文書での裏取りができていない。
-- #31 Cloud Tasks の `scheduleTime` の上限値: `creating-http-target-tasks` および `dual-overview` に上限の記載がなく、quotas ページを確認していない。本文はこの値に依存していないため影響なし。
+- #13 「Google Cloud のコンソールは全リージョン横断」: 一次情報に該当する断定的記述を見つけられなかった。実挙動としては妥当だが、公式文書での裏取りができていない。**T026 でも据え置き(カテゴリB: コンソールUI)** — 実機検証はヘッドレス環境で行われたため目視できていない。
+- #31 Cloud Tasks の `scheduleTime` の上限値: `creating-http-target-tasks` および `dual-overview` に上限の記載がなく、quotas ページを確認していない。本文はこの値に依存していないため影響なし。**T026 でも据え置き**(#31 の verdict 自体は `正しい` であり、この値は本文の主張に含まれない補足事項)。
+- なお本フラグメントの AWS 側比較記述のうち、他章に散在するものは `aws-comparisons.md` で別途検証済み(13件、未確認0件)。
 
 ## 事実誤りではないが報告する観察(本文は変更していない)
 

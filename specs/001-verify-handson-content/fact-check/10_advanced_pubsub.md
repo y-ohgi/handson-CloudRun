@@ -10,7 +10,7 @@
 | 2 | L13-21 | 本文のコード断片が `code/app/src/index.ts` の `/pubsub` ハンドラと一致 | 正しい | (リポジトリ内 `code/app/src/index.ts` L76-83 と完全一致) | 変更なし |
 | 3 | L24 | 認証なし push は「ハンズオン用ショートカット」であり本番では使わない旨の注記 | 正しい | https://docs.cloud.google.com/run/docs/triggering/pubsub-push (公式手順は `--no-allow-unauthenticated` 前提。"By keeping the service private you can rely on Cloud Run's automatic Pub/Sub integration to authenticate requests.") | 変更なし(既に明示済み) |
 | 4 | L29 | `gcloud pubsub topics create handson-topic` | 正しい | https://docs.cloud.google.com/run/docs/tutorials/pubsub (`gcloud pubsub topics create myRunTopic`) | 変更なし |
-| 5 | L31 | `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` | 未確認 | https://docs.cloud.google.com/sdk/gcloud/reference/run/services/describe | 公式リファレンスの EXAMPLES に同一の `--format` 例は無く、`value(status.url)` の妥当性を一次情報で確認できなかった。`--format` は gcloud 共通フラグであり教材の他章でも同じ書式を使っているため変更していない |
+| 5 | L31 | `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` | 正しい(実機確認) | https://docs.cloud.google.com/sdk/gcloud/reference/run/services/describe , `live-main-path.md` #8 | **2026-08-19 T026 で確定**: 実機でこのコマンドが有効なサービスURLを返すことを確認した(exit 0)。ただし返るのは**旧形式**の `https://handson-app-nv5rboaedq-an.a.run.app` で、`run deploy` の出力や既定書式の `describe` が示す決定的URL(`handson-app-<プロジェクト番号>.<リージョン>.run.app`)とは表記が異なる。両方とも同じサービスに到達し 200 を返すため push エンドポイントとして使う本章の用途では問題ない(4章 L75 にこの差異の注記を追記済み) |
 | 6 | L33-35 | `gcloud pubsub subscriptions create --topic --push-endpoint` のフラグ名 | 正しい | https://docs.cloud.google.com/sdk/gcloud/reference/pubsub/subscriptions/create | 変更なし |
 | 7 | L38 | 「SQS キュー作成・イベントソースマッピング・IAM ロール・バッチ設定に相当する作業はない」 | 正しい | https://docs.cloud.google.com/run/docs/tutorials/pubsub (認証なし構成では topic + subscription のみ) | 変更なし(教材が認証なし構成である前提の記述として成立) |
 | 8 | L43 | `gcloud pubsub topics publish handson-topic --message "..."` | 正しい | https://docs.cloud.google.com/sdk/gcloud/reference/pubsub/topics/publish (stable、`--message` 存在) | 変更なし |
@@ -22,16 +22,18 @@
 | 14 | L65 | サブスクリプションに `--push-auth-service-account` を指定すると OIDC トークン付きで POST される | 正しい | https://docs.cloud.google.com/sdk/gcloud/reference/pubsub/subscriptions/create ("Service account email used as the identity for the generated Open ID Connect token for authenticated push.") | 変更なし |
 | 15 | L64-67 | 認証付き push の手順に必要な IAM がすべて挙がっているか | 要修正 | https://docs.cloud.google.com/run/docs/tutorials/pubsub (`gcloud projects add-iam-policy-binding ... --member=serviceAccount:service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com --role=roles/iam.serviceAccountTokenCreator`) | Pub/Sub サービスエージェントへの `roles/iam.serviceAccountTokenCreator` 付与が抜けていたため箇条書きを1行追記した(これがないと OIDC トークンが生成できず認証付き push が成立しない) |
 | 16 | L67(修正後 L68) | IAM 付与直後は反映に数分かかり 403 が返ることがある | 正しい | https://docs.cloud.google.com/run/docs/tutorials/pubsub ("It can take several minutes for the IAM changes to propagate. In the meantime, you might see `HTTP 403` errors in the service logs.") | 変更なし |
-| 17 | L70 | Eventarc で「60以上のイベントソース」から Cloud Run を起動できる | 未確認 | https://docs.cloud.google.com/eventarc/standard/docs/event-providers-targets / https://docs.cloud.google.com/run/docs/triggering/trigger-with-events | 公式ドキュメントに件数の明示的な記述が見つからなかった。プロバイダ表の件数は 60 を明らかに上回るため下限としては成立する見込みだが、数値の一次情報が取れないため本文は変更していない |
+| 17 | L70 | Eventarc で「60以上のイベントソース」から Cloud Run を起動できる | 未確認 | https://docs.cloud.google.com/eventarc/standard/docs/event-providers-targets / https://docs.cloud.google.com/run/docs/triggering/trigger-with-events | 公式ドキュメントに件数の明示的な記述が見つからなかった。プロバイダ表の件数は 60 を明らかに上回るため下限としては成立する見込みだが、数値の一次情報が取れないため本文は変更していない。**2026-08-19 T026: 未確認のまま残す(カテゴリD)**。Eventarc は本教材のハンズオン手順に含まれない紹介文であり、実機検証4件のいずれも Eventarc を作成していないため実機記録から確定できない。公式が件数を明記しない限り確定不能な種類の主張 |
 | 18 | L70 | Eventarc の宛先として Cloud Run(サービス/ジョブ)がサポートされる | 正しい | https://docs.cloud.google.com/eventarc/docs/overview (destinations に Cloud Run jobs and services) | 変更なし |
 | 19 | L70 | Cloud Scheduler(cron)・Cloud Tasks(遅延・レート制御付きキュー)も HTTP エンドポイントを叩く形で Cloud Run と連携する | 正しい | https://docs.cloud.google.com/tasks/docs/creating-http-target-tasks (HTTP target、rate limits / retry の設定、"You can schedule a task at a future time.")、https://docs.cloud.google.com/run/docs/execute/jobs-on-schedule | 変更なし |
 | 20 | L75-76 | `gcloud pubsub subscriptions delete` / `gcloud pubsub topics delete` | 正しい | https://docs.cloud.google.com/sdk/gcloud/reference/pubsub/subscriptions/delete (stable、サブスクリプション名を位置引数で取る) | 変更なし |
 
 ## 集計
 
-- 正しい: 17
+- 正しい: 18(2026-08-19 T026 で #5 を `live-main-path.md` #8 の実測により確定)
 - 要修正: 1(#15)
-- 未確認: 2(#5 `--format 'value(status.url)'` の公式例、#17 Eventarc のイベントソース件数)
+- 未確認: 1(#17 Eventarc のイベントソース件数。カテゴリD)
+
+実機検証(`live-main-path.md` #37〜#42)では、トピック/サブスクリプション作成の出力、publish の `messageIds`、認証なし push の到達(publish から約20秒でログ反映)、Pub/Sub サービスエージェントのメール形式まで確認済み。#40 の指摘により L55 の「構造化ログとして届いている」を「severity `INFO` のログとして届いている(追加フィールドを持たないため `jsonPayload` ではなく本文だけのログとして記録される)」に修正した。認証付き push(#42)は新規 SA 作成とプロジェクトIAM変更が許可リソース範囲を超えるため未実施。
 
 ## 修正はしていないが報告事項
 

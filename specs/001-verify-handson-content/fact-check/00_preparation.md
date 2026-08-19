@@ -17,7 +17,7 @@
 | 5 | 用意するもの | 手元のPCへのインストールは一切不要(すべて Cloud Shell で完結) | 正しい | https://docs.cloud.google.com/shell/docs/how-cloud-shell-works | 変更なし。Cloud Shell はブラウザから使う VM で、gcloud CLI・Docker・npm 等がプリインストールされている(原文「Cloud Shell always comes with the latest versions of the gcloud CLI, Docker, and other utilities」) |
 | 6 | 1. プロジェクトを作る | 無料トライアルは90日 / $300 クレジット | 正しい | https://cloud.google.com/signup-faqs | 変更なし。原文「The Google Cloud Free Trial is a 90-day program」「preloaded with $300 in free Welcome credit which is valid for 90 days」 |
 | 7 | 1. プロジェクトを作る | Google Cloud ではプロジェクトが課金・リソースの分離単位 | 正しい | https://cloud.google.com/signup-faqs | 変更なし。Free Trial が「Free Trial billing account」を作りプロジェクトへ紐付ける構造と整合。プロジェクトが分離単位という記述は Resource Manager の階層(組織 → フォルダ → プロジェクト)と一致する |
-| 8 | 1. プロジェクトを作る | プロジェクトIDは自動でユニークになる | 未確認 | — | コンソールUIの挙動(プロジェクト名から一意なIDを自動生成する提案)を一次情報の原文で確認できなかった。gcloud/コンソールを実行しない制約下では検証できないため未確認とし、本文は変更していない |
+| 8 | 1. プロジェクトを作る | プロジェクトIDは自動でユニークになる | 未確認 | — | コンソールUIの挙動(プロジェクト名から一意なIDを自動生成する提案)を一次情報の原文で確認できなかった。gcloud/コンソールを実行しない制約下では検証できないため未確認とし、本文は変更していない。**2026-08-19 T026: 未確認のまま残す(カテゴリB: コンソールUI)**。実機検証は既存プロジェクト `sandbox-360407` を使い、プロジェクト新規作成をコンソールで行っていない(ヘッドレス環境のためコンソールの目視自体が未実施。`live-main-path.md` #43) |
 | 9 | 2. Cloud Shell | Cloud Shell は Google Cloud が無料で使える | 正しい | https://docs.cloud.google.com/free/docs/free-cloud-features | 変更なし(表現を「無料で提供する」→「無料で使える」に統一)。原文「Cloud Shell — Free access to Cloud Shell, including 5 GB of persistent disk storage」 |
 | 10 | 2. Cloud Shell | ブラウザで動くコードエディタが最初から使える | 正しい | https://docs.cloud.google.com/shell/docs/quotas-limits | 変更なし(ただし #11 の対比表現は修正)。Cloud Shell エディタは標準機能で、原文は「Cloud Shell Editor does not support the installation of custom editor extensions. However, the Cloud Shell Editor comes with a set of essential extensions already installed」 |
 | 11 | 2. Cloud Shell | ブラウザで動くコードエディタは AWS CloudShell にはない | 要修正 | https://aws.amazon.com/about-aws/whats-new/2026/08/aws-cloudshell-visual-file-editor/ | **事実誤り**。2026年8月17日に AWS CloudShell へ組み込みのビジュアルエディタが追加された(原文「AWS CloudShell now includes a built-in visual file editor that you can launch directly from your shell session using a single 'edit' command, no setup required」)。`docs.aws.amazon.com/cloudshell/latest/userguide/vm-specs.html` のプリインストール一覧にも `edit` が載る。「AWS CloudShell にはない」を削除し、注記で AWS 側の現状(`edit` コマンド)に触れる形へ書き換えた |
@@ -40,7 +40,7 @@
 | 28 | 3. API有効化 | 上記5つで教材の範囲をカバーできる | 正しい | https://docs.cloud.google.com/run/docs/deploying-source-code | 変更なし。教材内の `gcloud` は run / artifacts / builds(`--source`)/ pubsub / scheduler / logging / iam に限られる。`storage.googleapis.com` は公式が「deploy without build」の経路でのみ要求しており(原文「Enable the Cloud Run and Cloud Storage APIs」)、教材はビルド経路のみを使うため不要。Cloud Logging / IAM は新規プロジェクトで既定有効のため列挙不要 |
 | 29 | 3. API有効化 | Google Cloud では各サービスのAPIを明示的に有効化してから使う | 正しい | https://docs.cloud.google.com/run/docs/deploying-source-code | 変更なし。各プロダクトの「Before you begin」が API 有効化を前提手順として要求している構造と一致 |
 | 30 | 4. 動作確認 | Cloud Shell で `docker version` がエラーにならない | 正しい | https://docs.cloud.google.com/shell/docs/how-cloud-shell-works | 変更なし。Docker がプリインストールされている(#15)ため成立 |
-| 31 | トラブルシューティング | 課金アカウント未紐付けだと `gcloud services enable` が課金エラーになる | 未確認 | — | 課金アカウント未紐付けプロジェクトでの `services enable` の**エラー文言・失敗すること自体**を明記した一次情報を特定できなかった。gcloud を実行しない制約下では実測もできないため未確認とし、本文は変更していない(対処手順「課金ページから紐付ける」自体は妥当) |
+| 31 | トラブルシューティング | 課金アカウント未紐付けだと `gcloud services enable` が課金エラーになる | 未確認 | — | 課金アカウント未紐付けプロジェクトでの `services enable` の**エラー文言・失敗すること自体**を明記した一次情報を特定できなかった。gcloud を実行しない制約下では実測もできないため未確認とし、本文は変更していない(対処手順「課金ページから紐付ける」自体は妥当)。**2026-08-19 T026: 未確認のまま残す(カテゴリD)**。実機検証は課金アカウント紐付け済みのプロジェクトで行ったため、この失敗ケースは再現していない。再現には課金アカウント未紐付けのプロジェクトを新規作成する必要があり、許可されたリソース範囲外 |
 | 32 | トラブルシューティング | エディタが開かないときは通常モードで開き直す / 新しいウィンドウで開く | 正しい | https://docs.cloud.google.com/shell/docs/quotas-limits?hl=ja | 変更なし。原文「サードパーティの Cookie が無効になっていても、エディタ セッションを開いたときに [新しいウィンドウで開く] ボタンをクリックすると、別のウィンドウで Cloud Shell エディタを使用できます」 |
 | 33 | トラブルシューティング | `--allow-unauthenticated` の権限エラーは組織ポリシー(ドメイン制限共有)が原因の可能性が高い | 正しい | https://docs.cloud.google.com/resource-manager/docs/organization-policy/restricting-domains | 変更なし。#2 と同じ根拠 |
 | 34 | トラブルシューティング | IAM の変更は反映まで数分かかることがあるので1〜2分待ってリトライ | 要修正 | https://docs.cloud.google.com/iam/docs/access-change-propagation | 待ち時間が過小。原文はポリシー変更の反映を「Typically 2 minutes, potentially 7 minutes or longer」とする。「通常2分程度、場合によっては7分以上」「数分待ってからリトライ」へ修正した |
@@ -64,9 +64,11 @@
 
 ## 集計
 
-- 正しい: 36件
+- 正しい: 34件(2026-08-19 T026 で判定表の行を機械的に数え直した結果。旧記載は36件だったが、判定表の実行数は41行で 34 + 5 + 2 = 41 が正しい)
 - 要修正: 5件(#1, #11, #12, #21, #34)
-- 未確認: 2件(#8, #31)
+- 未確認: 2件(#8 カテゴリB / #31 カテゴリD。2026-08-19 T026 の棚卸しでも実機記録から確定できず据え置き)
+
+2026-08-19 T026 の補足: `live-main-path.md`「最重要の結論」により、#33 が想定していた組織ポリシー(ドメイン制限共有)による `--allow-unauthenticated` のブロックは検証プロジェクトでは発生せず、`allUsers` への IAM 付与が `Setting IAM Policy.............done` で成功することを確認した(#33 の判定は「正しい」のまま。組織ポリシーが設定された環境で起きうる事象という位置づけは維持)。
 
 ## 本文への変更
 

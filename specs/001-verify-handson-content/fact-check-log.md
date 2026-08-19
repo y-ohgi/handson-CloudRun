@@ -58,22 +58,22 @@
 | 章 | 本文パス | status (data-model.md) | フラグメント | 状態 |
 |---|---|---|---|---|
 | はじめに | `README.md` | — | 対象外(目次・導入。技術的主張は各章へ帰属) | — |
-| 0. 事前準備 | `00_preparation/README.md` | 修正済み | `fact-check/00_preparation.md` | 検証中 |
+| 0. 事前準備 | `00_preparation/README.md` | 修正済み | `fact-check/00_preparation.md` | **完成**(正しい34 / 要修正5 / 未確認2) |
 | 1. AWSとGoogle Cloudの考え方の違い | `01_aws_and_googlecloud/README.md` | 要再検証 | `fact-check/01_aws_and_googlecloud.md` | **完成**(正しい27 / 要修正8 / 未確認1) |
-| 2. Dockerのおさらいとコンテナ起動 | `02_docker/README.md` | 修正済み | `fact-check/02_docker.md` | 検証中 |
+| 2. Dockerのおさらいとコンテナ起動 | `02_docker/README.md` | 修正済み | `fact-check/02_docker.md` | **完成**(正しい38 / 要修正2 / 未確認0) |
 | 3. Cloud Runとは | `03_cloudrun/README.md` | 修正済み | `fact-check/03_cloudrun.md` | **完成**(正しい23 / 要修正0 / 未確認0、本文変更なし) |
-| 4. Cloud Runへデプロイする | `04_deploy/README.md` | 要再検証 | `fact-check/04_deploy.md` | **完成**(正しい12 / 要修正2 / 未確認6) |
-| 5. 更新とロールバック | `05_revision/README.md` | 要再検証 | `fact-check/05_revision.md` | **完成**(正しい13 / 要修正2 / 未確認3) |
-| 6. カナリアリリースとタグ付きURL | `06_traffic/README.md` | 要再検証 | `fact-check/06_traffic.md` | **完成**(正しい14 / 要修正1 / 未確認2) |
-| 7. オートスケールを観察する | `07_scaling/README.md` | 修正済み | `fact-check/07_scaling.md` | 検証中 |
-| 8. ログとメトリクスをのぞく | `08_observability/README.md` | 要再検証 | `fact-check/08_observability.md` | **完成**(正しい12 / 要修正0 / 未確認3) |
-| 9. 締め: Dockerfileすら書かないデプロイ | `09_source_deploy/README.md` | 要再検証 | `fact-check/09_source_deploy.md` | **完成**(正しい9 / 要修正1 / 未確認3) |
-| 10. 発展編(導入) | `10_advanced/README.md` | 修正済み | `fact-check/10_advanced.md` | 検証中 |
-| 10-1. Pub/Subとつなぐ | `10_advanced/pubsub.md` | 修正済み | `fact-check/10_advanced_pubsub.md` | **完成**(正しい17 / 要修正1 / 未確認2) |
+| 4. Cloud Runへデプロイする | `04_deploy/README.md` | 要再検証 | `fact-check/04_deploy.md` | **完成**(正しい14 / 要修正2 / 未確認4、T026 で更新) |
+| 5. 更新とロールバック | `05_revision/README.md` | 要再検証 | `fact-check/05_revision.md` | **完成**(正しい15 / 要修正2 / 未確認1、T026 で更新) |
+| 6. カナリアリリースとタグ付きURL | `06_traffic/README.md` | 要再検証 | `fact-check/06_traffic.md` | **完成**(正しい13 / 要修正3 / 未確認1、T026 で更新) |
+| 7. オートスケールを観察する | `07_scaling/README.md` | 修正済み | `fact-check/07_scaling.md` | **完成**(正しい18 / 要修正13 / 未確認1、T026 で更新) |
+| 8. ログとメトリクスをのぞく | `08_observability/README.md` | 要再検証 | `fact-check/08_observability.md` | **完成**(正しい13 / 要修正0 / 未確認2、T026 で更新) |
+| 9. 締め: Dockerfileすら書かないデプロイ | `09_source_deploy/README.md` | 要再検証 | `fact-check/09_source_deploy.md` | **完成**(正しい11 / 要修正1 / 未確認1、T026 で更新) |
+| 10. 発展編(導入) | `10_advanced/README.md` | 修正済み | `fact-check/10_advanced.md` | **完成**(正しい17 / 要修正0 / 未確認1) |
+| 10-1. Pub/Subとつなぐ | `10_advanced/pubsub.md` | 修正済み | `fact-check/10_advanced_pubsub.md` | **完成**(正しい18 / 要修正1 / 未確認1、T026 で更新) |
 | 10-2. WebSocketチャット | `10_advanced/websocket.md` | 修正済み | `fact-check/10_advanced_websocket.md` | **完成**(正しい15 / 要修正2 / 未確認0) |
-| 10-3. Cloud Run Jobs | `10_advanced/jobs.md` | 修正済み | `fact-check/10_advanced_jobs.md` | **完成**(正しい28 / 要修正0 / 未確認1) |
-| 99. 後片付け | `99_cleanup/README.md` | 要再検証 | `fact-check/99_cleanup.md` | **完成**(正しい12 / 要修正6 / 未確認2) |
-| サンプルアプリ・WebSocketサンプル | `code/app/*`, `code/websocket/*` | 要再検証 | `fact-check/code_samples.md` | **完成**(正しい15 / 要修正1 / 未確認2、`code/` は変更不要) |
+| 10-3. Cloud Run Jobs | `10_advanced/jobs.md` | 修正済み | `fact-check/10_advanced_jobs.md` | **完成**(正しい29 / 要修正0 / 未確認0、T026 で更新) |
+| 99. 後片付け | `99_cleanup/README.md` | 要再検証 | `fact-check/99_cleanup.md` | **完成**(正しい13 / 要修正6 / 未確認1、T026 で更新) |
+| サンプルアプリ・WebSocketサンプル | `code/app/*`, `code/websocket/*` | 要再検証 | `fact-check/code_samples.md` | **完成**(正しい17 / 要修正1 / 未確認0、`code/` は変更不要、T026 で更新) |
 
 `code/app` と `code/websocket` は当初 `code_app.md` / `code_websocket.md` に分ける想定だったが、実際には両者をまとめた `code_samples.md` 1ファイルで検証された。実ファイル名を正とする。
 
@@ -82,7 +82,7 @@
 **フラグメント完成状況(2026-08-19 時点)**
 
 - `fact-check/03_cloudrun.md`: 完成。判定は「正しい23件 / 要修正0件 / 未確認0件」で、`03_cloudrun/README.md` の本文変更なし。§3.4 の `T-01` / `T-02` / `T-03` / `F-01`〜`F-04` / `F-06`〜`F-10` / `A-01`〜`A-08` はこのフラグメントで決着済み(既に本文へ反映されていたことを一次情報で確認した結果、追加修正が不要だった)。SC-002 の判定時は、当該フラグメントの23件に §3.4 の対象IDが漏れなく含まれているかを突き合わせる
-- 上記以外は未作成(「予定」)
+- **2026-08-19 T026 時点: 「予定」の行は0件。** 上表17ファイルすべてが作成済みで、加えて実機検証4件(`fact-check/live-main-path.md` / `live-source-deploy.md` / `live-jobs.md` / `live-websocket.md`)と AWS 比較1件(`fact-check/aws-comparisons.md`)が追加されている。件数は T026 で判定表の行を機械的に数え直した実測値
 
 ---
 
@@ -421,3 +421,127 @@ rg -n "未確認" specs/001-verify-handson-content/fact-check/
 ### スコープ外項目の扱い
 
 `スコープ` = `スコープ外(今回不採用)` の行は SC-001 / SC-002 の判定対象に含めない。ただし「判断した記録」として本台帳に残し、消さない。うち `research/2025-2026-feature-additions.md` へ回すもの(P-14 / P-15 / P-17)は、tasks.md T035 の完了時に当該メモへ転記済みであることを確認する(SC-007)。
+
+---
+
+## 6. 最終棚卸し(T026)
+
+**実施日**: 2026-08-19 / **対象**: `fact-check/` 配下の全21フラグメント(章別16 + `aws-comparisons.md` + 実機検証4件)
+
+本節は tasks.md T026(「`verdict` が『未確認』のまま残っている項目が0件であることを確認する」)の実施記録である。章別フラグメント16件はドキュメント照合の段階で作られ、当時は実機実行が禁止されていたため多くの項目が `未確認` で止まっていた。その後に実施された実機検証4件と AWS 比較検証1件の結果を突き合わせ、確定できるものを確定させた。
+
+### 6.1 集計(判定行を機械的に数えた実測値)
+
+判定表の行数(`| # | location | claim | verdict | source_url | resolution |` 形式の行)を数えた結果:
+
+| 区分 | ファイル数 | 判定行 | 正しい | 要修正 | 未確認 |
+|---|---|---|---|---|---|
+| 章別フラグメント + `aws-comparisons.md` | 17 | **390** | 326 | 48 | **16** |
+| 実機検証フラグメント(`live-*.md`) | 4 | 100 | (一致/不一致/未実施の別形式) | — | — |
+
+- **確定済み: 374件**(正しい326 + 要修正48)
+- **残存 `未確認`: 16件**(verdict 列が `未確認` の行)
+- これに加えて `07_scaling.md` #21 は verdict が `正しい(Cloud Shell の jq は未確認)` で、主張の一部だけが未確認のまま残っている。**カテゴリ分類ではこれを含めた17件を扱う。**
+- T026 開始時点で `未確認` 系だったのは32件。**そのうち15件を確定させた**(内訳は 6.2)。
+
+### 6.2 T026 で確定させた15件
+
+実機検証の記録で確定(8件):
+
+| フラグメント | # | 変更後 verdict | 根拠 |
+|---|---|---|---|
+| `05_revision.md` | 6 | 正しい(実機確認) | `live-main-path.md` #11 — フラグなし再デプロイでも `allUsers`/`roles/run.invoker` は保持され公開URLは200。当日の致命的問題は存在しない |
+| `05_revision.md` | 12 | 正しい(実機確認) | `live-main-path.md` #9 / #12 / #13 — `handson-app-00001-bvd` / `00002-vjk` |
+| `04_deploy.md` | 17 | 正しい(実機確認) | `live-main-path.md` #6 / #9 — 同上 |
+| `07_scaling.md` | 24 | 要修正(実機で判明) | `live-main-path.md` #30 — コールドスタート実測1.454798s(本文修正済み) |
+| `10_advanced_pubsub.md` | 5 | 正しい(実機確認) | `live-main-path.md` #8 — `describe --format 'value(status.url)'` は有効。ただし返るのは旧形式URL |
+| `99_cleanup.md` | 14 | 要修正(実機で判明) | `live-source-deploy.md` #15 — `<プロジェクトID>_cloudbuild` バケットが実在。本文は commit `8fc3c01` で既に反映済み |
+| `code_samples.md` | 13 | 正しい(実機確認) | `live-websocket.md` #1 / #11 / #12 / #14 — `new Set<WSContext>()` を含むコードが node:24-slim で起動・通信 |
+| `code_samples.md` | 14 | 正しい(実機確認) | `live-websocket.md` #1 / #14、`live-source-deploy.md` #9 — Node.js v24.19.0 実機で type stripping 動作 |
+
+AWS 一次情報(`aws-comparisons.md`)で確定(7件):
+
+| フラグメント | # | 変更後 verdict | 根拠 |
+|---|---|---|---|
+| `04_deploy.md` | 6 | 正しい(一次情報確認) | `aws-comparisons.md` #9(ECR トークン12時間) |
+| `06_traffic.md` | 1 | 要修正(一次情報確認) | `aws-comparisons.md` #1(検証用リスナーは任意)。本文反映済み |
+| `07_scaling.md` | 6 | 正しい(一次情報確認) | `aws-comparisons.md` #5(標準 Lambda は1リクエスト=1環境) |
+| `07_scaling.md` | 8 | 要修正(一次情報確認) | `aws-comparisons.md` #4(ECS のターゲット追跡ではアラームは AWS が自動管理)。本文反映済み |
+| `08_observability.md` | 5 | 正しい(一次情報確認) | `aws-comparisons.md` #7(awslogs + IAM 権限が必要) |
+| `09_source_deploy.md` | 9 | 正しい(一次情報確認) | `aws-comparisons.md` #8(App Runner のソースデプロイ) |
+| `10_advanced_jobs.md` | 8 | 正しい(一次情報確認) | `aws-comparisons.md` #10(標準 Lambda 900秒) |
+
+あわせて、`未確認` ではないが実機記録と矛盾していた記載を3件訂正した。
+
+- `06_traffic.md` #6: `正しい` → `要修正(実機で判明)`。`--no-traffic` 時は URL が2つではなく**タグ付きURLの1つだけ**表示される(`live-main-path.md` #17。本文修正済み)
+- `99_cleanup.md` #17: `要修正(未実施)` → `要修正(反映済み)`。`support/README.md` L57 に後片付け節が入っている(commit `f1e5da3`)
+- `00_preparation.md` の集計: 正しい36件 → 34件(判定表の実行数41に対し 34 + 5 + 2 = 41)
+
+### 6.3 残存する `未確認` 17件のカテゴリ内訳
+
+| カテゴリ | 件数 |
+|---|---|
+| A: Cloud Shell 固有(検証環境が macOS のため原理的に未確認) | 2 |
+| B: コンソールUI(ヘッドレス環境のため目視できず) | 7 |
+| C: 所要時間・実測依存(環境依存で単一の正解が無い) | 3 |
+| D: その他 | 5 |
+
+**A: Cloud Shell 固有(2件)**
+
+- `06_traffic.md` #11 — Cloud Shell に `curl` / `jq` が入っているか。ループ自体は実機で動作し集計結果も教材の予想と一致(`live-main-path.md` #22)だが、実行環境は macOS(jq-1.7.1 / curl 8.7.1)
+- `07_scaling.md` #21 — 同じ `jq` の残件(verdict は `正しい` で、`jq` の存在のみ部分未確認)
+
+**B: コンソールUI(7件)**
+
+- `00_preparation.md` #8 — コンソールがプロジェクト名から一意なプロジェクトIDを自動生成すること
+- `01_aws_and_googlecloud.md` #13 — Google Cloud のコンソールがリージョン横断で一覧表示すること
+- `04_deploy.md` #11 — Artifact Registry コンソールページ(認証必須で到達確認できず)
+- `04_deploy.md` #19 — Cloud Run コンソールページ(同上)
+- `07_scaling.md` #20 — 「指標」タブのレイテンシがパーセンタイル(p50/p95/p99)表示か
+- `08_observability.md` #13 — 同上(8章側の記述)
+- `08_observability.md` #14 — 「指標」タブ上のリビジョン別フィルタUI(Monitoring API 側での絞り込みは `live-main-path.md` #36 で確認済み)
+
+**C: 所要時間・実測依存(3件)**
+
+- `04_deploy.md` #14 — 初回デプロイ「30秒ほどで完了」
+- `05_revision.md` #18 — ロールバックが「数秒で完了」(ロールバック自体の成功は `live-main-path.md` #14 / #15 で確認済み、秒数は未計測)
+- `10_advanced.md` #17 — 発展編各節の所要時間(20分/10分/10分)と2時間版の進行形式
+
+**D: その他(5件、個別理由つき)**
+
+- `00_preparation.md` #31 — 課金アカウント未紐付けプロジェクトで `gcloud services enable` が課金エラーになること。**理由**: 検証は課金アカウント紐付け済みプロジェクトで実施。再現には未紐付けプロジェクトの新規作成が必要で、許可されたリソース範囲外
+- `04_deploy.md` #1 — `gcloud config get-value project` が現行 gcloud で動くこと。**理由**: 公式リファレンスに `get-value` の個別ページが無く(404)、実機検証4件のいずれもこのコマンドを実行していない(全記録を grep して確認)。`gcloud config get project` への統一は 00章・`support/README.md` にも及ぶ章横断変更のため別タスクへ申し送り中
+- `09_source_deploy.md` #8 — `package-lock.json` 不在により依存解決が日によって変わりうること。**理由**: 浮動解決そのものは実機で観測済み(`live-websocket.md` #17 で `ws: ^8.17.0` → 8.21.3、`live-source-deploy.md` #9 で Buildpacks が `--package-lock-only` でロックを生成)だが、「日によって変わる」という時間的変動は1回の検証では観測できない。`code/` は本機能の変更禁止範囲
+- `10_advanced_pubsub.md` #17 — Eventarc の「60以上のイベントソース」という件数。**理由**: 公式ドキュメントが件数を明記しておらず、Eventarc はハンズオン手順に含まれない紹介文のため実機検証の対象外。公式が数値を書かない限り確定不能
+- `99_cleanup.md` #15 — 「API を有効化しただけでは課金されない」ことの裏付け(=無効化手順が不要である根拠)。**理由**: 実機検証は API 有効化済みの状態で行い、有効化のみによる課金の有無を切り分ける観測(無効化して課金明細を比較する等)を行っていない。判定には課金レポートの数日後の反映を待つ必要がある
+
+### 6.4 SC-001 / SC-002 の達成判定
+
+**SC-001「技術的主張のうち、出典となる一次情報のURLを明記できないものが0件」: 未達**
+
+§5 の6つの確認項目に対する実測結果:
+
+| # | 確認項目 | 結果 |
+|---|---|---|
+| 1 | §2 の全フラグメントが作成済み(「予定」が0件) | **達成**。21ファイルすべて存在 |
+| 2 | §3 / §4 の全行がフラグメントに対応行を持つ | **未検証**。ID単位の全件突き合わせは T026 では実施していない。SC-002 対象の `T-` / `F-` 15件については 6.4 後段のとおり確認済み |
+| 3 | 全行の `verdict` が `正しい` / `要修正` に確定(**`未確認` が0件**) | **未達。16件が `未確認` のまま**(+ 部分未確認1件)。内訳は 6.3 |
+| 4 | 確定した全行に `source_url` がある / 空・二次情報でない | **達成**。確定374行すべてに `source_url` があり(機械チェック済み)、`research/deep-research-report.md` を出典にしている行は0件。`source_url` が `-` / `—` の行は5件あるがいずれも未確認行(`00_preparation` #8・#31、`01_aws_and_googlecloud` #13、`04_deploy` #14、`10_advanced` #17)。`confirmed_on` は行単位ではなくフラグメント単位に `**確認日**: 2026-08-19` として記録され、全21ファイルが基準日以降 |
+| 5 | `要修正` の全行に `resolution` がある | **達成**。`resolution` が空の `要修正` 行は0件(機械チェック済み) |
+| 6 | 裏付けが取れなかった主張は、本文から削除したか「未確認」を本文に明記したか | **部分達成**。残存17件はいずれも `resolution` に「本文は変更していない」旨と理由を記録しているが、**教材本文側に「未確認」と明記する形の対応は取っていない**。カテゴリA〜Cは断定を避けた表現(「〜ほど」「〜程度」「置き換えてください」)になっており実害が小さいと判断された結果で、SC-001 の文言を厳格に取るなら本文側の追記が残件 |
+
+**未達の理由**: 残る16件は、(a) Cloud Shell 実機、(b) コンソールUIの目視、(c) 当日の実測、(d) 未紐付けプロジェクトや Eventarc など許可範囲外のリソース — のいずれかを必要とし、`gcloud` の再実行が禁止された本タスクの制約下では埋められない。**SC-001 を達成するには、当日の Cloud Shell での実機確認(A・C)とコンソール画面の目視確認(B)を担当者が行い、その結果を各フラグメントへ反映する必要がある。**
+
+**SC-002「レポートの『最も重要な発見トップ5』および『教材の事実確認』テーブルの指摘が未反映のまま残っている件数が0件」: 達成**
+
+- 対象IDは §5 の表のとおり `T-01`〜`T-05` と `F-01`〜`F-10` の15件で、決着先は `03_cloudrun.md`(未確認0件)・`02_docker.md`(未確認0件)・`07_scaling.md`・`10_advanced_websocket.md`(未確認0件)の4フラグメント
+- `07_scaling.md` に残る `未確認` は #20(コンソールのパーセンタイル表示)のみで、`T-05` / `F-08`(「必要インスタンス数 ≒ 同時リクエスト数 ÷ concurrency」と「50接続なら5台」)に対応する行は #2 / #15 であり、いずれも確定済み。#15 の本文書き換え(式では5台/実際は8台前後や上限10台/台数は観察対象)は `live-main-path.md` #27 の実測(上限10台に到達)と整合することを T026 で確認した
+- `T-04`(= `N-01`、Node.js 24 の type stripping の限定)は `02_docker.md` #7 / #8 / #10 で確定し、実機でも `v24.19.0` での起動を確認済み
+- `F-05`(WebSocket のタイムアウト既定5分・最大60分)は `10_advanced_websocket.md` #2 / #11 で確定し、`live-websocket.md` #9 / #10 で実測(`--timeout` 未指定で 300 秒、`--timeout 3601` は拒否)
+- したがって**レポート由来の指摘に未反映のものは0件**。ただし §3 の `スコープ外(今回不採用)` 行は判定対象外(§5「スコープ外項目の扱い」のとおり)
+
+### 6.5 残存する `未確認` が当日運用に与えるリスク
+
+**リスクは低い。** カテゴリB(コンソールUI 7件)は仮に表示が教材の記述と違っても、受講者が別のタブ・別のラベルを探す程度の詰まりで、CLI 手順の成否には影響しない。カテゴリC(所要時間3件)は本文が「〜ほど」「〜程度」と幅を持たせているうえ、最大の落とし穴だったコールドスタートの数値は実機実測(1〜1.5秒)に基づき修正済みで、期待値と実際のズレによる誤解は解消している。カテゴリD 5件も本文の手順そのものではなく紹介文・トラブルシューティング・後片付けの補足に属し、後片付けは推奨手順(プロジェクトごと削除)を取れば漏れが生じない。
+
+**唯一注視すべきはカテゴリA(Cloud Shell の `jq`)** で、これが入っていない場合は6章の集計ループと7章のインスタンスID確認が失敗する。ただしどちらも「観察」のためのコマンドであり、本編の主線(デプロイ・トラフィック制御・スケール設定)は止まらない。**当日の開始前に講師が Cloud Shell で `jq --version` を一度実行しておけば、この1点は数秒で解消できる。**

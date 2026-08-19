@@ -13,7 +13,7 @@
 | 5 | L14 | Jobs は最大7日間(タスクあたり) | 正しい | https://docs.cloud.google.com/run/docs/configuring/task-timeout ("you can change this to a shorter time or a longer time up to 168 hours (7 days)") | 変更なし |
 | 6 | L15 | 並列実行はタスク数・並列数を `--tasks` で指定 | 正しい | https://docs.cloud.google.com/sdk/gcloud/reference/run/jobs/create (`--tasks=TASKS; default=1`、`--parallelism=PARALLELISM`) | 変更なし |
 | 7 | L16 | リトライは `--max-retries` で組み込み | 正しい | https://docs.cloud.google.com/sdk/gcloud/reference/run/jobs/create ("Number of times a task is allowed to restart") | 変更なし |
-| 8 | L18 | Lambda の15分と比べて使える場面が広い(Lambda 上限15分) | 未確認 | (AWS 公式ドキュメントは本タスクのスコープ外のため未取得) | Cloud Run 側の7日は #5 で確認済み。Lambda の15分は AWS 一次情報を確認していないため未確認として記録し、本文は変更していない |
+| 8 | L18 | Lambda の15分と比べて使える場面が広い(Lambda 上限15分) | 正しい(一次情報確認) | https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html | **2026-08-19 T026 で確定**: `aws-comparisons.md` #10 が AWS 公式で「正しい」と判定(標準 Lambda の上限は900秒=15分のまま)。Cloud Run 側の7日は #5(書面)に加え `live-jobs.md` #18 で実機確認済み(`--task-timeout 169h` が `must be between 0 and 604800 seconds (168 hours)` で拒否された)。本文の変更は不要 |
 | 9 | L27-29 | `gcloud run jobs create handson-job --image ${IMAGE}:v3 --region ${REGION}` | 正しい | https://docs.cloud.google.com/sdk/gcloud/reference/run/jobs/create (`--image`、`--region`)。`${IMAGE}` は `00_preparation/README.md` L85、`:v3` は `06_traffic/README.md` L20-21 で作成済み | 変更なし |
 | 10 | L30-31 | `--command node --args "-e,console.log('...')"`(カンマ区切りで引数を渡す) | 正しい | https://docs.cloud.google.com/sdk/gcloud/reference/run/jobs/create (`--command=[COMMAND,…]`、`--args=[ARG,…]` "Comma-separated arguments passed to the command run by the container") | 変更なし |
 | 11 | L37 | `gcloud run jobs execute handson-job --region ${REGION} --wait` | 正しい | https://docs.cloud.google.com/sdk/gcloud/reference/run/jobs/execute ("--wait: Wait until the execution has completed running before exiting.") | 変更なし |
@@ -38,9 +38,11 @@
 
 ## 集計
 
-- 正しい: 28
+- 正しい: 29(2026-08-19 T026 で #8 を `aws-comparisons.md` #10 により確定)
 - 要修正: 0
-- 未確認: 1(#8 AWS Lambda の15分上限)
+- 未確認: 0
+
+なお、本表(ドキュメント照合)とは別に、実機検証 `live-jobs.md` #7 で `10_advanced/jobs.md` L81 の「詰まったら」に1件の追記(SA 作成直後の `add-iam-policy-binding` が `INVALID_ARGUMENT: ... does not exist.` で失敗する旨)が入っている。`live-jobs.md` 側の20項目は 一致17 / 不一致2(#7 修正済み、#14 は「403 が起きうる」という条件付き記述のため本文維持)/ 未実施1(#19 サービスの60分上限。実測手段がなく、書面確認は本表 #4 で済んでいる)。
 
 ## 修正はしていないが報告事項
 
