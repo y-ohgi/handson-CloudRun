@@ -37,7 +37,12 @@ gcloud pubsub topics delete handson-topic
 gcloud artifacts repositories delete ${REPO} --location ${REGION} --quiet
 # 9章のソースデプロイは cloud-run-source-deploy というリポジトリを自動で作るため、こちらも削除します
 gcloud artifacts repositories delete cloud-run-source-deploy --location ${REGION} --quiet
+
+# 9章のソースデプロイは Cloud Build 用のバケットも自動で作ります(アップロードしたソースが残ります)
+gcloud storage rm --recursive gs://${PROJECT_ID}_cloudbuild --quiet
 ```
+
+> このバケットは `--region` に追従せず US マルチリージョンに作られるので、`gcloud storage ls` で探すときはリージョンで絞らないでください。
 
 > **課金ポイントの整理:** Cloud Run はスケールtoゼロなので、`min-instances` を0に戻してあれば放置してもほぼ課金されません(1以上のままだとアイドル状態でも課金され続けます)。継続課金になり得るのは **Artifact Registry のストレージ**(無料枠は課金アカウントあたり0.5GB/月)、**min-instances**、そして **Cloud Scheduler のジョブ**(無料枠は課金アカウントあたり3ジョブ/月)です。
 
