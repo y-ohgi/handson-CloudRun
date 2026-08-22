@@ -1,6 +1,7 @@
 # 9. 締め: Dockerfileすら書かないデプロイ
 
-最後に、今日学んだ手順を巻き戻すような機能を紹介します。**ソースコードだけで Cloud Run にデプロイする**方法です。
+最後に、今日学んだ手順を巻き戻すような機能を紹介します。  
+**ソースコードだけで Cloud Run にデプロイする**方法です。
 
 ## ソースデプロイ
 
@@ -20,7 +21,17 @@ gcloud run deploy handson-app-src \
 >
 > **詰まったら:** `${REGION}` が空だとエラーになります。Cloud Shell を開き直した場合は [4章の「0. 環境変数の準備」](../04_deploy/README.md)を再実行してください。`cd ~/cloudrun-handson/app` の位置で実行しているか、`ls` に `package.json` があるかも確認してください。失敗したら**同じコマンドをもう一度実行して構いません**(何度実行しても新しいリビジョンが増えるだけです)。デプロイできたかどうかは `gcloud run services list --region ${REGION}` で確認できます。
 
-このディレクトリには Dockerfile があるのでそれが使われますが、**Dockerfile を消しても動きます**。その場合は [Google Cloud の Buildpacks](https://cloud.google.com/docs/buildpacks/nodejs) が `package.json` を見て「Node.js アプリだな」と判断し、`scripts.start`(この教材では `node src/index.ts`)を起動コマンドにした良い感じのイメージを自動生成します。
+<!-- 引用ブロックの結合を防ぐ区切り -->
+
+> **[要作図] 図3b: 図3 との差分(ソースデプロイ)**
+>
+> - **目的:** 4章の図3 と同じ構図を使い、`docker build` と `docker push` の2ステップがプラットフォーム側へ移ったことを差分として見せる
+> - **描き方:** 図3 のレイアウトをそのまま流用し、`docker build` / `docker push` の2箱を破線で囲んで「Cloud Build が代行」とラベルを付ける。参加者が打つコマンドは `gcloud run deploy --source .` の1つだけになることを強調する
+> - **要点:** 図3(4章)と**同一のレイアウト・同一の箱の位置**にすること。並べて見せて差分が読めることが唯一の要件
+> - **完成後の扱い:** `09_source_deploy/imgs/source-deploy-diff.png` として保存し、**見出しの直下**に `![ソースデプロイでプラットフォーム側へ移るステップ](imgs/source-deploy-diff.png)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
+
+このディレクトリには Dockerfile があるのでそれが使われますが、**Dockerfile を消しても動きます**。  
+その場合は [Google Cloud の Buildpacks](https://cloud.google.com/docs/buildpacks/nodejs) が `package.json` を見て「Node.js アプリだな」と判断し、`scripts.start`(この教材では `node src/index.ts`)を起動コマンドにした良い感じのイメージを自動生成します。
 
 > **成功していれば:** Dockerfile を消して同じ `gcloud run deploy handson-app-src --source . --region ${REGION} --allow-unauthenticated` を実行しても、やはり数分後に同じ画面が返ってきます。切り替わったかどうかは出力の1行目で分かります。Dockerfile があるときは `Building using Dockerfile and deploying container to Cloud Run service [handson-app-src]`、消したあとは `Building using Buildpacks and deploying container to Cloud Run service [handson-app-src]` になります。
 >
@@ -38,7 +49,8 @@ gcloud run deploy handson-app-src \
 
 ## では、なぜ今日 Dockerfile から始めたのか
 
-「最初からこれを教えてくれれば良かったのに」と思うかもしれません。でも順番には意図があります。
+「最初からこれを教えてくれれば良かったのに」と思うかもしれません。  
+でも順番には意図があります。
 
 - ソースデプロイは**中でやっていることが今日の手順そのもの**です(build → push → deploy)。仕組みを知った上で使う自動化と、知らずに使う魔法は違います
 - 実務では Dockerfile を書く場面が必ず来ます(依存OSパッケージ、マルチステージビルド、社内ベースイメージ…)
@@ -59,6 +71,8 @@ docker build && push && deploy        # 全部自分で制御(今日やったこ
 2. **イメージの不変性がプラットフォームまで貫かれている** — リビジョン、ロールバック、カナリア、タグ付きURL
 3. **従量課金と常駐のダイヤルを回せる** — スケールtoゼロ、concurrency、min/max-instances
 
-AWS に帰っても、この目線は使えます。「この構成、Cloud Run 的な発想ならどう簡単にできるか?」「App Runner や Lambda で十分では?」——別のクラウドを知ることは、いま使っているクラウドをより良く使うことにつながります。
+AWS に帰っても、この目線は使えます。  
+「この構成、Cloud Run 的な発想ならどう簡単にできるか?」「App Runner や Lambda で十分では?」——別のクラウドを知ることは、いま使っているクラウドをより良く使うことにつながります。
 
-時間に余裕があれば[発展編](../10_advanced/README.md)へ。終わったら必ず[後片付け](../99_cleanup/README.md)をしてください。
+時間に余裕があれば[発展編](../10_advanced/README.md)へ。  
+終わったら必ず[後片付け](../99_cleanup/README.md)をしてください。

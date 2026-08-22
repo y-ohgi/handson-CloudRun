@@ -6,7 +6,8 @@
 
 ## なぜ Cloud Run で WebSocket が動くのか
 
-Cloud Run のインスタンスは「普通のHTTPサーバーのプロセス」なので、コネクションを張りっぱなしにできます。特別な設定はほぼ不要で、注意点は3つだけです:
+Cloud Run のインスタンスは「普通のHTTPサーバーのプロセス」なので、コネクションを張りっぱなしにできます。  
+特別な設定はほぼ不要で、注意点は3つだけです:
 
 - リクエストタイムアウト(デフォルト5分、最大60分)がコネクションにも適用される → `--timeout` を伸ばす。切断時はクライアントが再接続する設計にする
 - 接続はインスタンスのメモリに紐づく → 複数インスタンス間で状態を共有するには Memorystore (Redis) 等が必要
@@ -14,7 +15,8 @@ Cloud Run のインスタンスは「普通のHTTPサーバーのプロセス」
 
 ## デプロイ手順(講師 or 自分でやりたい人向け)
 
-コードはこのリポジトリの [`code/websocket/`](https://github.com/y-ohgi/handson-CloudRun/tree/main/code/websocket) にあります。本編と同じ TypeScript + Hono 製(`@hono/node-ws` を追加)の小さなチャットサーバーで、受け取ったメッセージを接続中の全クライアントにブロードキャストするだけのものです。
+コードはこのリポジトリの [`code/websocket/`](https://github.com/y-ohgi/handson-CloudRun/tree/main/code/websocket) にあります。  
+本編と同じ TypeScript + Hono 製(`@hono/node-ws` を追加)の小さなチャットサーバーで、受け取ったメッセージを接続中の全クライアントにブロードキャストするだけのものです。
 
 ```bash
 cd ~/cloudrun-handson
@@ -38,11 +40,12 @@ gcloud run deploy handson-chat \
 <!-- 引用ブロックの結合を防ぐ区切り -->
 
 > **成功していれば:** デプロイの最後に `Service URL: https://handson-chat-....run.app` が表示され、`gcloud run services list --region ${REGION}` に `handson-chat` が並びます。
-> **詰まったら:** イメージのパスが `-docker.pkg.dev//` のように途中が空になっている場合は、環境変数が消えています。4章の「0. 環境変数の準備」を再実行してから docker build からやり直してください。`docker push` が `denied` や `unauthorized` で失敗する場合は `gcloud auth configure-docker ${REGION}-docker.pkg.dev` を実行してから push を再試行します。デプロイは同じコマンドを何度実行しても新しいリビジョンが作られるだけなので、失敗したらそのまま再実行して構いません。自分のデプロイがうまくいかないときは、講師が画面に映しているURLで体験に参加してください(この節の学習内容は変わりません)。
+> **詰まったら:** イメージのパスが `-docker.pkg.dev//` のように途中が空になっている場合は、環境変数が消えています。4章の「0. 環境変数の準備」を再実行し、`cd ~/cloudrun-handson/handson-CloudRun/code/websocket` に移動してから docker build からやり直してください。`docker push` が `denied` や `unauthorized` で失敗する場合は `gcloud auth configure-docker ${REGION}-docker.pkg.dev` を実行してから push を再試行します。デプロイは同じコマンドを何度実行しても新しいリビジョンが作られるだけなので、失敗したらそのまま再実行して構いません。自分のデプロイがうまくいかないときは、講師が画面に映しているURLで体験に参加してください(この節の学習内容は変わりません)。
 
 ## 体験する
 
-発行されたURLを全員で開き、メッセージを送り合ってみてください。**リアルタイムに全員の画面へ配信されます。**
+発行されたURLを全員で開き、メッセージを送り合ってみてください。  
+**リアルタイムに全員の画面へ配信されます。**
 
 いま起きていることを整理すると:
 
