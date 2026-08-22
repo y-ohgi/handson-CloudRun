@@ -14,9 +14,12 @@ let ng = 0;
 const worker = async () => {
   while (Date.now() < until) {
     try {
-      const res = await fetch(url);
+      // タイムアウトを入れないと、サーバー無応答時にワーカーが張り付いて
+      // 指定した継続秒数を過ぎても終わらなくなる
+      const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
       await res.arrayBuffer(); // レスポンスを読み切って接続を再利用する
-      res.ok ? ok++ : ng++;
+      if (res.ok) ok++;
+      else ng++;
     } catch {
       ng++;
     }
