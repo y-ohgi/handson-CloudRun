@@ -86,6 +86,13 @@ gcloud run deploy handson-app \
 
 コンソールの [Cloud Run のページ](https://console.cloud.google.com/run) も開いてみてください。サービスの一覧、リビジョン、メトリクス、ログがすべて1画面に集約されています。
 
+> **[要作図] 図3: この章でやったことの流れ**
+>
+> - **目的:** 4章で打った3コマンドが、どこからどこへ何を運んだのかを1枚で振り返れるようにする。5章以降で何度も戻ってくる基準図になる
+> - **描く流れ:** 手元のコード(`~/cloudrun-handson/app`)→ `docker build` でイメージ →`docker push` で Artifact Registry → `gcloud run deploy` で Cloud Run サービス → `*.run.app` の HTTPS URL
+> - **各ステップに添える情報:** そのステップで登場する Google Cloud のサービス名と、AWS での対応(Artifact Registry ↔ ECR など)
+> - **補足:** Cloud Run の箱の中に「リビジョン 00001」を小さく描いておくと、5章のリビジョンの話に自然につながる。9章のソースデプロイでは `docker build` と `docker push` の2ステップがプラットフォーム側へ移るので、**同じ絵を9章で再利用して差分を見せられる形**にしておきたい
+
 ## ふりかえり: 何をしなかったか
 
 ここまでで「したこと」は リポジトリ作成 → push → deploy の3コマンドです。それより「**しなかったこと**」に注目してください。
