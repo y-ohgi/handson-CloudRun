@@ -29,6 +29,9 @@ gcloud run deploy handson-app \
 
 ブラウザをリロードしてください。**画面が赤くなり、Revision が `handson-app-00002-xxx` に変わっていれば成功です。** ダウンタイムなしで切り替わったことにも注目してください。
 
+> **成功していれば:** デプロイの出力に `revision [handson-app-00002-xxx] has been deployed and is serving 100 percent of traffic.` と表示され、`gcloud run revisions list --service handson-app --region ${REGION}` の行が2つになります。
+> **詰まったら:** 画面が赤くならない場合、まずブラウザのスーパーリロード(Cmd+Shift+R / Ctrl+Shift+R)を試してください。それでも青いままなら `src/index.ts` の書き換えが保存されていない可能性があるので、ファイルを保存し直して `docker build` から再実行します。`docker build` が `no such file or directory` で失敗する場合は `cd ~/cloudrun-handson/app` を忘れています。`invalid reference format` や `-docker.pkg.dev//` のようなパスになる場合は Cloud Shell の再接続で環境変数が消えているので、4章の「0. 環境変数の準備」を再実行してください(`echo ${IMAGE}` で確認できます)。
+
 ## 3. リビジョンの一覧を見る
 
 ```bash
@@ -45,6 +48,16 @@ gcloud run revisions list --service handson-app --region ${REGION}
 
 AWS ならどうしますか? 前のタスク定義を指定してサービス更新、デプロイが走るのを待つ——数分かかります。Cloud Run では、**すでに存在する v1 のリビジョンにトラフィックを振り向けるだけ**です。新しいデプロイは走りません。
 
+> **[要作図] 図4: ロールバックはトラフィックの向きを変えるだけ**
+>
+> - **目的:** 「リビジョンは不変で、動くのはトラフィックだけ」を理解させる。この章の核心
+> - **描き方:** 横に3コマ並べた時系列。各コマに「サービスURL」が1つあり、そこから下のリビジョン群へ矢印が伸びる構図にする
+>   1. v1 デプロイ直後 — リビジョン 00001 のみ、矢印 100%
+>   2. v2 デプロイ後 — 00001 と 00002 が**両方存在**し、矢印は 00002 へ 100%
+>   3. ロールバック後 — リビジョンは2つのまま、矢印だけ 00001 へ戻る
+> - **要点:** 3コマを通じて**リビジョンの箱は消えず増えるだけ**であることを見せる。動くのは矢印だけ。ここが AWS のローリングデプロイとの決定的な違い
+> - **注意:** 番号は `00001` / `00002` と書いてよいが、実際の採番は連番にならず飛ぶことがある(この章の後半で触れている)。図では概念として扱う
+
 まず v1 のリビジョン名を確認して:
 
 ```bash
@@ -59,9 +72,12 @@ gcloud run services update-traffic handson-app \
   --to-revisions handson-app-00001-xxx=100
 ```
 
-ブラウザをリロードしてください。**一瞬で青(v1)に戻ります。**
+数秒待ってからブラウザをリロードしてください。**青(v1)に戻ります。** トラフィックの切り替えは瞬時ではないため、まだ赤のままなら少し待って再読み込みしてください。
 
-コンソールでも同じことができます: [Cloud Run](https://console.cloud.google.com/run) → サービス → 「リビジョン」タブ → 対象リビジョンのメニューから「このリビジョンにトラフィックを移行」。障害対応の現場では GUI でポチッと戻せるのは心強いです。
+コンソールでも同じことができます: [Cloud Run](https://console.cloud.google.com/run) → サービス → 「リビジョン」タブ → 対象リビジョンの右側にある省略記号アイコンから「トラフィックを管理」。障害対応の現場では GUI でポチッと戻せるのは心強いです。
+
+> **成功していれば:** コマンドの出力に `100% handson-app-00001-xxx` のようなトラフィック割り当てが表示され、数秒後のリロードで画面が青(v1)に戻ります。割り当ての現状は `gcloud run services describe handson-app --region ${REGION}` の出力の Traffic 欄で確認できます。
+> **詰まったら:** `Revision 'handson-app-00001-xxx' does not exist` と出た場合は、リビジョン名をそのままコピーしてしまっています。`gcloud run revisions list --service handson-app --region ${REGION} --format 'value(metadata.name)'` で実際の名前を取得し、`00001` を含む行の値に置き換えてください。まだ赤いままの場合は、トラフィックの切り替えは瞬時ではないので10〜20秒待ってからスーパーリロードします。それでも変わらなければ、上の `describe` で Traffic 欄が意図した割り当てになっているかを確認してください。
 
 ## 5. 次章に備えて v2 に戻しておく
 
@@ -74,6 +90,9 @@ gcloud run services update-traffic handson-app \
 ```
 
 ブラウザで赤(v2)に戻ったことを確認してください。
+
+> **成功していれば:** Traffic の割り当てが `100% LATEST (currently handson-app-00002-xxx)` になり、リロードで赤(v2)が表示されます。**次章はこの状態(最新リビジョンに100%)から始めるので、ここまでは必ず揃えてください。**
+> **詰まったら:** 赤に戻らない場合は `gcloud run services update-traffic handson-app --region ${REGION} --to-latest` をもう一度実行してください(何度実行しても同じ結果になる冪等なコマンドです)。それでも青いままなら、v2 のリビジョンが作られていない可能性があるため `gcloud run revisions list --service handson-app --region ${REGION}` で2つあるかを確認し、1つしかなければ「2. ビルドして push して deploy」からやり直します。
 
 ## まとめ
 

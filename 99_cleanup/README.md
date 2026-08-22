@@ -14,13 +14,17 @@ gcloud projects delete ${PROJECT_ID}
 
 ## 個別に削除する場合
 
-既存プロジェクトを使った場合はこちら。
+既存プロジェクトを使った場合はこちら。Cloud Shell を開き直していると `${REGION}` などの環境変数が消えているので、先に [4章の「環境変数の準備」](../04_deploy/README.md)を実行し直してください。
 
 ```bash
 # Cloud Run サービス
 gcloud run services delete handson-app --region ${REGION} --quiet
 gcloud run services delete handson-app-src --region ${REGION} --quiet   # 9章を実施した場合
 gcloud run services delete handson-chat --region ${REGION} --quiet      # 10-2を実施した場合
+
+# Cloud Scheduler とサービスアカウント(10-3を実施した場合)
+gcloud scheduler jobs delete handson-job-schedule --location ${REGION} --quiet
+gcloud iam service-accounts delete "handson-scheduler@${PROJECT_ID}.iam.gserviceaccount.com" --quiet
 
 # Cloud Run ジョブ(10-3を実施した場合)
 gcloud run jobs delete handson-job --region ${REGION} --quiet
@@ -31,9 +35,18 @@ gcloud pubsub topics delete handson-topic
 
 # Artifact Registry(イメージの保管料がかかるため忘れずに)
 gcloud artifacts repositories delete ${REPO} --location ${REGION} --quiet
+# 9章のソースデプロイは cloud-run-source-deploy というリポジトリを自動で作るため、こちらも削除します
+gcloud artifacts repositories delete cloud-run-source-deploy --location ${REGION} --quiet
+
+# 9章のソースデプロイは Cloud Build 用のバケットも自動で作ります(アップロードしたソースが残ります)
+gcloud storage rm --recursive gs://${PROJECT_ID}_cloudbuild --quiet
 ```
 
-> **課金ポイントの整理:** Cloud Run はスケールtoゼロなので、`min-instances` を0に戻してあれば放置してもほぼ課金されません。継続課金になり得るのは **Artifact Registry のストレージ**(無料枠0.5GB超過分)と **min-instances** です。
+> このバケットは `--region` に追従せず US マルチリージョンに作られるので、`gcloud storage ls` で探すときはリージョンで絞らないでください。
+
+> **課金ポイントの整理:** Cloud Run はスケールtoゼロなので、`min-instances` を0に戻してあれば放置してもほぼ課金されません(1以上のままだとアイドル状態でも課金され続けます)。継続課金になり得るのは **Artifact Registry のストレージ**(無料枠は課金アカウントあたり0.5GB/月)、**min-instances**、そして **Cloud Scheduler のジョブ**(無料枠は課金アカウントあたり3ジョブ/月)です。
+
+> **講師の方へ:** 当日のサポートアプリ(`handson-support`)は上の一覧に含まれていません。`--min-instances 1` で動かしているためアイドル状態でも課金が続くので、リポジトリの `support/README.md` の「後片付け」節も実行してください(受講者の方はこの節は不要です)。
 
 ## 消し忘れが心配な人へ
 

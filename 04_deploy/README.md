@@ -26,11 +26,14 @@ gcloud artifacts repositories create ${REPO} \
   --description="Cloud Run handson"
 ```
 
-docker コマンドが GAR に push できるよう、認証ヘルパーを設定します(ECR の `aws ecr get-login-password` に相当。こちらは一度設定すれば期限切れがありません)。
+docker コマンドが GAR に push できるよう、認証ヘルパーを設定します(ECR の `aws ecr get-login-password` に相当。こちらは一度設定すれば、push のたびにトークンを取り直す必要はありません)。
 
 ```bash
 gcloud auth configure-docker ${REGION}-docker.pkg.dev
 ```
+
+> **成功していれば:** リポジトリ作成が `Created repository [handson].` で終わり、`gcloud artifacts repositories list --location ${REGION}` に `handson` が1行表示されます。認証ヘルパーの設定は `Docker configuration file updated.` のようなメッセージで終わります。
+> **詰まったら:** `ALREADY_EXISTS` は作成済みという意味なので、そのまま次へ進んで構いません。`PERMISSION_DENIED` や API 無効のエラーが出た場合は `gcloud services enable artifactregistry.googleapis.com run.googleapis.com` を実行してから作成コマンドを再実行してください。`${REPO}` や `${REGION}` が空文字で展開されている(コマンドが `create --location=` のように見える)場合は、Cloud Shell の再接続で環境変数が消えています。「0. 環境変数の準備」を再実行してください。
 
 ## 2. イメージにタグを付けて push する
 
@@ -50,6 +53,9 @@ gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REP
 
 [コンソールの Artifact Registry](https://console.cloud.google.com/artifacts) からも見えます。
 
+> **成功していれば:** `docker push` の最後が `v1: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list` の出力に `.../handson/app` の行が1つ表示されます。
+> **詰まったら:** `An image does not exist locally with the tag: handson-app` と出た場合は2章のイメージが手元にありません。`cd ~/cloudrun-handson/app && docker build -t handson-app:v1 .` でビルドし直してから、タグ付けと push をやり直してください(手元のイメージ一覧は `docker images` で確認できます)。`denied` や `unauthorized` が出る場合は `gcloud auth configure-docker ${REGION}-docker.pkg.dev` を実行してから `docker push ${IMAGE}:v1` を再実行します。`echo ${IMAGE}` が空、または `-docker.pkg.dev//` のように途中が抜けている場合は「0. 環境変数の準備」を再実行してください。
+
 ## 3. Cloud Run にデプロイする
 
 いよいよ本番です。**このコマンド1つで、ECS なら ALB・ターゲットグループ・ACM 証明書・サービス・タスク定義を組み立てていた作業がすべて終わります。**
@@ -64,7 +70,10 @@ gcloud run deploy handson-app \
 - `handson-app` がサービス名になります
 - `--allow-unauthenticated` は「認証なしで公開」。デフォルトは IAM 認証必須(=閉じている)で、AWS と逆のデフォルトです
 
-30秒ほどで完了し、`Service URL: https://handson-app-xxxxx.a.run.app` が表示されます。
+30秒ほどで完了し、`Service URL: https://handson-app-<プロジェクト番号>.asia-northeast1.run.app` のような URL が表示されます。
+
+> **成功していれば:** 出力の最後に `Service [handson-app] revision [handson-app-00001-xxx] has been deployed and is serving 100 percent of traffic.` と Service URL が表示されます。URL は `サービス名-プロジェクト番号.リージョン.run.app` という決まった形式です。あとから `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` でいつでも取り直せますが、こちらは `handson-app-<ランダム文字列>-an.a.run.app` という古い形式の URL を返します。**どちらも同じサービスを指す有効な URL** なので、見た目が違っても気にしなくて大丈夫です(6章以降では `describe` で取得した URL をそのまま使います)。
+> **詰まったら:** まず `gcloud run services list --region ${REGION}` でサービスが作られているか確認してください。作られていなければエラーの原因を切り分けます。`Image not found` や `manifest unknown` の場合は「2. イメージにタグを付けて push する」の push が完了していないので、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}` で `app:v1` の存在を確認してください。`--region` や `--image` が空で怒られる場合は「0. 環境変数の準備」を再実行します。設定を間違えた場合も、同じ `gcloud run deploy` コマンドを何度でも実行し直して大丈夫です(新しいリビジョンが作られて上書きされます)。
 
 ## 4. アクセスして確認する
 
@@ -76,6 +85,13 @@ gcloud run deploy handson-app \
 - URL が最初から **HTTPS**。証明書の発行も更新も何もしていない
 
 コンソールの [Cloud Run のページ](https://console.cloud.google.com/run) も開いてみてください。サービスの一覧、リビジョン、メトリクス、ログがすべて1画面に集約されています。
+
+> **[要作図] 図3: この章でやったことの流れ**
+>
+> - **目的:** 4章で打った3コマンドが、どこからどこへ何を運んだのかを1枚で振り返れるようにする。5章以降で何度も戻ってくる基準図になる
+> - **描く流れ:** 手元のコード(`~/cloudrun-handson/app`)→ `docker build` でイメージ →`docker push` で Artifact Registry → `gcloud run deploy` で Cloud Run サービス → `*.run.app` の HTTPS URL
+> - **各ステップに添える情報:** そのステップで登場する Google Cloud のサービス名と、AWS での対応(Artifact Registry ↔ ECR など)
+> - **補足:** Cloud Run の箱の中に「リビジョン 00001」を小さく描いておくと、5章のリビジョンの話に自然につながる。9章のソースデプロイでは `docker build` と `docker push` の2ステップがプラットフォーム側へ移るので、**同じ絵を9章で再利用して差分を見せられる形**にしておきたい
 
 ## ふりかえり: 何をしなかったか
 

@@ -10,22 +10,29 @@ Google Cloud のマネージドサービスは、どちらかというと **SaaS
 
 ### 例: コンテナを1つ、HTTPSで公開するまで
 
-| | AWS (ECS/Fargate) | Google Cloud (Cloud Run) |
+| | AWS (ECS on Fargate + ALB) | Google Cloud (Cloud Run) |
 |---|---|---|
 | ネットワーク | VPC・サブネット・SG を用意 | 不要(必要なら後から VPC 接続) |
 | 負荷分散 | ALB + ターゲットグループ + リスナー | 不要(組み込み) |
 | TLS証明書 | ACM で発行し ALB に紐付け | 不要(`*.run.app` のHTTPS URLが自動発行) |
-| オートスケール | Application Auto Scaling を設定 | デフォルトで有効(0〜自動) |
+| オートスケール | Application Auto Scaling を設定 | デフォルトで有効(0台〜既定100台) |
 | ログ | awslogs ドライバや FireLens を設定 | 不要(stdout が自動で Cloud Logging へ) |
 | デプロイ | タスク定義 + サービス更新 | `gcloud run deploy` 1コマンド |
 
 どちらが優れているという話ではありません。細かく制御したいなら AWS 的なアプローチが強く、素早く価値を出したいなら Google Cloud 的なアプローチが強い。**両方の目線を持っていると、状況に応じて最適な選択ができる**——それが今日のゴールです。
 
+> **[要作図] 図1: 消える意思決定の数**
+>
+> - **目的:** 教材全体の主題である「ビルディングブロック vs SaaS的アプローチ」を、部品の個数の差として一目で見せる。この図がこの教材でいちばん重要
+> - **左(AWS):** VPC → サブネット → セキュリティグループ → ECS クラスタ → タスク定義 → Fargate → ALB → リスナー → ターゲットグループ → ACM → Application Auto Scaling を、線でつないだ構成図として描く。**箱の多さそのものがメッセージ**
+> - **右(Cloud Run):** 箱は「Cloud Run サービス」1つだけ。そこから `*.run.app` の HTTPS URL が出ている。左で描いた箱のうち消えたものを薄いグレーの点線で重ねて「プラットフォーム側に移った」と示すと対比が効く
+> - **注意:** 「Google Cloud のほうが優れている」と読ませない。図の下に「自由度をプラットフォームへ渡した結果」という趣旨のキャプションを添えるとトレードオフとして読める
+
 ## アカウント構造の違い
 
 | 概念 | AWS | Google Cloud |
 |---|---|---|
-| 分離の単位 | アカウント(Organizationsで束ねる) | **プロジェクト**(組織の下に複数作る) |
+| 分離の単位 | アカウント(Organizations の OU で階層化) | **プロジェクト**(組織 > フォルダ > プロジェクトの階層。フォルダは任意) |
 | リージョンの扱い | コンソールでリージョンを切り替える | リソース作成時に指定(コンソールは全リージョン横断) |
 | 権限の主体 | IAMユーザー / ロール | Google アカウント / **サービスアカウント** |
 | API | 常に有効 | プロジェクトごとに**明示的に有効化** |
@@ -40,9 +47,9 @@ Google Cloud のマネージドサービスは、どちらかというと **SaaS
 
 | Google Cloud | AWSでいうと | 補足 |
 |---|---|---|
-| **Cloud Run** | App Runner + Fargate + Lambda | どれとも微妙に違う。次章で詳しく |
+| **Cloud Run** | App Runner + ECS on Fargate + Lambda | どれとも微妙に違う。次章で詳しく |
 | **Artifact Registry (GAR)** | ECR | コンテナ以外(npm, Maven等)も置ける |
-| **Cloud Shell** | CloudShell | エディタ付き・Docker が動く |
+| **Cloud Shell** | CloudShell | エディタ付き・Docker が動く(AWS CloudShell も同様。ただし Docker は対応リージョン限定) |
 | **Cloud Build** | CodeBuild | ソースデプロイの裏側で動く |
 | **Cloud Logging** | CloudWatch Logs | 設定不要で stdout を収集 |
 | **Cloud Monitoring** | CloudWatch | メトリクスはデフォルトで収集済み |
@@ -54,10 +61,10 @@ Google Cloud のマネージドサービスは、どちらかというと **SaaS
 |---|---|---|
 | Compute Engine | EC2 | |
 | GKE | EKS | Kubernetes 発祥の地だけあり完成度が高い |
-| Cloud Functions (Cloud Run functions) | Lambda | 現在は Cloud Run 基盤に統合された |
+| Cloud Run functions(旧 Cloud Functions) | Lambda | 現在は Cloud Run 基盤に統合され、名称も Cloud Run functions へ |
 | Cloud Storage | S3 | |
 | Cloud SQL | RDS | |
-| Spanner | (相当なし / 強いて言えば Aurora) | グローバル分散RDB |
+| Spanner | Aurora DSQL(2025年5月GA) | グローバル分散RDB。強整合な分散SQLという点で近い |
 | BigQuery | Redshift + Athena | Google Cloud 最大の看板サービス |
 | Eventarc | EventBridge | 各サービスのイベントを Cloud Run へ配送 |
 | Cloud Tasks | SQS(遅延キュー用途) | HTTPターゲットに直接push |
