@@ -56,8 +56,6 @@ gcloud storage rm --recursive gs://${PROJECT_ID}_cloudbuild --quiet
 
 [課金レポート](https://console.cloud.google.com/billing)で数日後に確認するか、予算アラート(Budgets & alerts)を設定しておくと安心です。AWS の Budgets と同じ感覚で使えます。
 
----
-
 ## 続けて学びたい人へ
 
 - [Cloud Run 公式ドキュメント](https://cloud.google.com/run/docs?hl=ja) — 品質が高く日本語も充実

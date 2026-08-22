@@ -109,7 +109,7 @@ node ~/load.mjs ${URL}/heavy 50 30
 リクエスト数・レイテンシ(p50/p95/p99)・CPU使用率も**何も設定していないのに**最初から揃っています。
 
 **手元で:** `/api` はインスタンスごとに違う `instance` ID を返します。  
-何台に分散しているか数えてみましょう。
+何台に分散しているか数えてください。
 
 ```bash
 for i in $(seq 1 30); do curl -s ${URL}/api | jq -r .instance; done | sort | uniq -c

@@ -1,6 +1,6 @@
 # 4. Cloud Runへデプロイする
 
-2章で作ったイメージを Artifact Registry(GAR)に push し、Cloud Run にデプロイして、世界中からアクセスできる HTTPS URL を手に入れます。
+2章で作ったイメージを Artifact Registry (GAR)に push し、Cloud Run にデプロイして、世界中からアクセスできる HTTPS URL を手に入れます。
 
 ## 0. 環境変数の準備
 
@@ -46,15 +46,15 @@ docker tag handson-app:v1 ${IMAGE}:v1
 docker push ${IMAGE}:v1
 ```
 
-push できたか確認してみましょう。
+push できたか確認してください。
 
 ```bash
-gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}
+gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags
 ```
 
 [コンソールの Artifact Registry](https://console.cloud.google.com/artifacts) からも見えます。
 
-> **成功していれば:** `docker push` の最後が `v1: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list` の出力に `.../handson/app` の行が1つ表示されます。
+> **成功していれば:** `docker push` の最後が `v1: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list` の出力に `.../handson/app` の行が1つ表示され、`TAGS` 列が `v1` になっています。
 > **詰まったら:** `An image does not exist locally with the tag: handson-app` と出た場合は2章のイメージが手元にありません。`cd ~/cloudrun-handson/app && docker build -t handson-app:v1 .` でビルドし直してから、タグ付けと push をやり直してください(手元のイメージ一覧は `docker images` で確認できます)。`denied` や `unauthorized` が出る場合は `gcloud auth configure-docker ${REGION}-docker.pkg.dev` を実行してから `docker push ${IMAGE}:v1` を再実行します。`echo ${IMAGE}` が空、または `-docker.pkg.dev//` のように途中が抜けている場合は「0. 環境変数の準備」を再実行してください。
 
 ## 3. Cloud Run にデプロイする
@@ -82,7 +82,7 @@ gcloud run deploy handson-app \
 表示された URL をブラウザで開いてください。  
 **2章で Cloud Shell の中で見たのと同じ青い画面が、今度は本物のインターネット越しに表示されます。**
 
-2章との違いを見てみましょう:
+2章との違いを見てください:
 
 - `Service` が `handson-app` に、`Revision` が `handson-app-00001-xxx` になっている(Cloud Run が注入する環境変数 `K_SERVICE` / `K_REVISION` をアプリが表示している)
 - URL が最初から **HTTPS**。証明書の発行も更新も何もしていない
@@ -93,7 +93,7 @@ gcloud run deploy handson-app \
 > **[要作図] 図3: この章でやったことの流れ**
 >
 > - **目的:** 4章で打った3コマンドが、どこからどこへ何を運んだのかを1枚で振り返れるようにする。5章以降で何度も戻ってくる基準図になる
-> - **描く流れ:** 手元のコード(`~/cloudrun-handson/app`)→ `docker build` でイメージ →`docker push` で Artifact Registry → `gcloud run deploy` で Cloud Run サービス → `*.run.app` の HTTPS URL
+> - **描き方:** 手元のコード(`~/cloudrun-handson/app`)→ `docker build` でイメージ →`docker push` で Artifact Registry → `gcloud run deploy` で Cloud Run サービス → `*.run.app` の HTTPS URL
 > - **各ステップに添える情報:** そのステップで登場する Google Cloud のサービス名と、AWS での対応(Artifact Registry ↔ ECR など)
 > - **補足:** Cloud Run の箱の中に「リビジョン 00001」を小さく描いておくと、5章のリビジョンの話に自然につながる
 > - **レイアウトの制約:** 9章のソースデプロイでは `docker build` と `docker push` の2ステップがプラットフォーム側へ移ります。9章の図3b と**並べて差分が読める**ように、箱の位置とレイアウトを固定してください
@@ -101,7 +101,7 @@ gcloud run deploy handson-app \
 
 ## ふりかえり: 何をしなかったか
 
-ここまでで「したこと」は リポジトリ作成 → push → deploy の3コマンドです。  
+ここまでで「したこと」はリポジトリ作成 → push → deploy の3コマンドです。  
 それより「**しなかったこと**」に注目してください。
 
 - VPC・サブネット・セキュリティグループを作らなかった

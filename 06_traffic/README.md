@@ -69,7 +69,7 @@ gcloud run services update-traffic handson-app \
   --to-tags staging=10
 ```
 
-確認してみましょう。  
+確認してください。  
 `/api` エンドポイントを20回叩いて、どのリビジョンが応答したかを集計します。
 
 ```bash

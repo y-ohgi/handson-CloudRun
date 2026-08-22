@@ -40,7 +40,7 @@ gcloud run jobs create handson-job \
 gcloud run jobs execute handson-job --region ${REGION} --wait
 ```
 
-ログを見てみましょう:
+ログを見てください:
 
 ```bash
 gcloud run jobs logs read handson-job --region ${REGION}
