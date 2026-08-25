@@ -83,6 +83,7 @@
 
 - `fact-check/03_cloudrun.md`: 完成。判定は「正しい23件 / 要修正0件 / 未確認0件」で、`03_cloudrun/README.md` の本文変更なし。§3.4 の `T-01` / `T-02` / `T-03` / `F-01`〜`F-04` / `F-06`〜`F-10` / `A-01`〜`A-08` はこのフラグメントで決着済み(既に本文へ反映されていたことを一次情報で確認した結果、追加修正が不要だった)。SC-002 の判定時は、当該フラグメントの23件に §3.4 の対象IDが漏れなく含まれているかを突き合わせる
 - **2026-08-19 T026 時点: 「予定」の行は0件。** 上表17ファイルすべてが作成済みで、加えて実機検証4件(`fact-check/live-main-path.md` / `live-source-deploy.md` / `live-jobs.md` / `live-websocket.md`)と AWS 比較1件(`fact-check/aws-comparisons.md`)が追加されている。件数は T026 で判定表の行を機械的に数え直した実測値
+- **2026-08-25 追記(index の補正)**: 上記の集計から2ファイルが漏れていた。`fact-check/live-dryrun-full.md`(通しリハーサル、実行日 2026-08-22)は T026 の集計時に存在していたが本 index に載っていない。加えて `fact-check/aws-ecs-express-mode.md`(App Runner 提供終了と ECS Express Mode、確認日 2026-08-25)を新設した。**章別ではなく章をまたぐ受け皿として `aws-comparisons.md` と同じ位置づけとする。** `ls specs/001-verify-handson-content/fact-check/*.md | wc -l` による実測は **23ファイル**(内訳: 章別15 / 章横断2 / コード1 / 実機検証5)
 
 ---
 
@@ -108,8 +109,8 @@
 
 | # | location | claim | 判定(レポート) | source_url | スコープ |
 |---|---|---|---|---|---|
-| P-10 | p.8 サービス対応表 | 対応表は「最初の辞書」として残しつつ、より重要な比較を「AWSで身についた反射 → Cloud Runでの体験 → 教えるべき差」という**設計判断表**へ移す | 改善提案(中優先) | https://cloud.google.com/blog/products/gcp/google-cloud-iam-for-aws-users/ | スコープ外(今回不採用): 事実の誤りではなく提示方法の変更で、FR-013「修正は各章の記述内容(事実関係)に限定」の外 |
-| P-18b | p.8 サービス対応表 | 製品名の1対1対応より、Organization → Folder → Project → Resource の階層・policy inheritance・Projectというtrust boundaryをAWS利用者の既存知識へ接続する方式が有効 | 改善提案 | https://cloud.google.com/blog/products/gcp/google-cloud-iam-for-aws-users/ | スコープ外(今回不採用): 章の構成追加であり事実関係の修正ではない。ただし「アカウント構造の違い」表の既存記載の事実確認は §4 U-04〜U-06 で今回対応 |
+| P-10 | p.8 サービス対応表 | 対応表は「最初の辞書」として残しつつ、より重要な比較を「AWSで身についた反射 → Cloud Runでの体験 → 教えるべき差」という**設計判断表**へ移す | 改善提案(中優先) | https://cloud.google.com/blog/products/gcp/google-cloud-iam-for-aws-users/ | スコープ外(今回不採用): 事実の誤りではなく提示方法の変更で、FR-013「修正は各章の記述内容(事実関係)に限定」の外 → **2026-08-25 再判定: 採用(FR-013a)。§7.1 参照。当初の不採用理由は取り消さず、前提が変わったことによる再判定として扱う** |
+| P-18b | p.8 サービス対応表 | 製品名の1対1対応より、Organization → Folder → Project → Resource の階層・policy inheritance・Projectというtrust boundaryをAWS利用者の既存知識へ接続する方式が有効 | 改善提案 | https://cloud.google.com/blog/products/gcp/google-cloud-iam-for-aws-users/ | スコープ外(今回不採用): 章の構成追加であり事実関係の修正ではない。ただし「アカウント構造の違い」表の既存記載の事実確認は §4 U-04〜U-06 で今回対応 → **2026-08-25 再判定: 一部採用(FR-013a)。比較軸の付け替えのみ採用し、階層・policy inheritance の節の新設は引き続き不採用。§7.1 参照** |
 
 > レポートは `01_aws_and_googlecloud` の個別の事実誤りを1件も指摘していない(レポートは主に `03_cloudrun` のAWS比較表を対象にしている)。したがって本章は §4 の追加未確認項目が事実確認の主体になる。
 
@@ -135,7 +136,7 @@
 | A-05 | p.14 | App Runner「WebSocket 不可(×)」 | **未確認**と表記するのが安全。現行developer guideはHTTP/1.0・HTTP/1.1と120秒timeoutを記載するが、2026年時点で「WebSocketを正式サポートする」記述は確認できなかった。「長時間WebSocket用途には不向き / 公式サポート状況を開催直前に再確認」が堅い | https://docs.aws.amazon.com/apprunner/latest/dg/develop.html | 今回対応 |
 | A-06 | p.14 | 比較列名が「Fargate」 | 技術的誤りではなく比較粒度の問題。FargateはECS taskのcompute optionでApp Runner / Cloud Runに対応するapplication serviceではないため、列名を「ECS on Fargate + ALB + Service Auto Scaling」にする | (レポートの設計判断。一次情報なし) | 今回対応 |
 | A-07 | p.14 | Lambdaの標準execution timeout上限15分 | 正しい(現在も維持) | https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html | 今回対応 |
-| A-08 | p.14 | 比較軸を「HTTPS URL」の○×で示している | 表現改善提案。「managed HTTPS endpoint / arbitrary HTTP server・container / request timeout / instance内multi-concurrency / scale to zero」という軸へ変える方が有益 | 同 A-01〜A-03 | 今回対応 |
+| A-08 | p.14 | 比較軸を「HTTPS URL」の○×で示している | 表現改善提案。「managed HTTPS endpoint / arbitrary HTTP server・container / request timeout / instance内multi-concurrency / scale to zero」という軸へ変える方が有益 | 同 A-01〜A-03 | 今回対応 → **2026-08-25: 決着先を `fact-check/03_cloudrun.md` #24〜 に確定。それまでフラグメント上に対応行が存在しなかった(§6.4 確認項目2 のギャップ)。§7.1 参照** |
 | T-02 / F-01 | p.15 無料枠 | 「18万 vCPU秒 / 36万 GiB秒 / 200万リクエスト」 | 条件付きで正しい。request-based billingの無料枠としては正しいが、instance-based billingには別枠 240,000 vCPU秒 / 450,000 GiB秒がある | https://cloud.google.com/run/pricing | 今回対応 |
 | F-02 | p.14 | 「Cloud Run課金 = リクエスト処理中のみ(常時割当に変更可)」 | 要修正。現在の正式な区分は request-based billing / instance-based billing。request-basedでも起動処理等が課金対象、minimum instancesのアイドル時間も完全無料ではない。旧用語「CPU only during request / CPU always allocated」を主語にしない | https://cloud.google.com/run/pricing / https://cloud.google.com/run/docs/configuring/billing-settings | 今回対応 |
 | F-03 | p.15 | 「リクエストを処理していない間はCPU・メモリ課金なし」 | 単純化しすぎ。min instances=0の通常アイドル状態の説明としては概ね妥当だが、起動・graceful shutdown・minimum instance idleなど例外がある | https://cloud.google.com/run/pricing | 今回対応 |
@@ -485,6 +486,15 @@ AWS 一次情報(`aws-comparisons.md`)で確定(7件):
 | B: コンソールUI(ヘッドレス環境のため目視できず) | 7 |
 | C: 所要時間・実測依存(環境依存で単一の正解が無い) | 3 |
 | D: その他 | 5 |
+| E: AWS 一次情報が可否・数値を明記していない(2026-08-25 追加) | 3 |
+
+**E: AWS 一次情報が可否・数値を明記していない(3件、2026-08-25 追加)**
+
+いずれも `fact-check/aws-ecs-express-mode.md` #16〜#18 に記録。ECS Express Mode の (a) ゼロスケール(最小0タスク)可否、(b) カナリアデプロイの比率指定の粒度、(c) Fargate / ALB の具体的単価。
+
+- **理由**: (a)(b) は開発者ガイドと API リファレンスのいずれも可否を明記していない。(c) は Express Mode 自体に追加料金がないことは明記されているが、基盤リソースの単価は料金ページ側の値で改定され得るため、教材では数値を持たない方針(spec.md Assumptions)
+- **本文への扱い**: 教材本文はこの3点に依存しない記述にとどめた。同フラグメント末尾に「本文で使ってよい表現 / 使ってはいけない表現」の対照表を置き、断定への踏み込みを構造的に防いでいる
+- **増減の性質**: 今回の3件は既存の未確認を解消できなかったものではなく、**新しい主張を本文へ入れる際にその未確認部分を隠さずに起票したことによる増加**である
 
 **A: Cloud Shell 固有(2件)**
 
@@ -545,3 +555,34 @@ AWS 一次情報(`aws-comparisons.md`)で確定(7件):
 **リスクは低い。** カテゴリB(コンソールUI 7件)は仮に表示が教材の記述と違っても、受講者が別のタブ・別のラベルを探す程度の詰まりで、CLI 手順の成否には影響しない。カテゴリC(所要時間3件)は本文が「〜ほど」「〜程度」と幅を持たせているうえ、最大の落とし穴だったコールドスタートの数値は実機実測(1〜1.5秒)に基づき修正済みで、期待値と実際のズレによる誤解は解消している。カテゴリD 5件も本文の手順そのものではなく紹介文・トラブルシューティング・後片付けの補足に属し、後片付けは推奨手順(プロジェクトごと削除)を取れば漏れが生じない。
 
 **唯一注視すべきはカテゴリA(Cloud Shell の `jq`)** で、これが入っていない場合は6章の集計ループと7章のインスタンスID確認が失敗する。ただしどちらも「観察」のためのコマンドであり、本編の主線(デプロイ・トラフィック制御・スケール設定)は止まらない。**当日の開始前に講師が Cloud Shell で `jq --version` を一度実行しておけば、この1点は数秒で解消できる。**
+
+## 7. 判定の再検討記録
+
+本節は、いったん `スコープ外(今回不採用)` と判定した行を、後から採用へ転じた記録である。§3 の表からは行を消さず、`スコープ` 列に本節へのポインタだけを追記する運用とする。
+
+### 7.1 2026-08-25: 比較軸の変更(P-10 / P-18b / A-08)
+
+- **判断者**: 利用者(著者)。エージェントからの提案に対する明示的な承認として記録する
+- **根拠条文**: spec.md FR-013a(2026-08-25 追加)
+- **再判定した理由**: 不採用時の前提は「事実は変わらず提示方法だけを変える提案である」だった。その後、次の3点が一次情報で確定した。(1) ALB の HTTPS リスナーには証明書のデプロイが必須で、既定DNS名 `*.elb.amazonaws.com` に対する証明書は AWS から提供されない、(2) 独自ドメインの条件は AWS / Google Cloud で同等である、(3) AWS 側にも1コマンドで HTTPS 公開まで済む経路(ECS Express Mode、2025-11-21 GA)が存在する。条件を揃えると「作成時に組む部品の数」は主張の根拠として成立せず、**提示方法を据え置くと修正後の事実と矛盾する**。したがって当初の前提が失われたことによる再判定であり、FR-013 の解釈変更ではない
+- **採用範囲**: 比較の軸を「作成時に組む部品の数」から「運用で理解が必要なプロダクト数 / 壊れたときに開く画面の数」へ移す。ECS Express Mode は主役にせず注記として置き、軸変更の根拠にする
+- **不採用のまま据え置く範囲**: P-10 の「設計判断表(AWSで身についた反射 → Cloud Runでの体験 → 教えるべき差)」の新設、P-18b の「Organization → Folder → Project の階層と policy inheritance の節」の新設。いずれも本件の軸変更に必要ではなく、独立した構成追加であるため
+
+| ID | 当初判定 | 再判定 | 対象本文 | 決着先フラグメント |
+|---|---|---|---|---|
+| P-10 | スコープ外(今回不採用) | 採用(軸の付け替えのみ) | `01_aws_and_googlecloud/README.md` 比較表・冒頭2段落・まとめ | `fact-check/01_aws_and_googlecloud.md` #37〜 |
+| P-18b | スコープ外(今回不採用) | 一部採用(節の新設は不採用のまま) | 同上 | 同上 |
+| A-08 | 今回対応(決着先未確定) | 決着先を確定 | `03_cloudrun/README.md` AWS比較表 | `fact-check/03_cloudrun.md` #24〜(**3章への適用は後続の変更。本記録の時点では決着先の指定のみ**) |
+
+#### FR-013a 条件(1)に基づく追加見出しの申告
+
+FR-013a は既存の節の削除・改名・並べ替えを禁じ、新しい節の追加のみを認めている。本件で追加した見出しは次のとおり。既存の見出しは文言も相対順序も変更していない。
+
+| ファイル | 追加した見出し | レベル | 挿入位置 |
+|---|---|---|---|
+| `01_aws_and_googlecloud/README.md` | 注記: 1コマンドで立つ経路は AWS にもある | `###` | `## ビルディングブロック vs SaaS的アプローチ` の末尾 |
+| `01_aws_and_googlecloud/README.md` | 運用で向き合うプロダクトの数 | `##` | `## アカウント構造の違い` の直前 |
+
+`03_cloudrun/README.md` への適用は後続の変更で行う。3章では見出しを追加せず、既存の脚注パターン(`※1` / `※2` に続く `※3`)と実行モデル表の AWS 対応の更新に留める予定である。
+
+**この記録の時点で本文へ適用済みなのは `01_aws_and_googlecloud/README.md` のみ。** 3章は App Runner を現役の比較列として扱ったままであり、1章の「新規顧客への提供を終了」という記述と章間で食い違っている状態が一時的に残る。この不整合の解消は後続の変更で行う。
