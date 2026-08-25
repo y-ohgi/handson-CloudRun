@@ -1,6 +1,6 @@
 # Fact-check: 01_aws_and_googlecloud/README.md
 
-**確認日**: 2026-08-19
+**確認日**: 2026-08-19(#1〜#36)/ 2026-08-25(#37〜。ALB の HTTPS 条件の再検証、独自ドメイン、比較軸の変更)
 
 | # | location | claim | verdict | source_url | resolution |
 |---|---|---|---|---|---|
@@ -39,7 +39,14 @@
 | 33 | 対応表 Secret Manager行 | Secret Manager ≒ Secrets Manager | 正しい | https://docs.cloud.google.com/secret-manager/docs/overview | 変更なし |
 | 34 | 対応表 Cloud Load Balancing行 | Cloud Load Balancing ≒ ALB/NLB + CloudFront の一部。グローバル単一エニーキャストIP | 正しい | https://docs.cloud.google.com/load-balancing/docs/https | 変更なし(Premium Tier のグローバル外部Application Load Balancer が「Global Anycast external IP addresses」を持つと記載) |
 | 35 | 対応表 IAM サービスアカウント行 | サービスアカウント ≒ IAM ロール。「アカウント」だが実体はロールに近い | 正しい | https://docs.cloud.google.com/iam/docs/service-account-overview | 変更なし(ワークロードに紐づく非人間のprincipalという点で IAM ロールとの類比は妥当。厳密には principal かつ resource である点は教材の粒度では追記不要と判断) |
-| 36 | まとめ | AWS は部品を組み立てる / Google Cloud は完成品を調整する、分離単位はプロジェクト、対応表は1対1にならない | 正しい | https://docs.cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy | 変更なし(本文の各主張と整合) |
+| 36 | まとめ | AWS は部品を組み立てる / Google Cloud は完成品を調整する、分離単位はプロジェクト、対応表は1対1にならない | 正しい | https://docs.cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy | 変更なし(本文の各主張と整合)→ **2026-08-25: #43 により1行目を軸変更に合わせて差し替え。2行目・3行目は維持** |
+| 37 | 比較表 TLS証明書行(#4 / #5 の再検証) | ALB の既定DNS名(`*.elb.amazonaws.com`)でも HTTPS が使える | 要修正 | https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html | 「To create an HTTPS listener, you must deploy at least one SSL server certificate on your load balancer」。既定DNS名に対する証明書は AWS から提供されないため、既定DNS名は実質 HTTP のみ。TLS証明書行を「HTTPSリスナーには証明書が必須。ALB の既定DNS名(`*.elb.amazonaws.com`)は HTTP のみ」へ変更 |
+| 38 | 比較表 TLS証明書行 | ALB に紐付ける証明書はドメイン名と一致していなければならない | 正しい | https://docs.aws.amazon.com/elasticloadbalancing/latest/application/https-listener-certificates.html | 「The domain name on the certificate must match the custom domain name record so that we can verify the TLS connection」。#37 の「実質、所有ドメインが前提」という本文の含意の裏付け |
+| 39 | 比較表 独自ドメイン行(新規追加行) | Cloud Run で独自ドメインを使うには DNS レコードと証明書が必要で、ドメインマッピングは限定提供、推奨は外部 ALB 経由 | 要修正 | https://docs.cloud.google.com/run/docs/mapping-custom-domains | 独自ドメインの条件は AWS / Google Cloud で同等であるため、比較表に「独自ドメイン」行を追加して条件を明示した。当初版は ACM を AWS 側にだけ置いており、実質「独自ドメインありの AWS」対「独自ドメインなしの Cloud Run」という不公平な比較になっていた |
+| 40 | 比較表 TLS証明書行 Cloud Run 側(#6 の補強) | 既定の `run.app` URL は HTTPS 込みで払い出される | 正しい | https://docs.cloud.google.com/run/docs/triggering/https-request | 変更なし。「All Cloud Run services have a stable HTTPS URL」「Cloud Run redirects all HTTP requests to HTTPS」。#37 との対比の軸が「既定URLで HTTPS が使えるか」であることの裏付け |
+| 41 | 「独自ドメインの条件は両者で同じです」段落 | Cloud Run を外部 ALB で公開するには Serverless NEG / Backend Service / URL Map / Target HTTPS Proxy / Forwarding Rule / SSL Certificate の6リソースが必要 | 正しい | https://docs.cloud.google.com/load-balancing/docs/negs/serverless-neg-concepts | 「Cloud Run はリソース1つ」が成り立つのは `run.app` URL の場合に限るという公平性の根拠。#43 の新節でこの点を明記した |
+| 42 | 今日使うサービス対応表 Cloud Run行(#16 の再検証) | Cloud Run ≒ App Runner + ECS on Fargate + Lambda | 要修正 | https://docs.aws.amazon.com/apprunner/latest/dg/apprunner-availability-change.html | App Runner は新規顧客への提供を終了し、AWS は ECS Express Mode への移行を案内している。対応表の Cloud Run 行を「ECS Express Mode + ECS on Fargate + Lambda」へ変更し、提供終了を補足へ明記。#16 の判定(Fargate の粒度)は取り消さず、別の理由による追加修正として扱う。詳細は `aws-ecs-express-mode.md` |
+| 43 | 「ビルディングブロック vs SaaS的アプローチ」冒頭2段落・比較表全体・まとめ | 対比の軸は「作成時に組む部品の数」である | 要修正 | https://docs.aws.amazon.com/AmazonECS/latest/developerguide/express-service-work.html | #37〜#41 で独自ドメインの条件が同等と確定し、さらに ECS Express Mode が同等の部品を AWS 側でも自動作成することが確定した。部品数の差は「既定URLで公開する場合」に限った差であり、条件を揃えると主張の根拠にならない。軸を「運用で理解が必要なプロダクト数 / 壊れたときに開く画面の数」へ移す(spec.md FR-013a / `fact-check-log.md` §7.1)。比較表のセルは FR-010 の保護対象のため変更せず、表の直後に読み方を限定する段落を追加する形で対応した |
 
 ## `research/deep-research-report.md`(二次情報)の指摘との突き合わせ
 
