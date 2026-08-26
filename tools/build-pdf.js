@@ -106,6 +106,22 @@ const rewriteLinks = (html, chapterHref) => {
   });
 };
 
+// 章内の相対 img src を、リポジトリ内の絶対 file:// URL に置き換える。
+// 生成HTMLはtmpdirへ書いてfile://で開くため、相対パスのままでは画像が解決できない。
+const rewriteImages = (html, chapterHref) => {
+  const dir = path.posix.dirname(chapterHref);
+  return html.replace(/src="([^"]+)"/g, (full, src) => {
+    if (/^(https?:|data:|file:|\/)/.test(src)) return full;
+    const resolved = path.posix.normalize(path.posix.join(dir, src));
+    const abs = path.join(ROOT, resolved);
+    if (!fs.existsSync(abs)) {
+      console.warn(`warning: 画像が見つかりません: ${resolved} (${chapterHref})`);
+      return full;
+    }
+    return `src="file://${abs}"`;
+  });
+};
+
 // ---- 本文 HTML の組み立て ----
 const bodyParts = [];
 const tocParts = [];
@@ -116,7 +132,7 @@ for (const item of items) {
     continue;
   }
   const md = fs.readFileSync(path.join(ROOT, item.href), "utf-8");
-  const html = highlightCode(rewriteLinks(kramed(md), item.href));
+  const html = highlightCode(rewriteImages(rewriteLinks(kramed(md), item.href), item.href));
   bodyParts.push(`<section class="chapter" id="${item.anchor}">${html}</section>`);
   tocParts.push(
     `<li class="toc-item toc-level-${item.level}"><a href="#${item.anchor}">${escapeHtml(item.title)}</a></li>`,
