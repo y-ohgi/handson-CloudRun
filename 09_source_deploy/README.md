@@ -5,6 +5,8 @@
 
 ## ソースデプロイ
 
+![ソースデプロイでプラットフォーム側へ移るステップ](imgs/source-deploy-diff.svg)
+
 `--image` の代わりに `--source` を指定すると、Cloud Build がソースからイメージをビルドして GAR に push し、そのままデプロイまで行います。
 
 ```bash
@@ -28,7 +30,8 @@ gcloud run deploy handson-app-src \
 > - **目的:** 4章の図3 と同じ構図を使い、`docker build` と `docker push` の2ステップがプラットフォーム側へ移ったことを差分として見せる
 > - **描き方:** 図3 のレイアウトをそのまま流用し、`docker build` / `docker push` の2箱を破線で囲んで「Cloud Build が代行」とラベルを付ける。参加者が打つコマンドは `gcloud run deploy --source .` の1つだけになることを強調する
 > - **要点:** 図3(4章)と**同一のレイアウト・同一の箱の位置**にすること。並べて見せて差分が読めることが唯一の要件
-> - **完成後の扱い:** `09_source_deploy/imgs/source-deploy-diff.png` として保存し、**見出しの直下**に `![ソースデプロイでプラットフォーム側へ移るステップ](imgs/source-deploy-diff.png)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
+> - **完成後の扱い:** `09_source_deploy/imgs/source-deploy-diff.svg` として保存し、**見出しの直下**に `![ソースデプロイでプラットフォーム側へ移るステップ](imgs/source-deploy-diff.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
+> - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図です。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
 
 このディレクトリには Dockerfile があるのでそれが使われますが、**Dockerfile を消しても動きます**。  
 その場合は [Google Cloud の Buildpacks](https://cloud.google.com/docs/buildpacks/nodejs) が `package.json` を見て「Node.js アプリだな」と判断し、`scripts.start`(この教材では `node src/index.ts`)を起動コマンドにした良い感じのイメージを自動生成します。

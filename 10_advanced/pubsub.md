@@ -4,6 +4,8 @@ Cloud Run を Pub/Sub のサブスクライバーにして、イベント駆動�
 
 ## AWSでの構成と比べる
 
+![pull型とpush型の配送の違い](imgs/pull-vs-push-delivery.svg)
+
 「S3にファイルが置かれたら処理する」「注文イベントを非同期で処理する」——AWS なら SNS + SQS + Lambda(またはSQSポーリングのECS)で組む定番パターンです。  
 Lambda には専用のハンドラシグネチャがあり、SQS はポーリング設定やバッチサイズの調整が必要でした。
 
@@ -17,7 +19,8 @@ Google Cloud では **Pub/Sub がサブスクライバーのHTTPエンドポイ�
 > - **下(Cloud Run):** Pub/Sub トピック → サブスクリプション → **矢印は Pub/Sub 側から Cloud Run へ向かう**(POSTしてくる)。Cloud Run の箱には「`POST /pubsub` を受けるだけの普通のWebサーバー」と注記
 > - **要点:** 矢印の向きが逆であること。取りに行く側と、届けられる側の違いがこの節の本質
 > - **認証付きの場合(任意):** 本番構成では Pub/Sub のサービスエージェントが OIDC トークンを取得して付与する流れが入る。別コマとして描くなら、「サービスアカウント」「`roles/iam.serviceAccountTokenCreator`」「`roles/run.invoker`」の3つがどこに効くかを示すと、章末の補足が理解しやすくなる
-> - **完成後の扱い:** `10_advanced/imgs/pull-vs-push-delivery.png` として保存し、**見出しの直下**に `![pull型とpush型の配送の違い](imgs/pull-vs-push-delivery.png)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
+> - **完成後の扱い:** `10_advanced/imgs/pull-vs-push-delivery.svg` として保存し、**見出しの直下**に `![pull型とpush型の配送の違い](imgs/pull-vs-push-delivery.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
+> - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図です。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
 
 実は2章で作った `src/index.ts` には、こっそり受け口を仕込んであります:
 
