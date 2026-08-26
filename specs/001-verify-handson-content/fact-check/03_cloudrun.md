@@ -1,8 +1,8 @@
 # Fact-check: 03_cloudrun/README.md
 
-**確認日**: 2026-08-19
+**確認日**: 2026-08-19(#1〜#23)/ 2026-08-25(#24〜)
 
-**対象タスク**: T005(「3つの実行モデル」節)/ T006(「料金感」節)/ T007(差分があれば本文修正)
+**対象タスク**: T005(「3つの実行モデル」節)/ T006(「料金感」節)/ T007(差分があれば本文修正)。加えて 2026-08-25 に、これまでフラグメント上に対応行を持っていなかった AWS 比較表の指摘 `A-06` / `A-08` と、App Runner の提供終了に伴う比較表の再構成を #24〜 として追加した(`fact-check-log.md` §6.4 確認項目2 のギャップに該当)。
 
 **検証方法**: `research/deep-research-report.md`(ChatGPT製の二次情報)の指摘は根拠として採用せず、記載された出典URLをすべて自分で取得し、Google Cloud 公式ドキュメント(一次情報)の本文で裏を取った。`cloud.google.com` は `docs.cloud.google.com` へ 301 リダイレクトするため、リダイレクト後のURLで取得している。料金ページと release notes は WebFetch が本文を切り詰めるため、HTML を直接取得してテキスト化し、該当箇所を原文で確認した。
 
@@ -33,6 +33,12 @@
 | 21 | 料金感 | instance-based の無料枠: 月あたり vCPU 24万秒 / メモリ 45万GiB秒(リクエスト無料枠の記載なし) | 正しい | https://cloud.google.com/run/pricing | 変更なし。原文「CPU - First 240,000 vCPU-seconds free per month」「RAM - First 450,000 GiB-seconds free per month」。instance-based の料金表にリクエスト課金行は存在しないため、本文がリクエスト無料枠を書いていないのは適切 |
 | 22 | 料金感 | 単価・無料枠は改定されるので公式の料金ページが正(2026年8月時点と明記) | 正しい | https://cloud.google.com/run/pricing | 変更なし。確認時点の明記と公式ページへのリンクが既に併記されており、規約の要求を満たしている |
 | 23 | 料金感 | 個人開発や社内ツールなら実質無料で運用できることが多い | 正しい | https://cloud.google.com/run/pricing | 変更なし。無料枠が請求先アカウント単位でプロジェクト横断に集計され毎月リセットされる(原文「The free tier usage is aggregated across projects by billing account and resets every month」)ため、小規模用途の記述として妥当。ただし定性的な見込みであり保証ではない |
+| 24 | 「AWSでいうと何?」比較表 App Runner列 | App Runner を現行の比較対象として並置してよい | 要修正 | https://docs.aws.amazon.com/apprunner/latest/dg/apprunner-availability-change.html | 新規顧客への提供が終了しているため、現行の選択肢として無条件に並置すると読者を誤らせる。列は残しつつ表頭に脚注マーカーを付け、脚注で提供終了と後継(ECS Express Mode)を明記する。列を残す理由は、120秒上限・スケールtoゼロ不可という値が「Cloud Run ≒ App Runner」という誤解を壊すための教材資産であり、削除すると本文の目的が根拠を失うため。詳細は `aws-ecs-express-mode.md` |
+| 25 | 同表 脚注 | 後継の位置づけとして ECS Express Mode を注記に置ける | 正しい | https://docs.aws.amazon.com/AmazonECS/latest/developerguide/express-service-overview.html | 詳細は `aws-ecs-express-mode.md` に記録。3章本文には注記の粒度でのみ記載し、既定値・上限値は本文へ書かない(改定耐性のため)。実体が「ECS on Fargate + ALB」である点だけを述べる |
+| 26 | 同表 HTTPS URL行(A-08) | 比較軸を「HTTPS URL」の ○ / 要ALB+ACM で示す | 要修正 | https://docs.aws.amazon.com/AmazonECS/latest/developerguide/express-service-getting-started.html | ECS Express Mode の既定URLは HTTPS で ACM 証明書が自動発行されるため、○×では AWS / Google Cloud の差が表現できなくなった。軸を「運用で理解が必要なプロダクト数 / 壊れたときに開く画面の数」へ移す(A-08 の趣旨と一致。spec.md FR-013a / `fact-check-log.md` §7.1)。表のセル自体は FR-010 の保護対象のため変更せず、脚注と1章の新節で軸を移す |
+| 27 | 同表 表頭(A-06) | 列名は「ECS on Fargate + ALB」でよい | 正しい | https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-load-balancing.html | 変更なし。1章 #2 / #16 と表記が一致していることを確認した。A-06 は本行で初めてフラグメント上の対応行を持つ |
+| 28 | 「AWSでいうと何?」比較表・脚注 | Express Mode を軸変更の根拠として使える | 正しい | https://docs.aws.amazon.com/AmazonECS/latest/developerguide/express-service-work.html | Express Mode は ALB・ターゲットグループ等を自動作成する一方、作成されたリソースは AWS 側の各コンソールに実在し、ALB 設定とデプロイ戦略は Express Mode の API から変更できない。「部品の数」ではなく「運用で開く画面の数」が軸として妥当であることの根拠 |
+| 29 | 「Cloud Run の構成要素」節 | ハンズオンで触る概念は3つだけ | 正しい | https://docs.cloud.google.com/run/docs/resource-model | 変更なし。1章の新節「運用で向き合うプロダクトの数」と呼応させる一文を追加した(概念数の少なさが新軸の Google Cloud 側の実体であることを明示するため) |
 
 ## 確認したが本文に無い(参考・本文未追加)
 
@@ -49,6 +55,12 @@
 - 要修正: 0件
 - 未確認: 0件
 
+**2026-08-25 追加分(#24〜#29)**: 正しい4件 / 要修正2件 / 未確認0件
+
+**合計**: 正しい27件 / 要修正2件 / 未確認0件
+
 ## 本文への変更
 
-**変更なし。** T005・T006 で検証した「3つの実行モデル」節・「料金感」節の技術的主張23件はすべて公式ドキュメントと整合していたため、T007 の条件(差分が見つかった場合のみ修正)に該当せず、`03_cloudrun/README.md` は編集していない。
+**2026-08-19 時点: 変更なし。** T005・T006 で検証した「3つの実行モデル」節・「料金感」節の技術的主張23件はすべて公式ドキュメントと整合していたため、T007 の条件(差分が見つかった場合のみ修正)に該当せず、`03_cloudrun/README.md` は編集していない。
+
+**2026-08-25 追記**: #24 / #26 により `03_cloudrun/README.md` を編集した。変更したのは (1) 比較表の App Runner 列への脚注マーカー、(2) 脚注 ※3 の追加、(3) 「AWSでいうと何?」冒頭の App Runner への言及、(4) 実行モデル表のサービス行の AWS 対応、(5) 図2の作図指示の目的文、(6) 「Cloud Run の構成要素」節と「まとめ」への1文追加。**見出し(`##` / `###`)は追加・削除・改名・並べ替えのいずれも行っていない**(spec.md SC-008)。比較表のセル(#16〜#23 の判定対象)は1つも変更していない(FR-010)。
