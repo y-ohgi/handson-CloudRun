@@ -39,18 +39,26 @@ const HTML = `<!DOCTYPE html>
   </form>
   <script>
     var proto = location.protocol === "https:" ? "wss:" : "ws:";
-    var ws = new WebSocket(proto + "//" + location.host + "/ws");
-    ws.onmessage = function (e) {
-      var div = document.createElement("div");
-      div.textContent = e.data;
-      var messages = document.getElementById("messages");
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    };
+    var ws;
+    function connect() {
+      ws = new WebSocket(proto + "//" + location.host + "/ws");
+      ws.onmessage = function (e) {
+        var div = document.createElement("div");
+        div.textContent = e.data;
+        var messages = document.getElementById("messages");
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+      };
+      // インスタンスの入れ替えやデプロイで接続は切れる。切れたら張り直す
+      ws.onclose = function () {
+        setTimeout(connect, 1000);
+      };
+    }
+    connect();
     function send(event) {
       event.preventDefault();
       var input = document.getElementById("input");
-      if (input.value) {
+      if (input.value && ws.readyState === WebSocket.OPEN) {
         ws.send(input.value);
         input.value = "";
       }
@@ -82,8 +90,20 @@ app.get(
   }),
 );
 
-const port = Number(process.env.PORT ?? 8080);
+// `??` は空文字を拾わないため、`||` で「空文字・数値でない値」もまとめて弾く
+const port = Number(process.env.PORT) || 8080;
 const server = serve({ fetch: app.fetch, port }, () => {
   console.log(JSON.stringify({ severity: "INFO", message: `listening on port ${port}` }));
 });
 injectWebSocket(server);
+
+// Cloud Run はインスタンス終了の10秒前に SIGTERM を送る。
+// WebSocket は接続が張られ続けるため、先に全接続を閉じてから新規受付を止める。
+// クライアント側は onclose で再接続するので、別インスタンスへ張り直される。
+process.on("SIGTERM", () => {
+  console.log(JSON.stringify({ severity: "INFO", message: "SIGTERM received, shutting down" }));
+  for (const client of clients) {
+    client.close();
+  }
+  server.close(() => process.exit(0));
+});
