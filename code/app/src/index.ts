@@ -38,6 +38,7 @@ app.get("/", (c) => {
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      background: #333;        /* BG_COLOR を書き間違えても文字が読めるようにする保険 */
       background: ${BG_COLOR};
       color: #fff;
       font-family: sans-serif;
@@ -76,14 +77,30 @@ app.get("/heavy", async (c) => {
 // Pub/Sub push サブスクリプションの受け口(発展編で使用)
 app.post("/pubsub", async (c) => {
   const envelope = await c.req.json().catch(() => ({}));
-  const data: string = envelope?.message?.data ?? "";
+  // 外部から任意のJSONが飛んでくるため、文字列以外は空扱いにする
+  const raw = envelope?.message?.data;
+  const data = typeof raw === "string" ? raw : "";
   const text = data ? Buffer.from(data, "base64").toString("utf-8") : "(empty)";
   log("INFO", `Pub/Sub message received: ${text}`);
   return c.body(null, 204);
 });
 
-// Cloud Run は環境変数 PORT でリッスンすべきポートを渡してくる
-const port = Number(process.env.PORT ?? 8080);
-serve({ fetch: app.fetch, port }, () => {
+// 未捕捉の例外も1行JSONで出します。8章で severity フィルタを試す材料になります。
+app.onError((err, c) => {
+  log("ERROR", err.message, { stack: err.stack });
+  return c.json({ error: "internal server error" }, 500);
+});
+
+// Cloud Run は環境変数 PORT でリッスンすべきポートを渡してくる。
+// `??` は空文字を拾わないため、`||` で「空文字・数値でない値」もまとめて弾く。
+const port = Number(process.env.PORT) || 8080;
+const server = serve({ fetch: app.fetch, port }, () => {
   log("INFO", `listening on port ${port}`);
+});
+
+// Cloud Run はインスタンス終了の10秒前に SIGTERM を送ります。
+// 受け取ってから新規受付を止めることで、処理中のリクエストを取りこぼしません。
+process.on("SIGTERM", () => {
+  log("INFO", "SIGTERM received, shutting down");
+  server.close(() => process.exit(0));
 });
