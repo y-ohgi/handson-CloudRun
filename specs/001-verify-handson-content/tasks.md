@@ -104,6 +104,7 @@ description: "Task list for feature implementation"
 - [x] T024 [US4] `99_cleanup/README.md`のリソース削除コマンド(`gcloud run services delete`等)を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
 - [x] T025 [US4] `00_preparation/README.md`・`02_docker/README.md`(既修正)がT005〜T024の修正内容(API有効化リスト、Node.jsバージョン方針等)と矛盾しないか突き合わせ、後退していないことを確認する(regressionチェック)
 - [x] T026 [US4] `fact-check-log.md`の全行を確認し、`verdict`が「未確認」のまま残っている項目が0件であることを確認する。残っていれば追加調査して確定させる(spec SC-001, SC-002)
+    - 確認作業は実施済み。ただし判定結果は **SC-001 未達**で、`未確認` が16件(+ 部分未確認1件)残っている。内訳と未達の理由は `fact-check-log.md` §6.3 / §6.4 を参照。残件は実機確認・コンソール目視・当日の実測を要するため本タスクの制約下では確定できず、GitHub Issue #9〜#14 で追跡している。SC-002 は達成
 
 **Checkpoint**: US4完了。全章の事実確認が完了し、未反映項目が0件
 
