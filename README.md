@@ -2,6 +2,8 @@
 
 AWS を実務で使っているエンジニアに向けた、Google Cloud / Cloud Run のハンズオン教材です。
 
+Web版: <https://y-ohgi.com/handson-CloudRun/>
+
 ## この教材のゴール
 
 1. **Cloud Run を通して Google Cloud の良さを知る**
