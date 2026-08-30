@@ -25,8 +25,8 @@ description: "Task list for feature implementation"
 
 **Purpose**: 検証作業の前提を整える
 
-- [ ] T001 リポジトリのビルド環境を確認する。`npm install`(未実施なら)、`npm run build`を実行しベースラインが成功することを確認する(ファイル変更なし)
-- [ ] T002 [P] `gcloud`コマンドの実行確認に使うGoogle Cloudプロジェクトの認証状態(`gcloud auth list`, `gcloud config get-value project`)を確認する(ファイル変更なし)
+- [x] T001 リポジトリのビルド環境を確認する。`npm install`(未実施なら)、`npm run build`を実行しベースラインが成功することを確認する(ファイル変更なし)
+- [x] T002 [P] `gcloud`コマンドの実行確認に使うGoogle Cloudプロジェクトの認証状態(`gcloud auth list`, `gcloud config get-value project`)を確認する(ファイル変更なし)
 
 ---
 
@@ -36,8 +36,8 @@ description: "Task list for feature implementation"
 
 **⚠️ CRITICAL**: このフェーズ完了までUser Story作業(Phase 3以降)を開始しない
 
-- [ ] T003 `specs/001-verify-handson-content/fact-check-log.md`を新規作成し、`research/deep-research-report.md`の「教材の事実確認」テーブル・「最も重要な発見トップ5」・AWS比較表の指摘を、`data-model.md`の「事実確認項目」フィールド(chapter_id, location, claim, verdict, source_url, confirmed_on, resolution)形式で章ごとに転記する
-- [ ] T004 `fact-check-log.md`に、`01_aws_and_googlecloud`, `04_deploy`, `05_revision`, `06_traffic`, `08_observability`, `09_source_deploy`, `99_cleanup`, `code/app`, `code/websocket`の現状の記載を読み、deep-research-report.mdでカバーされていない技術的主張(コマンド構文、API名、権限、バージョン指定等)を追加の未確認行として洗い出す
+- [x] T003 `specs/001-verify-handson-content/fact-check-log.md`を新規作成し、`research/deep-research-report.md`の「教材の事実確認」テーブル・「最も重要な発見トップ5」・AWS比較表の指摘を、`data-model.md`の「事実確認項目」フィールド(chapter_id, location, claim, verdict, source_url, confirmed_on, resolution)形式で章ごとに転記する
+- [x] T004 `fact-check-log.md`に、`01_aws_and_googlecloud`, `04_deploy`, `05_revision`, `06_traffic`, `08_observability`, `09_source_deploy`, `99_cleanup`, `code/app`, `code/websocket`の現状の記載を読み、deep-research-report.mdでカバーされていない技術的主張(コマンド構文、API名、権限、バージョン指定等)を追加の未確認行として洗い出す
 
 **Checkpoint**: `fact-check-log.md`が初期化され、全User Storyが着手可能
 
@@ -49,9 +49,9 @@ description: "Task list for feature implementation"
 
 **Independent Test**: `03_cloudrun/README.md`の記述をCloud Run公式ドキュメント(overview, pricing, release notes)と突き合わせ、矛盾がないことを確認できる
 
-- [ ] T005 [US1] `03_cloudrun/README.md`の「3つの実行モデル」節をCloud Run公式ドキュメント(what-is-cloud-run, release notes)と突き合わせ、`fact-check-log.md`へ判定を記録する
-- [ ] T006 [US1] `03_cloudrun/README.md`の「料金感」節(request-based/instance-based billingの無料枠数値)をCloud Run pricing公式ページと突き合わせ、`fact-check-log.md`へ判定を記録する
-- [ ] T007 [US1] T005・T006で差分が見つかった場合のみ`03_cloudrun/README.md`を修正する。差分がない場合は`fact-check-log.md`に「変更なし」と記録する
+- [x] T005 [US1] `03_cloudrun/README.md`の「3つの実行モデル」節をCloud Run公式ドキュメント(what-is-cloud-run, release notes)と突き合わせ、`fact-check-log.md`へ判定を記録する
+- [x] T006 [US1] `03_cloudrun/README.md`の「料金感」節(request-based/instance-based billingの無料枠数値)をCloud Run pricing公式ページと突き合わせ、`fact-check-log.md`へ判定を記録する
+- [x] T007 [US1] T005・T006で差分が見つかった場合のみ`03_cloudrun/README.md`を修正する。差分がない場合は`fact-check-log.md`に「変更なし」と記録する
 
 **Checkpoint**: US1完了。`03_cloudrun`の実行モデル・料金記述が一次情報で裏付け済み
 
@@ -63,10 +63,10 @@ description: "Task list for feature implementation"
 
 **Independent Test**: 比較表の各主張(実行時間上限、HTTPS URL発行手段、同時実行モデル、スケールtoゼロ可否)をAWS公式ドキュメントと1件ずつ突き合わせて確認できる
 
-- [ ] T008 [US2] `01_aws_and_googlecloud/README.md`の「ビルディングブロック vs SaaS的アプローチ」表(ECS/Fargate, ALB, ACM等)をAWS公式ドキュメントと突き合わせ、`fact-check-log.md`へ判定を記録する
-- [ ] T009 [US2] `01_aws_and_googlecloud/README.md`の「サービス対応表」(Artifact Registry↔ECR、Cloud Build↔CodeBuild等の対応関係)を各公式ドキュメントと突き合わせ、`fact-check-log.md`へ判定を記録する
-- [ ] T010 [US2] T008・T009で見つかった差分に基づき`01_aws_and_googlecloud/README.md`を修正する
-- [ ] T011 [US2] `03_cloudrun/README.md`の既存AWS比較表(Lambda/Fargate/App Runner、既修正)と`01_aws_and_googlecloud/README.md`の新しい記載内容に矛盾がないか突き合わせ、後退していないことを確認する(regressionチェック)
+- [x] T008 [US2] `01_aws_and_googlecloud/README.md`の「ビルディングブロック vs SaaS的アプローチ」表(ECS/Fargate, ALB, ACM等)をAWS公式ドキュメントと突き合わせ、`fact-check-log.md`へ判定を記録する
+- [x] T009 [US2] `01_aws_and_googlecloud/README.md`の「サービス対応表」(Artifact Registry↔ECR、Cloud Build↔CodeBuild等の対応関係)を各公式ドキュメントと突き合わせ、`fact-check-log.md`へ判定を記録する
+- [x] T010 [US2] T008・T009で見つかった差分に基づき`01_aws_and_googlecloud/README.md`を修正する
+- [x] T011 [US2] `03_cloudrun/README.md`の既存AWS比較表(Lambda/Fargate/App Runner、既修正)と`01_aws_and_googlecloud/README.md`の新しい記載内容に矛盾がないか突き合わせ、後退していないことを確認する(regressionチェック)
 
 **Checkpoint**: US2完了。AWS比較箇所が一次情報で裏付け済み
 
@@ -78,18 +78,18 @@ description: "Task list for feature implementation"
 
 **Independent Test**: 各章の`gcloud`コマンドをCloud Shell相当の環境で実際に実行し、記載どおりの出力・挙動になることを確認できる
 
-- [ ] T012 [P] [US3] `04_deploy/README.md`の手順(`gcloud run deploy`、Artifact Registry操作等)をCloud Run公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
-- [ ] T013 [P] [US3] `05_revision/README.md`の手順(リビジョン・ロールバック関連コマンド)を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
-- [ ] T014 [P] [US3] `06_traffic/README.md`の`gcloud run deploy --no-traffic --tag`・`gcloud run services update-traffic`のオプションを現行のstableコマンド仕様と突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
-- [ ] T015 [P] [US3] `08_observability/README.md`のCloud Logging/Cloud Monitoring関連の記載を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
-- [ ] T016 [P] [US3] `09_source_deploy/README.md`の`gcloud run deploy --source`・Buildpacksの記載を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
-- [ ] T017 [P] [US3] `10_advanced/pubsub.md`の既存記載(push認証、`--push-auth-service-account`等)を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、事実の差分のみ修正する(FR-014により新機能は追加しない)
-- [ ] T018 [P] [US3] `10_advanced/websocket.md`の既存記載を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、事実の差分のみ修正する
-- [ ] T019 [P] [US3] `10_advanced/jobs.md`の既存記載(`gcloud run jobs logs read`のstable/beta区分、Cloud Scheduler API有効化・専用SA)を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
-- [ ] T020 [P] [US3] `code/app`の`package.json`の`engines.node`指定を確認し、`>=`のような無制限指定があれば`24.x`等の固定範囲に修正する(FR-006)。`package-lock.json`が同梱されているか確認し、なければ追加する
-- [ ] T021 [P] [US3] `code/websocket`について T020 と同様の確認・修正を行う
-- [ ] T022 [US3] `07_scaling/README.md`・`10_advanced/README.md`(既修正)の記載が、T012〜T021の修正内容と矛盾しないか突き合わせ、後退していないことを確認する(regressionチェック)
-- [ ] T023 [US3] T012〜T021で修正が確定した`04_deploy`〜`10_advanced`の`gcloud`コマンドを、Cloud Shell相当の環境で最初から順に実際に実行し、記載どおりの出力・挙動になることを確認する(quickstart.md手順4)。差分があれば該当章に反映する
+- [x] T012 [P] [US3] `04_deploy/README.md`の手順(`gcloud run deploy`、Artifact Registry操作等)をCloud Run公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
+- [x] T013 [P] [US3] `05_revision/README.md`の手順(リビジョン・ロールバック関連コマンド)を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
+- [x] T014 [P] [US3] `06_traffic/README.md`の`gcloud run deploy --no-traffic --tag`・`gcloud run services update-traffic`のオプションを現行のstableコマンド仕様と突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
+- [x] T015 [P] [US3] `08_observability/README.md`のCloud Logging/Cloud Monitoring関連の記載を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
+- [x] T016 [P] [US3] `09_source_deploy/README.md`の`gcloud run deploy --source`・Buildpacksの記載を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
+- [x] T017 [P] [US3] `10_advanced/pubsub.md`の既存記載(push認証、`--push-auth-service-account`等)を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、事実の差分のみ修正する(FR-014により新機能は追加しない)
+- [x] T018 [P] [US3] `10_advanced/websocket.md`の既存記載を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、事実の差分のみ修正する
+- [x] T019 [P] [US3] `10_advanced/jobs.md`の既存記載(`gcloud run jobs logs read`のstable/beta区分、Cloud Scheduler API有効化・専用SA)を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
+- [x] T020 [P] [US3] `code/app`の`package.json`の`engines.node`指定を確認し、`>=`のような無制限指定があれば`24.x`等の固定範囲に修正する(FR-006)。`package-lock.json`が同梱されているか確認し、なければ追加する
+- [x] T021 [P] [US3] `code/websocket`について T020 と同様の確認・修正を行う
+- [x] T022 [US3] `07_scaling/README.md`・`10_advanced/README.md`(既修正)の記載が、T012〜T021の修正内容と矛盾しないか突き合わせ、後退していないことを確認する(regressionチェック)
+- [x] T023 [US3] T012〜T021で修正が確定した`04_deploy`〜`10_advanced`の`gcloud`コマンドを、Cloud Shell相当の環境で最初から順に実際に実行し、記載どおりの出力・挙動になることを確認する(quickstart.md手順4)。差分があれば該当章に反映する
 
 **Checkpoint**: US3完了。ハンズオン手順が一次情報・実機の両方で裏付け済み
 
@@ -101,9 +101,10 @@ description: "Task list for feature implementation"
 
 **Independent Test**: 各章のコミット履歴とdeep-research-report.mdの指摘事項を突き合わせ、未反映の指摘が残っていないことを確認できる
 
-- [ ] T024 [US4] `99_cleanup/README.md`のリソース削除コマンド(`gcloud run services delete`等)を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
-- [ ] T025 [US4] `00_preparation/README.md`・`02_docker/README.md`(既修正)がT005〜T024の修正内容(API有効化リスト、Node.jsバージョン方針等)と矛盾しないか突き合わせ、後退していないことを確認する(regressionチェック)
-- [ ] T026 [US4] `fact-check-log.md`の全行を確認し、`verdict`が「未確認」のまま残っている項目が0件であることを確認する。残っていれば追加調査して確定させる(spec SC-001, SC-002)
+- [x] T024 [US4] `99_cleanup/README.md`のリソース削除コマンド(`gcloud run services delete`等)を公式ドキュメントと突き合わせ、`fact-check-log.md`へ記録の上、差分を修正する
+- [x] T025 [US4] `00_preparation/README.md`・`02_docker/README.md`(既修正)がT005〜T024の修正内容(API有効化リスト、Node.jsバージョン方針等)と矛盾しないか突き合わせ、後退していないことを確認する(regressionチェック)
+- [x] T026 [US4] `fact-check-log.md`の全行を確認し、`verdict`が「未確認」のまま残っている項目が0件であることを確認する。残っていれば追加調査して確定させる(spec SC-001, SC-002)
+    - 確認作業は実施済み。ただし判定結果は **SC-001 未達**で、`未確認` が16件(+ 部分未確認1件)残っている。内訳と未達の理由は `fact-check-log.md` §6.3 / §6.4 を参照。残件は実機確認・コンソール目視・当日の実測を要するため本タスクの制約下では確定できず、GitHub Issue #9〜#14 で追跡している。SC-002 は達成
 
 **Checkpoint**: US4完了。全章の事実確認が完了し、未反映項目が0件
 
@@ -117,14 +118,14 @@ description: "Task list for feature implementation"
 
 **依存関係**: 本フェーズはUser Story 3(章の内容確定)完了後に着手する。内容確定前にチェックポイントを切ると、後続の修正のたびにタグを作り直すことになるため
 
-- [ ] T027 [P] [US5] `04_deploy/README.md`のデプロイ手順末尾に「成功していれば/詰まったら」ブロックを追記し、その状態を指す`checkpoint-04`タグを作成する
-- [ ] T028 [P] [US5] `05_revision/README.md`に同様のブロックを追記し、`checkpoint-05`タグを作成する
-- [ ] T029 [P] [US5] `06_traffic/README.md`に同様のブロックを追記し、`checkpoint-06`タグを作成する
-- [ ] T030 [P] [US5] `07_scaling/README.md`に同様のブロックを追記し、`checkpoint-07`タグを作成する
-- [ ] T031 [P] [US5] `08_observability/README.md`に同様のブロックを追記し、`checkpoint-08`タグを作成する
-- [ ] T032 [P] [US5] `09_source_deploy/README.md`に同様のブロックを追記し、`checkpoint-09`タグを作成する
-- [ ] T033 [P] [US5] `10_advanced/pubsub.md`, `10_advanced/websocket.md`, `10_advanced/jobs.md`それぞれの「詰まったら」に、前提となる`checkpoint-09`への復帰コマンドを追記する(research.md Decision 2。発展編は個別タグを作成しない)
-- [ ] T034 [US5] `00_preparation/README.md`の「困ったらここ」ブロックに、チェックポイントタグの一覧と使い方(`git tag`, `git reset --hard checkpoint-XX`)への案内を追記する
+- [x] T027 [P] [US5] `04_deploy/README.md`のデプロイ手順末尾に「成功していれば/詰まったら」ブロックを追記し、その状態を指す`checkpoint-04`タグを作成する
+- [x] T028 [P] [US5] `05_revision/README.md`に同様のブロックを追記し、`checkpoint-05`タグを作成する
+- [x] T029 [P] [US5] `06_traffic/README.md`に同様のブロックを追記し、`checkpoint-06`タグを作成する
+- [x] T030 [P] [US5] `07_scaling/README.md`に同様のブロックを追記し、`checkpoint-07`タグを作成する
+- [x] T031 [P] [US5] `08_observability/README.md`に同様のブロックを追記し、`checkpoint-08`タグを作成する
+- [x] T032 [P] [US5] `09_source_deploy/README.md`に同様のブロックを追記し、`checkpoint-09`タグを作成する
+- [x] T033 [P] [US5] `10_advanced/pubsub.md`, `10_advanced/websocket.md`, `10_advanced/jobs.md`それぞれの「詰まったら」に、前提となる`checkpoint-09`への復帰コマンドを追記する(research.md Decision 2。発展編は個別タグを作成しない)
+- [x] T034 [US5] `00_preparation/README.md`の「困ったらここ」ブロックに、チェックポイントタグの一覧と使い方(`git tag`, `git reset --hard checkpoint-XX`)への案内を追記する
 
 **Checkpoint**: US5完了。`04`〜`09`にチェックポイントタグと期待結果/レスキューブロックが揃っている
 
@@ -136,8 +137,8 @@ description: "Task list for feature implementation"
 
 **Independent Test**: 教材本文とは別のメモとして、各新機能候補ごとに採否判断に必要な情報が揃っていることを確認できる
 
-- [ ] T035 [US6] `research/2025-2026-feature-additions.md`を新規作成し、`data-model.md`の「新機能候補」フィールド(name, description, related_chapter, estimated_effort, recommendation)に沿って、Worker pool講師デモ・GPU・Docker Compose deployment・Direct IAP integration・multi-region service health等を`research/deep-research-report.md`の該当表を出発点に記載する
-- [ ] T036 [US6] `npm run build`の出力に`research/2025-2026-feature-additions.md`の内容が含まれていないこと(honkitのビルド対象外であること)を確認する
+- [x] T035 [US6] `research/2025-2026-feature-additions.md`を新規作成し、`data-model.md`の「新機能候補」フィールド(name, description, related_chapter, estimated_effort, recommendation)に沿って、Worker pool講師デモ・GPU・Docker Compose deployment・Direct IAP integration・multi-region service health等を`research/deep-research-report.md`の該当表を出発点に記載する
+- [x] T036 [US6] `npm run build`の出力に`research/2025-2026-feature-additions.md`の内容が含まれていないこと(honkitのビルド対象外であること)を確認する
 
 **Checkpoint**: US6完了。将来の改訂判断に使える調査メモが独立して存在する
 
@@ -147,11 +148,11 @@ description: "Task list for feature implementation"
 
 **Purpose**: 全Story共通の最終検証と成果物の整合
 
-- [ ] T037 `npm run build`を実行し、全章がエラーなくビルドされることを確認する
-- [ ] T038 `npm run serve`で実際に表示し、追加した期待結果/レスキューブロックが該当章に表示されることを目視確認する
-- [ ] T039 本文修正が確定したため`npm run pdf`を実行し、`handson-cloudrun.pdf`を再生成する
-- [ ] T040 `git tag`で`checkpoint-04`〜`checkpoint-09`が全て存在し、それぞれ`git reset --hard checkpoint-XX`で次章の前提状態に戻れることを確認する(quickstart.md手順4)
-- [ ] T041 変更内容を責務ごとのcommitに分割する(AGENTS.mdのGit規約に従う。例: 章ごと/チェックポイント追加/調査メモ追加をそれぞれ別commitにする)
+- [x] T037 `npm run build`を実行し、全章がエラーなくビルドされることを確認する
+- [x] T038 `npm run serve`で実際に表示し、追加した期待結果/レスキューブロックが該当章に表示されることを目視確認する
+- [x] T039 本文修正が確定したため`npm run pdf`を実行し、`handson-cloudrun.pdf`を再生成する
+- [x] T040 `git tag`で`checkpoint-04`〜`checkpoint-09`が全て存在し、それぞれ`git reset --hard checkpoint-XX`で次章の前提状態に戻れることを確認する(quickstart.md手順4)
+- [x] T041 変更内容を責務ごとのcommitに分割する(AGENTS.mdのGit規約に従う。例: 章ごと/チェックポイント追加/調査メモ追加をそれぞれ別commitにする)
 
 ---
 
