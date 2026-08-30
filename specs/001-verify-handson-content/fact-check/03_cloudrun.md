@@ -10,7 +10,7 @@
 
 | # | location | claim | verdict | source_url | resolution |
 |---|---|---|---|---|---|
-| 1 | 3つの実行モデル(導入文) | Cloud Run には現在、3つの実行モデルがある | 正しい | https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run | 変更なし。公式は resource type として services / jobs / worker pools の3種を並列に列挙している |
+| 1 | 3つの実行モデル(導入文) | Cloud Run には現在、3つの実行モデルがある | 正しい | https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run | 変更なし。公式は resource type として services / jobs / worker pools の3種を並列に列挙している。**2026-08-30: #30 により失効。第4のリソースタイプ Cloud Run instances が追加されたため、本文は4モデルへ更新した** |
 | 2 | 3つの実行モデル(表) | サービス (Service) は HTTPリクエスト / イベント駆動 向け | 正しい | https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run | 変更なし。原文「Responds to HTTP requests sent to a unique and stable endpoint, using stateless instances that autoscale based on a variety of key metrics, also responds to events and functions」 |
 | 3 | 3つの実行モデル(表) | ジョブ (Job) は実行して終わるバッチ処理向け | 正しい | https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run | 変更なし。原文「Executes parallelizable tasks that are executed manually, or on a schedule, and run to completion」 |
 | 4 | 3つの実行モデル(表) | ワーカープール (Worker pool) は常駐してキューをpullし続ける処理向け | 正しい | https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run | 変更なし。原文「Handles always-on background workloads such as pull-based workloads, for example, Kafka consumers, Pub/Sub pull queues, or RabbitMQ consumers」 |
@@ -39,6 +39,7 @@
 | 27 | 同表 表頭(A-06) | 列名は「ECS on Fargate + ALB」でよい | 正しい | https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-load-balancing.html | 変更なし。1章 #2 / #16 と表記が一致していることを確認した。A-06 は本行で初めてフラグメント上の対応行を持つ |
 | 28 | 「AWSでいうと何?」比較表・脚注 | Express Mode を軸変更の根拠として使える | 正しい | https://docs.aws.amazon.com/AmazonECS/latest/developerguide/express-service-work.html | Express Mode は ALB・ターゲットグループ等を自動作成する一方、作成されたリソースは AWS 側の各コンソールに実在し、ALB 設定とデプロイ戦略は Express Mode の API から変更できない。「部品の数」ではなく「運用で開く画面の数」が軸として妥当であることの根拠 |
 | 29 | 「Cloud Run の構成要素」節 | ハンズオンで触る概念は3つだけ | 正しい | https://docs.cloud.google.com/run/docs/resource-model | 変更なし。1章の新節「運用で向き合うプロダクトの数」と呼応させる一文を追加した(概念数の少なさが新軸の Google Cloud 側の実体であることを明示するため) |
+| 30 | 「4つの実行モデル」節(導入文・表・まとめ) | Cloud Run の実行モデルは3つである | 要修正 | https://docs.cloud.google.com/run/docs/resource-model#resource-comparison 、https://docs.cloud.google.com/run/docs/release-notes | 2026-08-30 に再確認。公式の resource model 比較表は services / jobs / worker pools / **instances** の4種を並列に列挙しており、instances は 2026-08-25 付でリリースノートに Preview 掲載されている。本文の見出し・導入文・表・まとめ・「制約・向かないもの」を4モデルへ更新した。提供状況の詳細は `cloudrun-instances.md` を参照 |
 
 ## 確認したが本文に無い(参考・本文未追加)
 
@@ -51,9 +52,11 @@
 
 ## 集計
 
-- 正しい: 23件
-- 要修正: 0件
+- 正しい: 28件
+- 要修正: 2件
 - 未確認: 0件
+
+(2026-08-30 に実測で数え直した値。2026-08-19 時点の記載は23 / 0 / 0 だったが、2026-08-26 の App Runner 提供終了対応で #24〜#29 が、2026-08-30 に #30 が追加されており未反映だった)
 
 **2026-08-25 追加分(#24〜#29)**: 正しい4件 / 要修正2件 / 未確認0件
 
