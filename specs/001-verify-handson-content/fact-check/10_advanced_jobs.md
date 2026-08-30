@@ -38,7 +38,7 @@
 
 ## 集計
 
-- 正しい: 29(2026-08-19 T026 で #8 を `aws-comparisons.md` #10 により確定)
+- 正しい: 32(2026-08-19 T026 で #8 を `aws-comparisons.md` #10 により確定。2026-08-30 に #30〜#32 を追加。内訳は「2026-08-30 追記」の節)
 - 要修正: 0
 - 未確認: 0
 
@@ -46,6 +46,19 @@
 
 ## 修正はしていないが報告事項
 
-- Cloud Run Jobs の task timeout の**既定値は10分**(https://docs.cloud.google.com/run/docs/configuring/task-timeout)。本章の比較表は上限(最大7日)のみを示しており誤りではないが、既定10分・`--task-timeout` で変更という情報は本文にない。新規記述の追加はスコープ外のため未修正。
-- 同ページには「GPU を使うタスクの最大タイムアウトは1時間」という例外も記載されている。教材は GPU に触れていないため影響なし。
+- Cloud Run Jobs の task timeout の**既定値は10分**(https://docs.cloud.google.com/run/docs/configuring/task-timeout)。本章の比較表は上限(最大7日)のみを示しており誤りではないが、既定10分・`--task-timeout` で変更という情報は本文にない。**2026-08-19 時点では新規記述の追加をスコープ外として未修正とした → 2026-08-30 に本文へ反映済み(下記の追記を参照)。**
+- 同ページには「GPU を使うタスクの最大タイムアウトは1時間」という例外も記載されている。教材は GPU に触れていないため影響なし。**2026-08-30 の追記では、既定値と併せて1行だけ触れている。**
+
+## 2026-08-30 追記(既定値の本文反映)
+
+**確認日**: 2026-08-30。上記2件の根拠を https://docs.cloud.google.com/run/docs/configuring/task-timeout で再取得し、原文が次のとおりであることを確認した。
+
+| # | 確認項目 | 確定した内容 | verdict | source_url | resolution |
+|---|---|---|---|---|---|
+| 30 | タスクタイムアウトの既定値 | 「By default, each task runs for a maximum of 10 minutes」 | 正しい | https://docs.cloud.google.com/run/docs/configuring/task-timeout | `10_advanced/jobs.md` の比較表直後へ、既定10分と `--task-timeout` での変更を1段落で追記した |
+| 31 | タスクタイムアウトの上限 | 「you can change this to a shorter time or a longer time up to 168 hours (7 days)」 | 正しい | https://docs.cloud.google.com/run/docs/configuring/task-timeout | 同上。本文の「最大7日間」と一致するため表の値は変更していない |
+| 32 | GPU タスクの上限 | 「For tasks using GPUs, the maximum available timeout is 1 hour.」 | 正しい | https://docs.cloud.google.com/run/docs/configuring/task-timeout | 同上。同じ段落内で1文だけ触れた |
+
+**スコープ判断**: 本文への追記は、既存記載(タスクあたりの実行時間上限)に対する事実の補足であり、FR-013 の「修正は各章の記述内容(事実関係)に限定する」および FR-014 の「既存記載の事実確認・修正のみ」の範囲に収まる。新機能の追加ではなく、章立て・節構成・`SUMMARY.md` に変更はない(新しい `##` / `###` 見出しを本文へ追加していないため FR-013a の手続きは要さない)。反映の動機は、上限だけを示す記述のままだと受講者が既定の10分で打ち切られる事故につながるため。
+
 - `10_advanced/jobs.md` は既に stable の `gcloud run jobs logs read` を使用し、Scheduler も専用 SA 方式であるため、deep research レポートが指摘していた `beta` 利用と default compute SA 依存は現行 Markdown には存在しなかった(レポートは PDF 版を対象にしていた可能性が高い。未確認)。
