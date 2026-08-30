@@ -92,6 +92,14 @@
 
   `ls specs/001-verify-handson-content/fact-check/*.md | wc -l` による実測は **24ファイル**(内訳: 章別15 / 章横断3 / コード1 / 実機検証5)
 
+- **2026-08-30 追記(Cloud Run instances の提供状況)**: `fact-check/cloudrun-instances.md`(第4のリソースタイプ Cloud Run instances の提供状況、確認日 2026-08-30)を新設した。**これも章をまたぐ受け皿**で、`aws-ecs-express-mode.md` と同じ位置づけ。判定は「確認済み4 / 未確認2(計6項目)」。
+
+  スコープは**提供状況(launch stage / 招待制か / gcloud サーフェス / 対応リージョン / 料金区分 / GPU 対応)の確定に限る**。本文へどう書くか(3モデル→4モデルへの更新、発展編での紹介、後片付け手順の追加)は別タスクで扱うため、**章別フラグメントの既存の判定を変更しない**。
+
+  食い違っていた2つの情報のうち「リリースノートに 2026-08-25 付で Preview 掲載・`gcloud beta run instances` あり」が正しく、「招待制の select customers 限定・`gcloud alpha`」は公式ドキュメントで裏付けられなかった。
+
+  `ls specs/001-verify-handson-content/fact-check/*.md | wc -l` による実測は **25ファイル**(内訳: 章別15 / 章横断4 / コード1 / 実機検証5)
+
 ---
 
 ## 3. レポート由来の指摘インベントリ
