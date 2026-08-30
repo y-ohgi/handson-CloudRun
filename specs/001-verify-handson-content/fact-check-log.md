@@ -71,7 +71,7 @@
 | 10. 発展編(導入) | `10_advanced/README.md` | 修正済み | `fact-check/10_advanced.md` | **完成**(正しい17 / 要修正0 / 未確認1) |
 | 10-1. Pub/Subとつなぐ | `10_advanced/pubsub.md` | 修正済み | `fact-check/10_advanced_pubsub.md` | **完成**(正しい18 / 要修正1 / 未確認1、T026 で更新) |
 | 10-2. WebSocketチャット | `10_advanced/websocket.md` | 修正済み | `fact-check/10_advanced_websocket.md` | **完成**(正しい15 / 要修正2 / 未確認0) |
-| 10-3. Cloud Run Jobs | `10_advanced/jobs.md` | 修正済み | `fact-check/10_advanced_jobs.md` | **完成**(正しい29 / 要修正0 / 未確認0、T026 で更新) |
+| 10-3. Cloud Run Jobs | `10_advanced/jobs.md` | 修正済み | `fact-check/10_advanced_jobs.md` | **完成**(正しい32 / 要修正0 / 未確認0、T026 で更新。2026-08-30 に #30〜#32 を追加) |
 | 99. 後片付け | `99_cleanup/README.md` | 要再検証 | `fact-check/99_cleanup.md` | **完成**(正しい13 / 要修正6 / 未確認1、T026 で更新) |
 | サンプルアプリ・WebSocketサンプル | `code/app/*`, `code/websocket/*` | 要再検証 | `fact-check/code_samples.md` | **完成**(正しい17 / 要修正1 / 未確認0、`code/` は変更不要、T026 で更新) |
 
