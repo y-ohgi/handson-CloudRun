@@ -2,18 +2,25 @@
 
 AWS を実務で使っているエンジニアに向けた、Google Cloud / Cloud Run のハンズオン教材です。
 
+Web版: [y-ohgi.com/handson-CloudRun](https://y-ohgi.com/handson-CloudRun/)
+
 ## この教材のゴール
 
-1. **Cloud Run を通して Google Cloud の良さを知る** — 「デプロイしたら HTTPS の URL が返ってくる」体験から、Google Cloud の SaaS 的なアプローチを体感する
-2. **AWS との違いを知る** — 単なるサービス名の読み替えではなく、思想の違いを理解する
-3. **別のクラウドの目線を持ち帰る** — 普段 AWS で組んでいる構成を「Google Cloud ならどう組むか」で考えられるようになる
+1. **Cloud Run を通して Google Cloud の良さを知る**
+  - 「デプロイしたら HTTPS の URL が返ってくる」体験から、Google Cloud の SaaS 的なアプローチを体感する
+2. **AWS との違いを知る**
+  - 単なるサービス名の読み替えではなく、思想の違いを理解する
+3. **異なるクラウドの目線を持ち帰る**
+  - 普段 AWS で組んでいる構成を「Google Cloud ならどう組むか」で考えられるようになる
 
 ## 対象者
 
-- クラウドを実務で利用したことがある(AWS がメイン)
-- `docker build` / `docker run` を打ったことがある、もしくは概念は知っている
-- Google Cloud はほぼ触ったことがなくて OK
-- サンプルアプリは TypeScript + [Hono](https://hono.dev/) 製ですが、書き換えるのは定数2行だけなので TypeScript の経験は不要です
+- AWS を実務で利用したことがある方
+  - Google Cloud は未経験、もしくは BigQuery などを少し触った程度
+- コンテナ技術は知識として知っている方
+  - Docker・devcontainer・ECS・Kubernetes
+- クラウドベンダーの設計思想の違いを学びたい方
+  - AWS と Google Cloud の違いをサービス名の対応ではなく、設計思想の違いとして理解したい方
 
 ## 進め方
 

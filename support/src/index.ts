@@ -11,7 +11,16 @@ const PORT = Number(process.env.PORT ?? 8080);
 // iframe に表示する GitBook の URL。
 // デフォルトはこのアプリ自身が /book/ で配信する同梱ビルド(Dockerfile 参照)。
 // 外部ホスティング(GitHub Pages 等)を使う場合は環境変数で差し替える。
-const GITBOOK_URL = process.env.GITBOOK_URL ?? "/book/";
+// スキームを省略した値(localhost:4000 など)はそのままだと相対URLとして解決されて
+// iframe が表示できないため補う。Cloud Run は HTTPS 配信で http:// の埋め込みは
+// mixed content としてブロックされるので、ローカル開発用ホスト以外は https:// を補う。
+const normalizeBookUrl = (url: string) => {
+  if (url.startsWith("/") || /^[a-z][a-z0-9+.-]*:\/\//i.test(url)) return url;
+  const isLocal = /^(localhost|127\.0\.0\.1|\[::1\])(:|\/|$)/i.test(url);
+  return `${isLocal ? "http" : "https"}://${url}`;
+};
+
+const GITBOOK_URL = normalizeBookUrl(process.env.GITBOOK_URL ?? "/book/");
 
 // 同梱 GitBook の静的ファイルの場所。ローカル開発ではリポジトリルートの _book を使う
 const BOOK_DIR = process.env.BOOK_DIR ?? "../_book";

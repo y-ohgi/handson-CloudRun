@@ -1,0 +1,24 @@
+{#
+  既定テーマの website/page.html を継承し、head に OGP / Twitter Card のメタタグを足す。
+  同名テンプレートを extends すると、honkit の ThemesLoader が次の検索パス
+  (= テーマプラグイン側の page.html) を解決するため、テーマ本体は上書きされない。
+#}
+{% extends "website/page.html" %}
+
+{% set siteBaseURL = "https://y-ohgi.com/handson-CloudRun/" %}
+{### contentURL は README.md を "./" に変換するため、先頭の "./" を落として絶対URLにする ###}
+{% set ogPath = file.path|contentURL|replace(r/^\.\//, "") %}
+{### トップページの章タイトル(「はじめに」)は単独では内容が伝わらないため書籍名を使う ###}
+{% set ogTitle = config.title if ogPath == "" else page.title|d(config.title, true) %}
+{% set ogDescription = config.description|d("AWSの経験を土台に、Google CloudとCloud Runの考え方をハンズオンで学ぶ教材です。", true) %}
+
+{% block head %}
+    {{ super() }}
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="{{ config.title }}">
+    <meta property="og:title" content="{{ ogTitle }}">
+    <meta property="og:description" content="{{ ogDescription }}">
+    <meta property="og:image" content="{{ siteBaseURL }}imgs/ogp.png">
+    <meta property="og:url" content="{{ siteBaseURL }}{{ ogPath }}">
+    <meta name="twitter:card" content="summary_large_image">
+{% endblock %}

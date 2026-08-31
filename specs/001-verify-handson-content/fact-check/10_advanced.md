@@ -27,10 +27,13 @@
 | 16 | L28 | ロードバランサーを組まずに社内向けアプリへ Google アカウント認証を付けられる | 正しい | https://docs.cloud.google.com/run/docs/release-notes | 同エントリの「without the need for load balancers」と一致 |
 | 17 | L3, L5-9 | 各節の形式・所要時間(20分/10分/10分)、2時間版は講師デモ | 未確認 | - | 教材運営上の設計値であり、公式ドキュメントで検証できる技術的主張ではない。当日の実測に委ねる。**2026-08-19 T026: 未確認のまま残す(カテゴリC: 所要時間・実測依存)**。参考として実機の所要時間は、Jobs の `execute --wait` が約24秒(`live-jobs.md` #2)、Scheduler 起動から実行開始まで約64秒(#13)、`--tasks 5` の並列実行が約21秒(#15)、ソースデプロイが1〜2分(`live-source-deploy.md` #14)。個々の待ち時間は節の想定内だが、参加者20〜50人規模での節全体の所要時間は当日にしか測れない |
 | 18 | L19 | 「ただのコンテナ・ただのHTTP」という抽象を守っているから何とでもつながる | 正しい(解釈) | https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run | 公式はサービスを「Responds to HTTP requests sent to a unique and stable endpoint, using stateless instances that autoscale based on a variety of key metrics」と説明。コンテナ + HTTP という基本モデルと矛盾しない教材側の解釈 |
+| 19 | L26(新) | Cloud Run instances は3章で触れた第4の実行モデルで、2026年8月時点で Preview。インスタンスごとに専用URLを持つ | 正しい | https://docs.cloud.google.com/run/docs/release-notes 、https://docs.cloud.google.com/run/docs/resource-model | 2026-08-31 に「さらにその先(講師からの紹介のみ)」へ1行追加した。Preview の掲載は 2026-08-25 付リリースノート、専用URL(Dedicated URL endpoint)は resource model が instances の機能として挙げている。提供状況の詳細は `cloudrun-instances.md` |
 
 ## 修正した箇所
 
-なし。**2026年の新機能4件(Worker pools / GPU / Docker Compose / IAP直接統合)のGA時期と内容はすべてリリースノートおよび機能ドキュメントの一次情報と一致していた。**
+**2026-08-19 時点: なし。** 2026年の新機能4件(Worker pools / GPU / Docker Compose / IAP直接統合)のGA時期と内容はすべてリリースノートおよび機能ドキュメントの一次情報と一致していた。
+
+**2026-08-31 追記**: #19 により「さらにその先(講師からの紹介のみ)」へ Cloud Run instances の1行を追加した。同節は既に2025〜2026年の新機能を紹介のみで列挙する枠であり、実習項目は増やしていない。見出しの追加・改名・並べ替えはなく、`SUMMARY.md` の差分もない。
 
 ## 実機確認が必要な残件・補足(2026-08-19 T026 で棚卸し)
 
