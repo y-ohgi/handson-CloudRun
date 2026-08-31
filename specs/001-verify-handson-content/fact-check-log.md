@@ -59,16 +59,16 @@
 |---|---|---|---|---|
 | はじめに | `README.md` | — | 対象外(目次・導入。技術的主張は各章へ帰属) | — |
 | 0. 事前準備 | `00_preparation/README.md` | 修正済み | `fact-check/00_preparation.md` | **完成**(正しい34 / 要修正5 / 未確認2) |
-| 1. AWSとGoogle Cloudの考え方の違い | `01_aws_and_googlecloud/README.md` | 要再検証 | `fact-check/01_aws_and_googlecloud.md` | **完成**(正しい27 / 要修正8 / 未確認1) |
+| 1. AWSとGoogle Cloudの考え方の違い | `01_aws_and_googlecloud/README.md` | 要再検証 | `fact-check/01_aws_and_googlecloud.md` | **完成**(正しい30 / 要修正12 / 未確認1。2026-08-25 に #37〜#43 を追加) |
 | 2. Dockerのおさらいとコンテナ起動 | `02_docker/README.md` | 修正済み | `fact-check/02_docker.md` | **完成**(正しい38 / 要修正2 / 未確認0) |
-| 3. Cloud Runとは | `03_cloudrun/README.md` | 修正済み | `fact-check/03_cloudrun.md` | **完成**(正しい23 / 要修正0 / 未確認0、本文変更なし) |
+| 3. Cloud Runとは | `03_cloudrun/README.md` | 修正済み | `fact-check/03_cloudrun.md` | **完成**(正しい27 / 要修正3 / 未確認0。2026-08-26 に #24〜#29、2026-08-30 に #30 を追加) |
 | 4. Cloud Runへデプロイする | `04_deploy/README.md` | 要再検証 | `fact-check/04_deploy.md` | **完成**(正しい14 / 要修正2 / 未確認4、T026 で更新) |
 | 5. 更新とロールバック | `05_revision/README.md` | 要再検証 | `fact-check/05_revision.md` | **完成**(正しい15 / 要修正2 / 未確認1、T026 で更新) |
 | 6. カナリアリリースとタグ付きURL | `06_traffic/README.md` | 要再検証 | `fact-check/06_traffic.md` | **完成**(正しい13 / 要修正3 / 未確認1、T026 で更新) |
 | 7. オートスケールを観察する | `07_scaling/README.md` | 修正済み | `fact-check/07_scaling.md` | **完成**(正しい18 / 要修正13 / 未確認1、T026 で更新) |
 | 8. ログとメトリクスをのぞく | `08_observability/README.md` | 要再検証 | `fact-check/08_observability.md` | **完成**(正しい13 / 要修正0 / 未確認2、T026 で更新) |
 | 9. 締め: Dockerfileすら書かないデプロイ | `09_source_deploy/README.md` | 要再検証 | `fact-check/09_source_deploy.md` | **完成**(正しい11 / 要修正1 / 未確認1、T026 で更新) |
-| 10. 発展編(導入) | `10_advanced/README.md` | 修正済み | `fact-check/10_advanced.md` | **完成**(正しい17 / 要修正0 / 未確認1) |
+| 10. 発展編(導入) | `10_advanced/README.md` | 修正済み | `fact-check/10_advanced.md` | **完成**(正しい18 / 要修正0 / 未確認1。2026-08-31 に #19 を追加) |
 | 10-1. Pub/Subとつなぐ | `10_advanced/pubsub.md` | 修正済み | `fact-check/10_advanced_pubsub.md` | **完成**(正しい18 / 要修正1 / 未確認1、T026 で更新) |
 | 10-2. WebSocketチャット | `10_advanced/websocket.md` | 修正済み | `fact-check/10_advanced_websocket.md` | **完成**(正しい15 / 要修正2 / 未確認0) |
 | 10-3. Cloud Run Jobs | `10_advanced/jobs.md` | 修正済み | `fact-check/10_advanced_jobs.md` | **完成**(正しい32 / 要修正0 / 未確認0、T026 で更新。2026-08-30 に #30〜#32 を追加) |
@@ -99,6 +99,17 @@
   食い違っていた2つの情報のうち「リリースノートに 2026-08-25 付で Preview 掲載・`gcloud beta run instances` あり」が正しく、「招待制の select customers 限定・`gcloud alpha`」は公式ドキュメントで裏付けられなかった。
 
   `ls specs/001-verify-handson-content/fact-check/*.md | wc -l` による実測は **25ファイル**(内訳: 章別15 / 章横断4 / コード1 / 実機検証5)
+
+- **2026-08-30 追記(3モデル → 4モデルへの本文更新。FR-013a の適用記録)**: 判断者はリポジトリ所有者(bd `handson-CloudRun-jdo` として起票、実施は Claude Code の自律実行セッション)。
+
+  **変更前**: `03_cloudrun/README.md` の見出しが「3つの実行モデル」で、表は サービス / ジョブ / ワーカープール の3行。まとめも「実行モデルは3つ」。
+  **変更後**: 見出しを「4つの実行モデル」に改め、表へ「インスタンス (Instance)」の行を追加。導入文・まとめ・「制約・向かないもの」も4モデル前提へ更新し、選び分けの軸(リクエストが来るか / 処理に終わりがあるか / 1台か複数か)と、ワーカープールとインスタンスの境目を1段落で補った。
+
+  **適用理由**: 公式の resource model 比較表が services / jobs / worker pools / instances の4種を並列に列挙しており、「3つ」という記述が事実として誤りになったため。根拠は `fact-check/cloudrun-instances.md`(FR-013a 条件2)と `fact-check/03_cloudrun.md` #30。
+
+  **FR-013a の条件との差異(重要)**: 条件(1)は「既存の節(`##` / `###`)の削除・改名・並べ替えを行わない」としているが、本変更は既存見出し `## 3つの実行モデル` を `## 4つの実行モデル` へ**改名している**。見出し自身が「3つ」という事実誤りを含んでおり、改名せずに事実を正すことができないための例外扱いとした。`SUMMARY.md` の差分は0行、章順・時間配分・他の見出しの文言と相対順序に変更はない。新しい `##` / `###` の追加もない。
+
+  **未対応**: 図 `03_cloudrun/imgs/three-execution-models.svg` は3分岐のままで、インスタンスが描かれていない。本文に図が3分岐である旨の注記を置き、差し替えは別タスクとした。`fact-check/figures.md` の図2に関する判定も、差し替え後に見直しが要る。
 
 ---
 
@@ -452,14 +463,14 @@ rg -n "未確認" specs/001-verify-handson-content/fact-check/
 
 | 区分 | ファイル数 | 判定行 | 正しい | 要修正 | 未確認 |
 |---|---|---|---|---|---|
-| 章別フラグメント + `aws-comparisons.md` | 17 | **406** | 336 | 54 | **16** |
+| 章別フラグメント + `aws-comparisons.md` | 17 | **408** | 337 | 55 | **16** |
 | 実機検証フラグメント(`live-*.md`) | 5 | 122 | (一致/不一致/未実施の別形式) | — | — |
 
 > **2026-08-30 再集計**: 上表は 2026-08-19 の実施時点では実測と一致していた(当時のコミット `2bb97dc` で数え直すと 390 / 326 / 48 / 16)。その後、対象ファイルへ判定行を追加した3つのコミットが本集計表を更新しないまま入り、**判定行が16行ぶんずれていた**。内訳は `01_aws_and_googlecloud.md` +7(`3e86ab4`、2026-08-25)、`03_cloudrun.md` +6(`6018411`、2026-08-26)、`10_advanced_jobs.md` +3(`aa33a36`、2026-08-30)。あわせて、実機検証フラグメントは 2026-08-22 に `live-dryrun-full.md` が加わって5ファイル122行になっていたが、こちらも未反映だった(§2 の 2026-08-25 追記で index には補正済み)。**`未確認` の16件は増減していない**ため、SC-001 の判定(未達)は変わらない。
 >
-> 数え方: 各フラグメントの `^\| *[0-9]+ *\|` にマッチする行を判定行とし、verdict 列は `**` を除いた前方一致で分類する。`07_scaling.md` #32 の `正しい(Cloud Shell の jq は未確認)` を「未確認」に数えない点と、`aws-comparisons.md` #16 の `**要修正**`(太字)を取りこぼさない点に注意する。
+> 数え方: 各フラグメントの `^\| *[0-9]+ *\|` にマッチする行を判定行とし、verdict 列は `**` を除いた前方一致で分類する。`07_scaling.md` #21 の `正しい(Cloud Shell の jq は未確認)` を「未確認」に数えない点と、`aws-comparisons.md` #16 の `**要修正**`(太字)を取りこぼさない点に注意する。
 
-- **確定済み: 390件**(正しい336 + 要修正54)
+- **確定済み: 392件**(正しい337 + 要修正55)
 - **残存 `未確認`: 16件**(verdict 列が `未確認` の行)
 - これに加えて `07_scaling.md` #21 は verdict が `正しい(Cloud Shell の jq は未確認)` で、主張の一部だけが未確認のまま残っている。**カテゴリ分類ではこれを含めた17件を扱う。**
 - T026 開始時点で `未確認` 系だったのは32件。**そのうち15件を確定させた**(内訳は 6.2)。
