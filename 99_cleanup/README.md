@@ -26,7 +26,7 @@ gcloud run services delete handson-chat --region ${REGION} --quiet      # 10-2�
 gcloud scheduler jobs delete handson-job-schedule --location ${REGION} --quiet
 gcloud iam service-accounts delete "handson-scheduler@${PROJECT_ID}.iam.gserviceaccount.com" --quiet
 
-# Cloud Run ジョブ(10-3を実施した場合)
+# Cloud Run Jobs(10-3を実施した場合)
 gcloud run jobs delete handson-job --region ${REGION} --quiet
 
 # Pub/Sub(10-1を実施した場合)

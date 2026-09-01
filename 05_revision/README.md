@@ -27,7 +27,7 @@ gcloud run deploy handson-app \
   --region ${REGION}
 ```
 
-> 2回目以降は `--allow-unauthenticated` などの設定を繰り返す必要はありません。サービスの設定は維持され、**変更したもの(イメージ)だけが新しいリビジョンとして記録されます**。
+> 2回目以降は `--allow-unauthenticated` などの設定を繰り返す必要はありません。Service の設定は維持され、**変更したもの(イメージ)だけが新しいリビジョンとして記録されます**。
 
 ブラウザをリロードしてください。  
 **画面が赤くなり、Revision が `handson-app-00002-xxx` に変わっていれば成功です。**  

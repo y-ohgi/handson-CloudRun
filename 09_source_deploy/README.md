@@ -17,7 +17,7 @@ gcloud run deploy handson-app-src \
   --allow-unauthenticated
 ```
 
-数分待つと、別サービス `handson-app-src` として同じアプリが公開されます。
+数分待つと、別の Service `handson-app-src` として同じアプリが公開されます。
 
 > **成功していれば:** ビルドとデプロイに数分かかったあと、`Service URL: https://handson-app-src-...` が表示されます。開くと4章と同じレイアウトの画面が出ますが、**色とメッセージは緑の v3** です(6章で `src/index.ts` を v3 に書き換えたまま進めているので、ソースからビルドされるのは v3 のコードです)。`Service` の欄が `handson-app-src` になっていることも確認してください。初回はビルド済みイメージの置き場として `cloud-run-source-deploy` という Artifact Registry リポジトリが自動で作られます(確認を求められたらそのまま進めてください)。途中で出力が止まって見えても、ビルド待ちなので待って大丈夫です。
 >
@@ -48,7 +48,7 @@ gcloud run deploy handson-app-src \
 
 <!-- 引用ブロックの結合を防ぐ区切り -->
 
-> **AWSとの比較:** App Runner のソースデプロイに相当しますが、できあがるものは今日ずっと触ってきた「普通の Cloud Run サービス」です。カナリアも、タグ付きURLも、スケール設定も全部同じように使えます。
+> **AWSとの比較:** App Runner のソースデプロイに相当しますが、できあがるものは今日ずっと触ってきた「普通の Cloud Run Service」です。カナリアも、タグ付きURLも、スケール設定も全部同じように使えます。
 
 ## では、なぜ今日 Dockerfile から始めたのか
 

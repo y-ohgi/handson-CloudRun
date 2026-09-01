@@ -47,7 +47,7 @@ gcloud run services logs read handson-app --region ${REGION} --limit 20
 > curl -s -o /dev/null ${URL}/
 > ```
 >
-> `${REGION}` が空のまま実行するとエラーになります。Cloud Shell を開き直した場合は、[4章の「0. 環境変数の準備」](../04_deploy/README.md)をもう一度実行してください。サービスそのものが見つからないときは `gcloud run services list --region ${REGION}` で名前を確認してください。
+> `${REGION}` が空のまま実行するとエラーになります。Cloud Shell を開き直した場合は、[4章の「0. 環境変数の準備」](../04_deploy/README.md)をもう一度実行してください。Service そのものが見つからないときは `gcloud run services list --region ${REGION}` で名前を確認してください。
 
 <!-- 引用ブロックの結合を防ぐ区切り -->
 
