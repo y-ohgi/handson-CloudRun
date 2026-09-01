@@ -6,7 +6,7 @@
 
 > **AWSでいうと:** ECS の RunTask、AWS Batch、(15分制限がなければ)Lambda あたりの守備範囲です。
 
-## Service との違い
+## Services との違い
 
 | | Services | Jobs |
 |---|---|---|

@@ -116,6 +116,10 @@
   **変更前**: 4つのリソースタイプが章によって「サービス / ジョブ / ワーカープール / インスタンス」(カタカナ)と英語表記で混在し、3章の表は手動編集の結果 `Service` / `Jobs` / `Worker pool` / `Instances` と単複が揃っていなかった。
   **変更後**: 全13ファイルで表記を統一した。**リソースタイプそのものを列挙・比較する箇所は Title Case の複数形**(`Services` / `Jobs` / `Worker Pools` / `Instances`)、**文中で1つのリソースを指す箇所は先頭大文字の単数形**(`Service` / `Job` / `Worker pool` / `Instance`)とした。
 
+  **単複の下位規則(2026-09-01 のセルフレビューで明文化)**: 上の2分類の境目は「**種類として語っているか、個別のリソースを指しているか**」で判定する。比較・対比・選択・GA時期の言及・機能の登場はいずれも「種類として語っている」に当たるため複数形。「Service 名になります」「Job を実行する」のように受講者が作る・触る対象を指す場合は単数形。この規則を当てた結果、`Worker pool`(単数)は本文から0件になった(この教材は個々の worker pool を1つ指す場面を持たないため)。
+
+  **プロダクト名の表記も対象に含めた**: 4リソースタイプに加えて、Google Cloud のプロダクト名が公式表記になっているかを全章で確認した(`Pub/Sub` / `Eventarc` / `Artifact Registry` / `Cloud Build` / `Cloud Scheduler` / `Cloud Logging` / `Cloud Monitoring` / `Cloud Shell` / `Secret Manager` / `Identity-Aware Proxy (IAP)`)。誤表記は0件だったが、`10_advanced/README.md` の `**IAP 直接統合**` のみ、教材で唯一の登場箇所であり略称のみだったため `**Identity-Aware Proxy (IAP) 直接統合**` へ展開した。`09_source_deploy/README.md` の `GAR` は 1章・4章で `Artifact Registry (GAR)` として導入済みの略称のため据え置いた。
+
   **公式表記の調査結果**(確認日 2026-09-01、いずれも英語版): resource model の比較表のヘッダーは Title Case の複数形 `Services` / `Jobs` / `Worker Pools` / `Instances`。本文の見出しと散文では小文字の普通名詞("Cloud Run services"、"a job"、"a worker pool"、"an instance")。根拠は https://docs.cloud.google.com/run/docs/resource-model#resource-comparison 。
 
   **公式からの意図的な逸脱**: 公式は散文中で小文字だが、本教材では**先頭大文字**を採用した。日本語の文中に小文字の英単語を混ぜると誤記に見えるため。
