@@ -42,10 +42,10 @@ Cloud Run には現在、ワークロードの形に合わせた**4つの実行�
 
 | 実行モデル | 向いているもの | AWSでいうと |
 |---|---|---|
-| **Service** | HTTPリクエスト / イベント駆動 | ECS on Fargate + ALB(1コマンドで立てるなら ECS Express Mode), Lambda + ALB |
-| **Job** | 実行して終わるバッチ処理(発展編10-3) | ECS RunTask, AWS Batch |
-| **Worker pool** | 常駐してキューをpullし続ける処理(2026年4月GA) | SQSをポーリングするECS常駐ワーカー |
-| **Instance** | 1台であることに意味があるシングルトン常駐(2026年8月時点で Preview) | 常時起動の Fargate タスク1個 / 小型EC2 |
+| **[Service](https://cloud.google.com/run/docs/overview/what-is-cloud-run#cloud_run_services)** | HTTPリクエスト / イベント駆動 | ECS on Fargate + ALB(1コマンドで立てるなら ECS Express Mode), Lambda + ALB |
+| **[Job](https://cloud.google.com/run/docs/overview/what-is-cloud-run#cloud-run-jobs)** | 実行して終わるバッチ処理(発展編10-3) | ECS RunTask, AWS Batch |
+| **[Worker pool](https://cloud.google.com/run/docs/overview/what-is-cloud-run#cloud-run-worker-pools)** | 常駐してキューをpullし続ける処理(2026年4月GA) | SQSをポーリングするECS常駐ワーカー |
+| **[Instance](https://cloud.google.com/run/docs/overview/what-is-cloud-run#cloud-run-instances)** | 1台であることに意味があるシングルトン常駐(2026年8月時点で Preview) | 常時起動の Fargate タスク1個 / 小型EC2 |
 
 Kafka コンシューマや Pub/Sub の pull 型ワーカーのような「リクエスト起点でない常駐処理」も、Worker pool の登場で Cloud Run に乗るようになりました。  
 同じイメージ・同じ開発体験のまま実行モデルだけ選び替えられるのが、このプラットフォームの設計の一貫性です。
