@@ -17,7 +17,7 @@ gcloud projects delete ${PROJECT_ID}
 既存プロジェクトを使った場合はこちら。Cloud Shell を開き直していると `${REGION}` などの環境変数が消えているので、先に [4章の「環境変数の準備」](../04_deploy/README.md)を実行し直してください。
 
 ```bash
-# Cloud Run Services
+# Cloud Run Service
 gcloud run services delete handson-app --region ${REGION} --quiet
 gcloud run services delete handson-app-src --region ${REGION} --quiet   # 9章を実施した場合
 gcloud run services delete handson-chat --region ${REGION} --quiet      # 10-2を実施した場合
@@ -26,7 +26,7 @@ gcloud run services delete handson-chat --region ${REGION} --quiet      # 10-2�
 gcloud scheduler jobs delete handson-job-schedule --location ${REGION} --quiet
 gcloud iam service-accounts delete "handson-scheduler@${PROJECT_ID}.iam.gserviceaccount.com" --quiet
 
-# Cloud Run Jobs(10-3を実施した場合)
+# Cloud Run Job(10-3を実施した場合)
 gcloud run jobs delete handson-job --region ${REGION} --quiet
 
 # Pub/Sub(10-1を実施した場合)

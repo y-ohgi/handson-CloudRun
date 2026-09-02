@@ -130,6 +130,14 @@
 
   **未対応**: 図(`imgs/*.svg`)のラベルは日本語(「サービス」「ジョブ」「ワーカープール」)のまま。本文が図のラベルを引用している箇所(`01:44`、`04:98`、`05:64`、`06:57`)は図との対応が崩れるため日本語のまま残した。図の差し替えは bd `handson-CloudRun-l3w`(図2の4分岐化)に統合する。
 
+- **2026-09-02 改訂(単数形への一本化)**: 判断者はリポジトリ所有者(「単数形で統一して」)。上記 2026-09-01 の「列挙・比較は複数形 / 個体は単数形」という2形式の使い分けを廃止し、**教材内は `Service` / `Job` / `Worker pool` / `Instance` の単数形に一本化した**。表のヘッダー・図の作図指示・まとめの列挙も単数形にする。
+
+  **理由**: (1) 2形式の使い分けは境界(比較か言及か)の判定が人によってぶれ、実際に同一文書内で `Service` と `Services` の混在を生んだ。(2) 単数・先頭大文字には Cloud Run Admin API v2 のリソース型名(`Service` / `Job` / `WorkerPool` / `Instance`)という公式の裏付けがある(https://docs.cloud.google.com/run/docs/reference/rest/v2/projects.locations.services ほか)。(3) 教材が引用する gcloud の出力(`Service URL:`、`Service [handson-app] revision ... has been deployed`)が単数形であり、本文と受講者の画面が一致する。
+
+  **公式ドキュメントの実態(2026-09-01 調査)**: 英語版の本文・見出し・リリースノートは一貫して小文字複数の普通名詞("Cloud Run services" など)で、大文字化は resource-model の比較表ヘッダーのみ。「Cloud Run Jobs」のような大文字の製品機能名はプロダクトページに存在しない。つまり大文字単数は「公式の散文の表記」ではなく「API 型名の表記」の採用である。
+
+  **例外(単数形にしないもの)**: 章タイトル「10-3. Cloud Run Jobs」(`SUMMARY.md`・`10_advanced/jobs.md` の H1・各所の目次リンク)は著者が付けた章名として維持。コード内文字列とその出力の引用(`Hello from Cloud Run Jobs`)。AWS 製品名(`Lambda Managed Instances`)。日本語コンソールのメニュー名(公式の日本語ラベルは「サービス」「ジョブ」「ワーカープール」のカタカナであることを `?hl=ja` の公式手順文で確認済み)。
+
 ---
 
 ## 3. レポート由来の指摘インベントリ

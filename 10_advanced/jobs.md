@@ -1,14 +1,14 @@
 # 10-3. Cloud Run Jobs
 
 ここまで扱ってきたのは Cloud Run の「Service」——HTTPリクエストを受けるワークロードでした。  
-もう1つの顔が **Jobs**: リクエストを受けず、処理が終わったら終了するワークロードです。  
+もう1つの顔が **Job**: リクエストを受けず、処理が終わったら終了するワークロードです。  
 バッチ処理、DBマイグレーション、定期集計などに使います。
 
 > **AWSでいうと:** ECS の RunTask、AWS Batch、(15分制限がなければ)Lambda あたりの守備範囲です。
 
-## Services との違い
+## Service との違い
 
-| | Services | Jobs |
+| | Service | Job |
 |---|---|---|
 | 起動のきっかけ | HTTPリクエスト | 実行命令(手動 / スケジュール / API) |
 | 終わり方 | 常に待ち受け | プロセスが exit したら完了 |
@@ -90,7 +90,7 @@ gcloud scheduler jobs create http handson-job-schedule \
 
 ![並列タスクが環境変数で担当範囲を分ける仕組み](imgs/parallel-tasks-index.svg)
 
-Jobs の面白いところは組み込みの並列実行です。  
+Job の面白いところは組み込みの並列実行です。  
 例えば「10万件のデータを100タスクで分担して処理」のような使い方ができます:
 
 ```bash

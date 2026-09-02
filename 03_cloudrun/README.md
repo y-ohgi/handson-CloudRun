@@ -42,33 +42,33 @@ Cloud Run には現在、ワークロードの形に合わせた**4つの実行�
 
 | 実行モデル | 向いているもの | AWSでいうと |
 |---|---|---|
-| **Services** | HTTPリクエスト / イベント駆動 | ECS on Fargate + ALB(1コマンドで立てるなら ECS Express Mode), Lambda + ALB |
-| **Jobs** | 実行して終わるバッチ処理(発展編10-3) | ECS RunTask, AWS Batch |
-| **Worker Pools** | 常駐してキューをpullし続ける処理(2026年4月GA) | SQSをポーリングするECS常駐ワーカー |
-| **Instances** | 1台であることに意味があるシングルトン常駐(2026年8月時点で Preview) | 常時起動の Fargate タスク1個 / 小型EC2 |
+| **Service** | HTTPリクエスト / イベント駆動 | ECS on Fargate + ALB(1コマンドで立てるなら ECS Express Mode), Lambda + ALB |
+| **Job** | 実行して終わるバッチ処理(発展編10-3) | ECS RunTask, AWS Batch |
+| **Worker pool** | 常駐してキューをpullし続ける処理(2026年4月GA) | SQSをポーリングするECS常駐ワーカー |
+| **Instance** | 1台であることに意味があるシングルトン常駐(2026年8月時点で Preview) | 常時起動の Fargate タスク1個 / 小型EC2 |
 
-Kafka コンシューマや Pub/Sub の pull 型ワーカーのような「リクエスト起点でない常駐処理」も、Worker Pools の登場で Cloud Run に乗るようになりました。  
+Kafka コンシューマや Pub/Sub の pull 型ワーカーのような「リクエスト起点でない常駐処理」も、Worker pool の登場で Cloud Run に乗るようになりました。  
 同じイメージ・同じ開発体験のまま実行モデルだけ選び替えられるのが、このプラットフォームの設計の一貫性です。
 
 選び分けの軸は3つだけです。**(1) リクエストが来るか (2) 処理に終わりがあるか (3) コンテナインスタンスが1台か複数か**。  
-迷いやすいのは Worker Pools と Instances の境目で、ここは「N台に分散したいのか」「1台であることに意味があるのか」で分かれます。キューを複数台で食べたいなら Worker Pools、状態を持つプロセスを1つだけ動かし続けたいなら Instances です。
+迷いやすいのは Worker pool と Instance の境目で、ここは「N台に分散したいのか」「1台であることに意味があるのか」で分かれます。キューを複数台で食べたいなら Worker pool、状態を持つプロセスを1つだけ動かし続けたいなら Instance です。
 
 > Instance は 2026年8月時点で Preview です。`gcloud beta run instances` から使えますが、`us-central1` / `us-east1` / `europe-west1` は対象外です。今日のハンズオンでは扱いません。
 
-> **図の状態**: 上の図は3分岐(Services / Jobs / Worker Pools)のままで、Instances がまだ描かれていません。差し替えは別途対応します。
+> **図の状態**: 上の図は3分岐(Service / Job / Worker pool)のままで、Instance がまだ描かれていません。差し替えは別途対応します。
 
 > **[要作図] 図2: 実行モデル**
 >
 > - **目的:** 「Cloud Run は HTTP リクエストを受ける Service だけ」という思い込みを壊す。**同じコンテナイメージが中央にあり、そこから4方向に分岐する**という構図にすることが要点
 > - **中央:** 「同じコンテナイメージ」の箱を1つ置く
 > - **4方向の分岐:** それぞれ「何が起動のきっかけか」→「どう終わるか」を1組で描く
->   - Services: HTTPリクエスト / イベント → 常に待ち受け(URLを持つ)
->   - Jobs: 実行命令(手動 / スケジュール) → プロセスが exit したら完了
->   - Worker Pools: キューを自分で pull → 常駐しつづける(URLを持たない、N台に分散する)
->   - Instances: 手動で起動 → 1台のまま常駐しつづける(専用URLを持つ、Preview)
-> - **補足:** Worker Pools に「URLなし」を明示すると、Services との違いが伝わる。Worker Pools と Instances は「N台か1台か」で対比させると境目が伝わる。AWS 対応(ECS on Fargate + ALB / ECS RunTask / SQSをポーリングするECS常駐ワーカー / 常時起動の Fargate タスク1個)を各分岐の脇に小さく添えてもよい
+>   - Service: HTTPリクエスト / イベント → 常に待ち受け(URLを持つ)
+>   - Job: 実行命令(手動 / スケジュール) → プロセスが exit したら完了
+>   - Worker pool: キューを自分で pull → 常駐しつづける(URLを持たない、N台に分散する)
+>   - Instance: 手動で起動 → 1台のまま常駐しつづける(専用URLを持つ、Preview)
+> - **補足:** Worker pool に「URLなし」を明示すると、Service との違いが伝わる。Worker pool と Instance は「N台か1台か」で対比させると境目が伝わる。AWS 対応(ECS on Fargate + ALB / ECS RunTask / SQSをポーリングするECS常駐ワーカー / 常時起動の Fargate タスク1個)を各分岐の脇に小さく添えてもよい
 > - **完成後の扱い:** `03_cloudrun/imgs/three-execution-models.svg` として保存し、**見出しの直下**に `![同じコンテナイメージから分岐する実行モデル](imgs/three-execution-models.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
-> - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図ですが、**まだ3分岐のまま**で Instances が描かれていません。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
+> - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図ですが、**まだ3分岐のまま**で Instance が描かれていません。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
 
 ## Cloud Run の構成要素
 
@@ -106,5 +106,5 @@ Service
 ## まとめ
 
 - Cloud Run = コンテナを渡すと HTTPS URL が返ってくる。Lambda の運用感覚 × コンテナの自由度
-- 実行モデルは「Services・Jobs・Worker Pools・Instances」の4つ(Instances は Preview)。今日の主役は Service で、概念は「Service・リビジョン・トラフィック分割」の3つだけ。**AWS 側で ECS・ELB・CloudWatch・IAM・Application Auto Scaling に散っていた設定が、この3つと数個のつまみに集まっている**
+- 実行モデルは「Service・Job・Worker pool・Instance」の4つ(Instance は Preview)。今日の主役は Service で、概念は「Service・リビジョン・トラフィック分割」の3つだけ。**AWS 側で ECS・ELB・CloudWatch・IAM・Application Auto Scaling に散っていた設定が、この3つと数個のつまみに集まっている**
 - 座学はここまで。**ここからは全部手を動かします**
