@@ -69,13 +69,13 @@ gcloud run deploy handson-app \
   --allow-unauthenticated
 ```
 
-- `handson-app` がサービス名になります
+- `handson-app` が Service 名になります
 - `--allow-unauthenticated` は「認証なしで公開」。デフォルトは IAM 認証必須(=閉じている)で、AWS と逆のデフォルトです
 
 30秒ほどで完了し、`Service URL: https://handson-app-<プロジェクト番号>.asia-northeast1.run.app` のような URL が表示されます。
 
-> **成功していれば:** 出力の最後に `Service [handson-app] revision [handson-app-00001-xxx] has been deployed and is serving 100 percent of traffic.` と Service URL が表示されます。URL は `サービス名-プロジェクト番号.リージョン.run.app` という決まった形式です。あとから `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` でいつでも取り直せますが、こちらは `handson-app-<ランダム文字列>-an.a.run.app` という古い形式の URL を返します。**どちらも同じサービスを指す有効な URL** なので、見た目が違っても気にしなくて大丈夫です(6章以降では `describe` で取得した URL をそのまま使います)。
-> **詰まったら:** まず `gcloud run services list --region ${REGION}` でサービスが作られているか確認してください。作られていなければエラーの原因を切り分けます。`Image not found` や `manifest unknown` の場合は「2. イメージにタグを付けて push する」の push が完了していないので、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` を実行し、`TAGS` 列に `v1` が付いた行があるかを確認してください。`--region` や `--image` が空で怒られる場合は「0. 環境変数の準備」を再実行します。設定を間違えた場合も、同じ `gcloud run deploy` コマンドを何度でも実行し直して大丈夫です(新しいリビジョンが作られて上書きされます)。
+> **成功していれば:** 出力の最後に `Service [handson-app] revision [handson-app-00001-xxx] has been deployed and is serving 100 percent of traffic.` と Service URL が表示されます。URL は `サービス名-プロジェクト番号.リージョン.run.app` という決まった形式です。あとから `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` でいつでも取り直せますが、こちらは `handson-app-<ランダム文字列>-an.a.run.app` という古い形式の URL を返します。**どちらも同じ Service を指す有効な URL** なので、見た目が違っても気にしなくて大丈夫です(6章以降では `describe` で取得した URL をそのまま使います)。
+> **詰まったら:** まず `gcloud run services list --region ${REGION}` で Service が作られているか確認してください。作られていなければエラーの原因を切り分けます。`Image not found` や `manifest unknown` の場合は「2. イメージにタグを付けて push する」の push が完了していないので、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` を実行し、`TAGS` 列に `v1` が付いた行があるかを確認してください。`--region` や `--image` が空で怒られる場合は「0. 環境変数の準備」を再実行します。設定を間違えた場合も、同じ `gcloud run deploy` コマンドを何度でも実行し直して大丈夫です(新しいリビジョンが作られて上書きされます)。
 
 ## 4. アクセスして確認する
 
@@ -90,7 +90,7 @@ gcloud run deploy handson-app \
 - URL が最初から **HTTPS**。証明書の発行も更新も何もしていない
 
 コンソールの [Cloud Run のページ](https://console.cloud.google.com/run) も開いてみてください。  
-サービスの一覧、リビジョン、メトリクス、ログがすべて1画面に集約されています。
+Service の一覧、リビジョン、メトリクス、ログがすべて1画面に集約されています。
 
 > **[要作図] 図3: この章でやったことの流れ**
 >

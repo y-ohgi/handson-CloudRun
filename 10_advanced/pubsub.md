@@ -53,7 +53,7 @@ gcloud pubsub subscriptions create handson-sub \
 SQSキューの作成、イベントソースマッピング、IAMロール、バッチ設定……に相当する作業はありません。
 
 > **成功していれば:** `Created topic [projects/.../topics/handson-topic].` と `Created subscription [projects/.../subscriptions/handson-sub].` が表示されます。`gcloud pubsub topics list` に `handson-topic`、`gcloud pubsub subscriptions list` に `handson-sub` が1行ずつ出れば配線できています。
-> **詰まったら:** `ALREADY_EXISTS` は作成済みという意味なので、そのまま次へ進んで構いません。`--push-endpoint /pubsub` のように URL が空で渡っている場合は `URL` の取得に失敗しています。まず `echo ${REGION}` が空でないか確認し、空なら 4章の「0. 環境変数の準備」を再実行してから `URL=$(gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)')` をやり直してください。`handson-app` が見つからないと言われる場合は `gcloud run services list --region ${REGION}` でサービス名を確認します。作り直したいときは `gcloud pubsub subscriptions delete handson-sub` で消してから、この節のコマンドをもう一度実行すれば同じ状態に戻せます。
+> **詰まったら:** `ALREADY_EXISTS` は作成済みという意味なので、そのまま次へ進んで構いません。`--push-endpoint /pubsub` のように URL が空で渡っている場合は `URL` の取得に失敗しています。まず `echo ${REGION}` が空でないか確認し、空なら 4章の「0. 環境変数の準備」を再実行してから `URL=$(gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)')` をやり直してください。`handson-app` が見つからないと言われる場合は `gcloud run services list --region ${REGION}` で Service 名を確認します。作り直したいときは `gcloud pubsub subscriptions delete handson-sub` で消してから、この節のコマンドをもう一度実行すれば同じ状態に戻せます。
 
 ## 2. メッセージを発行してみる
 
@@ -81,9 +81,9 @@ gcloud run services logs read handson-app --region ${REGION} --limit 10
 
 ## 本番に向けた補足
 
-ハンズオンでは簡単のため認証なし(`--allow-unauthenticated` なサービス)に push しましたが、本番では以下のようにします:
+ハンズオンでは簡単のため認証なし(`--allow-unauthenticated` な Service)に push しましたが、本番では以下のようにします:
 
-- サービスを `--no-allow-unauthenticated` にして、Pub/Sub 用のサービスアカウントに `roles/run.invoker` を付与
+- Service を `--no-allow-unauthenticated` にして、Pub/Sub 用のサービスアカウントに `roles/run.invoker` を付与
 - サブスクリプションに `--push-auth-service-account` を指定すると、Pub/Sub が OIDC トークン付きで POST してくれる
 - あわせて Pub/Sub のサービスエージェント(`service-<プロジェクト番号>@gcp-sa-pubsub.iam.gserviceaccount.com`)に `roles/iam.serviceAccountTokenCreator` を付与します。これがないと Pub/Sub が OIDC トークンを生成できません
 - IAM 付与の直後は反映まで数分かかり、その間 403 が返ることがあります(数分待ってリトライ)
