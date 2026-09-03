@@ -4,7 +4,7 @@
   "scripts": {
     "serve": "honkit serve",
     "build": "honkit build",
-    "pdf": "node tools/build-pdf.js"
+    "pdf": "PDF_OUT=../handson-cloudrun.pdf node tools/build-pdf.js"
   },
   "devDependencies": {
     "honkit": "^6.0.0"

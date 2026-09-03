@@ -5,7 +5,7 @@ const path = require("node:path");
 
 const ROOT = process.env.BOOK_ROOT || process.cwd();
 const OUT = process.env.PDF_OUT || path.join(ROOT, "handson-cloudrun.pdf");
-const GITHUB_BASE = "https://github.com/y-ohgi/handson-CloudRun/blob/main/";
+const GITHUB_BASE = "https://github.com/y-ohgi/handson-CloudRun/blob/main/book/";
 
 // kramed / highlight.js は honkit の依存として node_modules に入っている
 const kramed = require(path.join(ROOT, "node_modules/kramed"));
