@@ -245,17 +245,18 @@ AIコーディングエージェント共通の作業規約。特定のツール
 
 ### 構成
 
-- 本文は章ディレクトリ(`00_preparation`〜`99_cleanup`)の`README.md`に置く。発展編のみ`10_advanced/`配下に個別ファイルを持つ
-- `SUMMARY.md`が目次の唯一の正。章の追加・削除・改名・並べ替えを行ったら必ず同時に更新する
-- `tools/build-pdf.js`は`SUMMARY.md`をパースして章順とPDF内リンクを決めるため、`SUMMARY.md`に載っていないMarkdownはPDFに含まれない
-- `code/`は受講者がコピーして使うサンプルアプリ。変更したら参照元の章の本文と手順を同期させる
-- `support/`は当日運用のサポートアプリ。`.bookignore`によりGitBook本体のビルド対象外で、教材本体はこれに依存しない
+- honkitの資産(章本文、`SUMMARY.md`、`book.json`、`package.json`、`tools/`、`imgs/`、`_layouts/`)は`book/`配下に置く
+- 本文は章ディレクトリ(`book/00_preparation`〜`book/99_cleanup`)の`README.md`に置く。発展編のみ`book/10_advanced/`配下に個別ファイルを持つ
+- `book/SUMMARY.md`が目次の唯一の正。章の追加・削除・改名・並べ替えを行ったら必ず同時に更新する
+- `book/tools/build-pdf.js`は`book/SUMMARY.md`をパースして章順とPDF内リンクを決めるため、`SUMMARY.md`に載っていないMarkdownはPDFに含まれない
+- `code/`(リポジトリルート)は受講者がコピーして使うサンプルアプリ。変更したら参照元の章の本文と手順を同期させる
+- `support/`(リポジトリルート)は当日運用のサポートアプリ。`book/`の外にあるためGitBook本体のビルド対象外で、教材本体はこれに依存しない
 
 ### 検証
 
-- 表示確認は`npm run serve`、ビルド確認は`npm run build`
+- 表示確認・ビルド確認は`book/`で`npm run serve`・`npm run build`を実行する
 - `handson-cloudrun.pdf`は`development`/`main`へのmerge時にGitHub Actions
   (`.github/workflows/pdf.yml`)が再生成してcommitする。PRには含めない
-- ローカルでの見た目確認に`npm run pdf`を使ってよい(PlaywrightのChromiumが
-  必要)。ただし生成物はcommitしない
+- ローカルでの見た目確認に`book/`で`npm run pdf`を使ってよい(Playwrightの
+  Chromiumが必要)。ただし生成物はcommitしない
 - 手順やコマンドを追加・変更する場合は、実行して通ることを確認してから書く。確認できない場合はその旨を本文ではなくPRに明示する
