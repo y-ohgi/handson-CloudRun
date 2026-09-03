@@ -1,0 +1,52 @@
+name: PDF
+
+# development / main へ merge(push)されたときのみ PDF を再生成し、
+# 差分があれば bot が commit する。PR 上では PDF を生成しない。
+on:
+  push:
+    branches:
+      - main
+      - development
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pdf-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright (Chromium)
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Build PDF
+        run: npm run pdf
+
+      # 出力は決定的(tools/build-pdf.js が日付を固定)なため、
+      # development で commit した PDF と main での再生成結果は一致し、
+      # 内容変更がない限りここは no-op になる。
+      - name: Commit PDF if changed
+        run: |
+          if git diff --quiet -- handson-cloudrun.pdf; then
+            echo "PDF unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add handson-cloudrun.pdf
+          git commit -m "chore: regenerate handson-cloudrun.pdf [skip ci]"
+          git push

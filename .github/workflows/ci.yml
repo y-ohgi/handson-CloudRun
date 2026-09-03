@@ -22,11 +22,3 @@ jobs:
 
       - name: Build honkit site
         run: npm run build
-
-      - name: Install Playwright (Chromium)
-        run: |
-          npm install --no-save playwright
-          npx playwright install --with-deps chromium
-
-      - name: Build PDF
-        run: npm run pdf
