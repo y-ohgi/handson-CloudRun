@@ -27,14 +27,18 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: book
 
       - name: Install Playwright (Chromium)
         run: |
           npm install --no-save playwright
           npx playwright install --with-deps chromium
+        working-directory: book
 
+      # 出力先は npm script の PDF_OUT 指定によりリポジトリルート
       - name: Build PDF
         run: npm run pdf
+        working-directory: book
 
       # 出力は決定的(tools/build-pdf.js が日付を固定)なため、
       # development で commit した PDF と main での再生成結果は一致し、

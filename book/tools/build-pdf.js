@@ -2,10 +2,22 @@
 // honkit pdf は Calibre(ebook-convert)必須のため、Chromium 経由で生成する。
 const fs = require("node:fs");
 const path = require("node:path");
+const { execSync } = require("node:child_process");
 
 const ROOT = process.env.BOOK_ROOT || process.cwd();
 const OUT = process.env.PDF_OUT || path.join(ROOT, "handson-cloudrun.pdf");
-const GITHUB_BASE = "https://github.com/y-ohgi/handson-CloudRun/blob/main/";
+
+// 章から book の外のファイルへ張るリンクの基点。リポジトリのURLと
+// book ディレクトリの位置をgitから導出し、fork・改名・移動に追従させる。
+const git = (cmd) => execSync(cmd, { cwd: ROOT, encoding: "utf-8" }).trim();
+const originToHttps = (url) => {
+  const m = url.match(/^(?:https?:\/\/|ssh:\/\/(?:[^@/]+@)?|[^@/]+@)([^:/]+)[:/](.+?)(?:\.git)?$/);
+  if (!m) throw new Error(`origin のURLを解釈できません: ${url}`);
+  return `https://${m[1]}/${m[2]}`;
+};
+const GITHUB_BASE = `${originToHttps(git("git remote get-url origin"))}/blob/main/${git(
+  "git rev-parse --show-prefix",
+)}`;
 
 // kramed / highlight.js は honkit の依存として node_modules に入っている
 const kramed = require(path.join(ROOT, "node_modules/kramed"));

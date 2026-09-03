@@ -27,15 +27,17 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: book
 
       - name: Build honkit site
         run: npm run build
+        working-directory: book
 
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _book
+          path: book/_book
 
   deploy:
     needs: build

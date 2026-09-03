@@ -6,10 +6,10 @@ FROM node:24-slim AS book
 
 WORKDIR /build
 
-COPY package.json ./
+COPY book/package.json ./
 RUN npm install
 
-COPY . ./
+COPY book/ ./
 RUN npx honkit build
 
 # --- ステージ2: サポートアプリ本体 ---

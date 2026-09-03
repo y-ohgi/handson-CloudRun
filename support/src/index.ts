@@ -22,8 +22,8 @@ const normalizeBookUrl = (url: string) => {
 
 const GITBOOK_URL = normalizeBookUrl(process.env.GITBOOK_URL ?? "/book/");
 
-// 同梱 GitBook の静的ファイルの場所。ローカル開発ではリポジトリルートの _book を使う
-const BOOK_DIR = process.env.BOOK_DIR ?? "../_book";
+// 同梱 GitBook の静的ファイルの場所。ローカル開発では book/_book を使う
+const BOOK_DIR = process.env.BOOK_DIR ?? "../book/_book";
 
 // 進捗報告の選択肢。GitBook の SUMMARY.md の章立てに合わせる
 const CHAPTERS = [

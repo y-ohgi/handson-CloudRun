@@ -19,6 +19,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: book
 
       - name: Build honkit site
         run: npm run build
+        working-directory: book

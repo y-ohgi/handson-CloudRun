@@ -2,4 +2,6 @@
 .git
 node_modules
 _book
+book/node_modules
+book/_book
 support/node_modules

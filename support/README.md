@@ -80,7 +80,7 @@ gcloud artifacts docker images delete ${IMAGE} --delete-tags --quiet
 |---|---|---|
 | `PORT` | `8080` | リッスンポート(Cloud Run が注入) |
 | `GITBOOK_URL` | `/book/` | iframe に表示する URL。GitHub Pages 等の外部ホスティングに差し替え可能(その場合、埋め込み先が iframe 表示を許可している必要があります)。スキームを省略した場合は補完されます(`localhost:4000` → `http://`、それ以外のホスト → `https://`) |
-| `BOOK_DIR` | `../_book`(Docker では `./book`) | 同梱 GitBook の静的ファイルのパス |
+| `BOOK_DIR` | `../book/_book`(Docker では `./book`) | 同梱 GitBook の静的ファイルのパス |
 
 ## 章立てを変えたとき
 
