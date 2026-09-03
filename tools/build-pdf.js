@@ -302,6 +302,16 @@ const doc = `<!DOCTYPE html>
   });
   await browser.close();
 
+  // CreationDate/ModDate を固定値へ置換し、同一ソースから同一バイト列のPDFを得る。
+  // CIがブランチごとに再生成しても差分が出ず、branch間のbinary conflictを防ぐ。
+  // 置換前後で文字列長が同じため、xrefのオフセットは壊れない。
+  const FIXED_DATE = "D:20250101000000+00'00'";
+  const raw = fs
+    .readFileSync(OUT, "latin1")
+    .replace(/\/CreationDate \(D:[^)]+\)/, `/CreationDate (${FIXED_DATE})`)
+    .replace(/\/ModDate \(D:[^)]+\)/, `/ModDate (${FIXED_DATE})`);
+  fs.writeFileSync(OUT, raw, "latin1");
+
   const kb = Math.round(fs.statSync(OUT).size / 1024);
   console.log(`generated: ${OUT} (${kb} KB)`);
 })();

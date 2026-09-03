@@ -254,5 +254,8 @@ AIコーディングエージェント共通の作業規約。特定のツール
 ### 検証
 
 - 表示確認は`npm run serve`、ビルド確認は`npm run build`
-- 本文または`SUMMARY.md`を変更したら`npm run pdf`で`handson-cloudrun.pdf`を再生成し、生成物も同じPRに含める。PlaywrightのChromiumが必要
+- `handson-cloudrun.pdf`は`development`/`main`へのmerge時にGitHub Actions
+  (`.github/workflows/pdf.yml`)が再生成してcommitする。PRには含めない
+- ローカルでの見た目確認に`npm run pdf`を使ってよい(PlaywrightのChromiumが
+  必要)。ただし生成物はcommitしない
 - 手順やコマンドを追加・変更する場合は、実行して通ることを確認してから書く。確認できない場合はその旨を本文ではなくPRに明示する
