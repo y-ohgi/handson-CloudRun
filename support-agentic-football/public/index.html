@@ -52,13 +52,34 @@
       min-height: 0;
       display: flex;
       justify-content: center;
-      overflow-y: auto;
     }
+    /* PC幅: 進捗・ヘルプを左カラム、チャットを右カラムに横並び */
     #panel {
-      width: min(100%, 640px);
+      width: min(100%, 960px);
+      display: flex;
+      flex-direction: row;
+      min-height: 0;
+    }
+    .col-side {
+      flex: 0 0 320px;
       display: flex;
       flex-direction: column;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+    }
+    .col-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
       min-height: 0;
+    }
+    /* 狭い幅: 縦積みに戻す */
+    @media (max-width: 800px) {
+      main { overflow-y: auto; }
+      #panel { flex-direction: column; width: 100%; }
+      .col-side { flex: none; border-right: none; overflow-y: visible; }
+      .col-main { flex: none; }
     }
     section { padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); }
     section h2 {
@@ -204,25 +225,29 @@
 
   <main>
     <div id="panel">
-      <section>
-        <h2>進捗 — いまいるステップをクリック</h2>
-        <div id="chapters"></div>
-      </section>
+      <div class="col-side">
+        <section>
+          <h2>進捗 — いまいるステップをクリック</h2>
+          <div id="chapters"></div>
+        </section>
 
-      <section>
-        <h2>ヘルプ</h2>
-        <button id="helpToggle">🙋 助けが必要です</button>
-        <div id="helpList"></div>
-      </section>
+        <section>
+          <h2>ヘルプ</h2>
+          <button id="helpToggle">🙋 助けが必要です</button>
+          <div id="helpList"></div>
+        </section>
+      </div>
 
-      <section id="chatSection">
-        <h2>チャット</h2>
-        <div id="messages"></div>
-        <form id="chatForm">
-          <input id="chatInput" autocomplete="off" placeholder="コメント・質問を入力">
-          <button>送信</button>
-        </form>
-      </section>
+      <div class="col-main">
+        <section id="chatSection">
+          <h2>チャット</h2>
+          <div id="messages"></div>
+          <form id="chatForm">
+            <input id="chatInput" autocomplete="off" placeholder="コメント・質問を入力">
+            <button>送信</button>
+          </form>
+        </section>
+      </div>
     </div>
   </main>
 
