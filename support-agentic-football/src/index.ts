@@ -12,19 +12,26 @@ const PORT = Number(process.env.PORT ?? 8080);
 const WORKSHOP_URL =
   process.env.WORKSHOP_URL ?? "https://catalog.workshops.aws/agentic-football/ja-JP";
 
-// 進捗報告の選択肢。実際のワークショップのステップ名で要確認・要更新の仮リスト
+// 進捗報告の選択肢。ワークショップのサイドナビゲーションの構成に合わせたもの。
+// phase: null の項目はどのフェーズにも属さない単独ステップ
 const CHAPTERS = [
-  { id: "ch0", label: "0. 事前準備" },
-  { id: "ch1", label: "1. イントロダクション" },
-  { id: "ch2", label: "2. 環境セットアップ" },
-  { id: "ch3", label: "3. エージェント設計" },
-  { id: "ch4", label: "4. ツール・チーム構築" },
-  { id: "ch5", label: "5. チーム作成" },
-  { id: "ch6", label: "6. デプロイ" },
-  { id: "ch7", label: "7. 初回マッチ" },
-  { id: "ch8", label: "8. チューニング" },
-  { id: "ch9", label: "9. 再挑戦" },
-  { id: "done", label: "🎉 完了" },
+  { id: "intro", label: "エージェンティックフットボールの遊び方", phase: null },
+
+  { id: "p1-sample", label: "サンプルエージェントを取得する", phase: "フェーズ1: チームを構築する" },
+  { id: "p1-setup", label: "セットアップとテスト", phase: "フェーズ1: チームを構築する" },
+  { id: "p1-deploy", label: "AWSにデプロイする", phase: "フェーズ1: チームを構築する" },
+
+  { id: "p2-play", label: "試合をプレーする", phase: "フェーズ2: 試合をプレーする" },
+
+  { id: "p3-memory", label: "AgentCoreメモリ", phase: "フェーズ3: エージェントをスーパーチャージする" },
+  { id: "p3-gateway", label: "AgentCore Gateway", phase: "フェーズ3: エージェントをスーパーチャージする" },
+  { id: "p3-observability", label: "AgentCoreオブザーバビリティ", phase: "フェーズ3: エージェントをスーパーチャージする" },
+  { id: "p3-prompt", label: "システムプロンプトエンジニアリング", phase: "フェーズ3: エージェントをスーパーチャージする" },
+  { id: "p3-multi-agent", label: "マルチエージェント連携", phase: "フェーズ3: エージェントをスーパーチャージする" },
+
+  { id: "next-steps", label: "次のステップ: フットボールから本番環境へ", phase: null },
+  { id: "cleanup", label: "クリーンアップ", phase: null },
+  { id: "done", label: "🎉 完了", phase: null },
 ] as const;
 
 type ChapterId = (typeof CHAPTERS)[number]["id"];

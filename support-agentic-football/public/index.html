@@ -71,6 +71,14 @@
 
     /* 進捗 */
     #chapters { display: flex; flex-direction: column; gap: 2px; max-height: 30vh; overflow-y: auto; }
+    .phase-header {
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--pitch-dark);
+      margin: 0.5rem 0 0.1rem;
+      padding: 0 0.5rem;
+    }
+    .phase-header:first-child { margin-top: 0; }
     .chapter {
       display: flex;
       align-items: center;
@@ -310,7 +318,16 @@
       var max = Math.max(1, online.length);
       var chaptersEl = $("chapters");
       chaptersEl.textContent = "";
+      var lastPhase = null;
       state.chapters.forEach(function (ch) {
+        if (ch.phase && ch.phase !== lastPhase) {
+          var header = document.createElement("div");
+          header.className = "phase-header";
+          header.textContent = ch.phase;
+          chaptersEl.appendChild(header);
+        }
+        lastPhase = ch.phase;
+
         var count = counts[ch.id] || 0;
         var btn = document.createElement("button");
         btn.className = "chapter" + (me && me.chapter === ch.id ? " mine" : "");
