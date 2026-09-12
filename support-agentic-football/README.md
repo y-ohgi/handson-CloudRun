@@ -14,11 +14,12 @@
 
 ## 技術スタック
 
-`support/` と同じ **TypeScript + Hono + Cloud Run** です。
+`support/` と同じ **TypeScript + Hono** ですが、Cloud Run Service ではなく **Cloud Run Instances**(Preview, 2026-08-28 発表)にデプロイします。
 
+- Cloud Run Instances は常に単一インスタンス(singleton)でオートスケールしないため、Cloud Run Service で必要だった `--max-instances 1` / `--min-instances 1` / `--session-affinity` の指定が不要です
 - 状態(参加者・進捗・チャット履歴)はインスタンスのメモリ上に保持します
-- そのため `--max-instances 1` でのデプロイが前提です
-- インスタンスが再起動すると状態は消えます。1日のイベント運用なら許容範囲ですが、気になる場合はイベント中 `--min-instances 1` にして再起動の確率を下げてください
+- インスタンスが再起動(`stop`→`start`、クラッシュ再起動など)すると状態は消えます。実機検証済みで、Cloud Run Instances の `stop`/`start` はコンテナプロセスを再起動するため、メモリ上の状態は保持されません。1日のイベント運用なら許容範囲です
+- Preview 機能のため `gcloud beta` コマンドが必要で、将来仕様が変わる可能性があります
 
 ## ローカルで動かす
 
@@ -29,35 +30,42 @@ npm start
 # → http://localhost:8080
 ```
 
-## Cloud Run へデプロイする
+## Cloud Run Instance へデプロイする
+
+`gcloud beta run instances` コマンドを使います(未導入の場合は `gcloud components install beta` が必要)。
 
 ```bash
 export PROJECT_ID=$(gcloud config get-value project)
 export REGION=asia-northeast1
 export IMAGE=${REGION}-docker.pkg.dev/${PROJECT_ID}/handson/agentic-football-support
 
-docker build -t ${IMAGE}:v1 ./support-agentic-football
+docker build --platform linux/amd64 -t ${IMAGE}:v1 ./support-agentic-football
 docker push ${IMAGE}:v1
 
-gcloud run deploy agentic-football-support \
-  --image ${IMAGE}:v1 \
-  --region ${REGION} \
-  --allow-unauthenticated \
-  --timeout 3600 \
-  --session-affinity \
-  --max-instances 1 \
-  --min-instances 1
+gcloud beta run instances create agentic-football-support \
+  --image=${IMAGE}:v1 \
+  --region=${REGION} \
+  --port=8080 \
+  --public
 ```
 
 発行された URL を当日の参加者に共有してください(QRコードにしておくと楽です)。
 
-## 後片付け(イベント終了後に必ず実行)
-
-上のデプロイは `--min-instances 1` を付けているため、**誰もアクセスしていない時間帯もインスタンスが起動したままで、課金され続けます**。イベントが終わったら必ず削除してください。
+コードを更新して再デプロイする場合は `create` の代わりに `deploy` を使います。
 
 ```bash
-# 環境変数が消えている場合は「Cloud Run へデプロイする」の export 3行を実行し直す
-gcloud run services delete agentic-football-support --region ${REGION} --quiet
+gcloud beta run instances deploy agentic-football-support \
+  --image=${IMAGE}:vN \
+  --region=${REGION}
+```
+
+## 後片付け(イベント終了後に必ず実行)
+
+Cloud Run Instances は常に起動したままで、**誰もアクセスしていない時間帯も課金され続けます**。イベントが終わったら必ず削除してください。
+
+```bash
+# 環境変数が消えている場合は「Cloud Run Instance へデプロイする」の export 3行を実行し直す
+gcloud beta run instances delete agentic-football-support --region ${REGION} --quiet
 gcloud artifacts docker images delete ${IMAGE} --delete-tags --quiet
 ```
 
