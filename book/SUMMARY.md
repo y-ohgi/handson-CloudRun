@@ -11,19 +11,13 @@
 
 ## ハンズオンパート
 
-* [4. Cloud Runへデプロイする](04_deploy/README.md)
-* [5. 更新とロールバック](05_revision/README.md)
-* [6. カナリアリリースとタグ付きURL](06_traffic/README.md)
-* [7. オートスケールを観察する](07_scaling/README.md)
-* [8. ログとメトリクスをのぞく](08_observability/README.md)
-* [9. 締め: Dockerfileすら書かないデプロイ](09_source_deploy/README.md)
-
-## 発展編(3時間版)
-
-* [10. 発展編](10_advanced/README.md)
-    * [10-1. Pub/Subとつなぐ](10_advanced/pubsub.md)
-    * [10-2. WebSocketチャット](10_advanced/websocket.md)
-    * [10-3. Cloud Run Jobs](10_advanced/jobs.md)
+* [4. Cloud Shellとエディタの使い方](04_cloudshell_editor/README.md)
+* [5. Cloud Runへデプロイする](05_deploy/README.md)
+* [6. 更新とロールバック](06_revision/README.md)
+* [7. カナリアリリースとタグ付きURL](07_traffic/README.md)
+* [8. オートスケールを観察する](08_scaling/README.md)
+* [9. ログとメトリクスをのぞく](09_observability/README.md)
+* [10. 締め: Dockerfileすら書かないデプロイ](10_source_deploy/README.md)
 
 ## おわりに
 

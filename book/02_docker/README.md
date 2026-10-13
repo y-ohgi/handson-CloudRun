@@ -152,7 +152,7 @@ app.post("/pubsub", async (c) => {
   return c.body(null, 204);
 });
 
-// 未捕捉の例外も1行JSONで出します。8章で severity フィルタを試す材料になります。
+// 未捕捉の例外も1行JSONで出します。9章で severity フィルタを試す材料になります。
 app.onError((err, c) => {
   log("ERROR", err.message, { stack: err.stack });
   return c.json({ error: "internal server error" }, 500);
@@ -245,4 +245,4 @@ exit
 - Cloud Run との約束は「環境変数 `PORT` を listen する」だけ
 
 今、あなたの手元(Cloud Shell)には動くイメージがあります。  
-次章で Cloud Run の仕組みを知り、4章でこれをそのままクラウドに載せます。
+次章で Cloud Run の仕組みを知り、5章でこれをそのままクラウドに載せます。
