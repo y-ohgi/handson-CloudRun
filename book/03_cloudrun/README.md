@@ -43,7 +43,7 @@ Cloud Run には現在、ワークロードの形に合わせた**4つの実行�
 | 実行モデル | 向いているもの | AWSでいうと |
 |---|---|---|
 | **[Service](https://cloud.google.com/run/docs/overview/what-is-cloud-run#cloud_run_services)** | HTTPリクエスト / イベント駆動 | ECS on Fargate + ALB(1コマンドで立てるなら ECS Express Mode), Lambda + ALB |
-| **[Job](https://cloud.google.com/run/docs/overview/what-is-cloud-run#cloud-run-jobs)** | 実行して終わるバッチ処理(発展編10-3) | ECS RunTask, AWS Batch |
+| **[Job](https://cloud.google.com/run/docs/overview/what-is-cloud-run#cloud-run-jobs)** | 実行して終わるバッチ処理 | ECS RunTask, AWS Batch |
 | **[Worker pool](https://cloud.google.com/run/docs/overview/what-is-cloud-run#cloud-run-worker-pools)** | 常駐してキューをpullし続ける処理(2026年4月GA) | SQSをポーリングするECS常駐ワーカー |
 | **[Instance](https://cloud.google.com/run/docs/overview/what-is-cloud-run#cloud-run-instances)** | 1台であることに意味があるシングルトン常駐(2026年8月時点で Preview) | 常時起動の Fargate タスク1個 / 小型EC2 |
 
@@ -54,8 +54,6 @@ Kafka コンシューマや Pub/Sub の pull 型ワーカーのような「リ�
 迷いやすいのは Worker pool と Instance の境目で、ここは「N台に分散したいのか」「1台であることに意味があるのか」で分かれます。キューを複数台で食べたいなら Worker pool、状態を持つプロセスを1つだけ動かし続けたいなら Instance です。
 
 > Instance は 2026年8月時点で Preview です。`gcloud beta run instances` から使えますが、`us-central1` / `us-east1` / `europe-west1` は対象外です。今日のハンズオンでは扱いません。
-
-> **図の状態**: 上の図は3分岐(Service / Job / Worker pool)のままで、Instance がまだ描かれていません。差し替えは別途対応します。
 
 > **[要作図] 図2: 実行モデル**
 >
@@ -68,7 +66,7 @@ Kafka コンシューマや Pub/Sub の pull 型ワーカーのような「リ�
 >   - Instance: 手動で起動 → 1台のまま常駐しつづける(専用URLを持つ、Preview)
 > - **補足:** Worker pool に「URLなし」を明示すると、Service との違いが伝わる。Worker pool と Instance は「N台か1台か」で対比させると境目が伝わる。AWS 対応(ECS on Fargate + ALB / ECS RunTask / SQSをポーリングするECS常駐ワーカー / 常時起動の Fargate タスク1個)を各分岐の脇に小さく添えてもよい
 > - **完成後の扱い:** `03_cloudrun/imgs/three-execution-models.svg` として保存し、**見出しの直下**に `![同じコンテナイメージから分岐する実行モデル](imgs/three-execution-models.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
-> - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図ですが、**まだ3分岐のまま**で Instance が描かれていません。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
+> - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図です。4分岐(Service / Job / Worker pool / Instance)をすべて描いています。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
 
 ## Cloud Run の構成要素
 
@@ -87,7 +85,7 @@ Service
 - **トラフィック分割**: どのリビジョンに何%流すかを Service が制御。ロールバックもカナリアもこの仕組みの上に乗っている
 
 「リビジョンが不変で、トラフィックを好きに振り分けられる」——2章でおさらいしたイメージの不変性が、プラットフォームの機能にまで貫かれています。  
-ここが Cloud Run の設計の美しさで、5章・6章で実際に体験していきましょう。
+ここが Cloud Run の設計の美しさで、6章・7章で実際に体験していきましょう。
 
 ## 料金感
 
