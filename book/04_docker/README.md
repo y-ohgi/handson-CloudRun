@@ -1,7 +1,7 @@
-# 2. Dockerのおさらいとコンテナ起動
+# 4. Dockerのおさらいとコンテナ起動
 
-この章では Docker の要点をおさらいしたあと、実際に Web サーバーのコンテナイメージを作って・動かして・ブラウザで見るところまでやってみましょう。  
-ここで作ったイメージを、次章以降で Cloud Run にデプロイしていきます。
+この章では Cloud Shell のエディタとターミナルを行き来しながら、Docker の要点をおさらいし、実際に Web サーバーのコンテナイメージを作って・動かして・ブラウザで見るところまでやってみましょう。  
+3章で用意した `~/cloudrun-handson/app` が、今日ずっと作業する場所です。ここで作ったイメージを、次章以降で Cloud Run にデプロイしていきます。
 
 > Docker をしっかり学びたい人は [introduction-docker](https://github.com/y-ohgi/introduction-docker) にまとまっています。今日は Cloud Run に必要な分だけ、駆け足で。
 
@@ -17,9 +17,49 @@
 「環境ごと固めて配る」からこそ、ローカルでも Cloud Run でも ECS でも同じように動きます。  
 この不変性が、後でやるロールバックやカナリアリリースの土台になります。
 
+## エディタとターミナルの基本
+
+Cloud Shell エディタを開くと、3つの領域に分かれています。
+
+- **左側: ファイルツリー** — `$HOME`(`~/cloudrun-handson/` など)配下のファイル・フォルダ一覧
+- **中央: エディタ** — VS Code ベースで、拡張機能・シンタックスハイライトなど一通り揃っています
+- **下部: ターミナル** — コマンドを実行する画面。タブで複数開けます
+
+#### ファイル・フォルダを操作する
+ファイルツリーを右クリックすると、新規ファイル・新規フォルダ・リネーム・削除ができます。  
+ファイルの保存は**自動ではありません**。編集後は `Cmd+S`(macOS)/ `Ctrl+S`(Windows/Linux)で保存してください。
+
+> **詰まったら:** 「ファイルを書き換えたのにコマンドの結果が変わらない」と感じたら、エディタのタブ名の横に丸印(●)が出ていないか確認してください。丸印は未保存の印で、保存すればファイル名だけの表示に変わります。
+
+#### ターミナルを使う
+下部パネルの `+` ボタンで、新しいターミナルタブを追加できます。  
+複数のターミナルは同じ Cloud Shell 環境(同じ `$HOME`)を共有するので、たとえば片方でログを流しっぱなしにしながら、もう片方でコマンドを打つ、という使い方ができます。
+
+ターミナルとエディタは同じファイルシステムを見ているため、エディタで保存した変更は即座にターミナルから見えます。  
+一方で、Cloud Shell が切断されると新しいターミナルセッションになり、`export` した環境変数はすべて消えます(ファイルは `$HOME` に残るため消えません)。環境変数を設定し直す方法は、5章の「0. 環境変数の準備」でまとめて扱います。
+
+#### 覚えておくと速いショートカット
+必須ではありませんが、知っておくと操作が速くなります。
+
+| 操作 | ショートカット |
+|---|---|
+| コマンドパレットを開く | `Cmd+Shift+P` / `Ctrl+Shift+P` |
+| ファイルを名前で開く | `Cmd+P` / `Ctrl+P` |
+| ファイル内を検索 | `Cmd+F` / `Ctrl+F` |
+| プロジェクト全体を検索 | `Cmd+Shift+F` / `Ctrl+Shift+F` |
+
+今日の基本サイクルは、ここからずっとこの繰り返しです。
+
+1. エディタでファイルを編集する
+2. 保存する(`Cmd+S` / `Ctrl+S`)
+3. ターミナルでコマンドを実行する(`docker build`、`gcloud run deploy` など)
+4. 結果をブラウザやターミナルの出力で確認する
+
+手が止まったら、まず「保存し忘れていないか」を疑ってください。
+
 ## ハンズオン: Webサーバーのイメージを作る
 
-アプリは TypeScript + [Hono](https://hono.dev/) で書きます。  
+アプリは TypeScript + [Hono](https://hono.dev/) で書かれています。  
 Hono は Web 標準 API ベースの軽量な Web フレームワークです(Hono 自体は Cloudflare Workers や Deno などマルチランタイム対応ですが、今回は Node.js アダプタと Node.js API を使います)。  
 実行には Node.js 24 の組み込み **type stripping** ——型注釈を剥がして実行する機能——を使い、この教材で使う範囲の TypeScript をビルドステップなしで動かします。  
 ビルドを1段消すことで、今日の主役である Cloud Run に集中するためです。
@@ -30,175 +70,15 @@ Hono は Web 標準 API ベースの軽量な Web フレームワークです(Ho
 
 > TypeScript に詳しくなくても大丈夫です。書き換えるのは定数2行だけで、あとはコピー&ペーストで進められます。
 
-### 1. 作業ディレクトリとファイルの作成
+### 1. サンプルコードを開く
 
-Cloud Shell エディタのターミナルで作業ディレクトリを作ってみましょう。
+エディタの左のファイルツリーから `cloudrun-handson/app` を開きます。`package.json`・`src/index.ts`・`Dockerfile`・`.dockerignore` の4つが入っています。
 
 ```bash
-mkdir -p ~/cloudrun-handson/app/src
 cd ~/cloudrun-handson/app
 ```
 
-エディタで以下の4ファイルを作成してみましょう(コピー&ペーストでOK)。  
-このリポジトリの [`code/app/`](https://github.com/y-ohgi/handson-CloudRun/tree/main/code/app) にも同じものがあります。
-
-`package.json` — 依存関係は Hono 本体と Node.js アダプタの2つだけです。
-
-```json
-{
-  "name": "handson-app",
-  "private": true,
-  "type": "module",
-  "engines": {
-    "node": "24.x"
-  },
-  "scripts": {
-    "start": "node src/index.ts"
-  },
-  "dependencies": {
-    "@hono/node-server": "1.19.17",
-    "hono": "4.13.2"
-  }
-}
-```
-
 `src/index.ts` — 小さなWebサーバーです。アクセスすると「メッセージ・リビジョン名・インスタンスID」を表示します。
-
-```typescript
-import { serve } from "@hono/node-server";
-import { Hono } from "hono";
-import crypto from "node:crypto";
-
-// ================================================================
-// ハンズオンで書き換えるのはこの2行です
-// ================================================================
-const MESSAGE = "Hello, Cloud Run!";
-const BG_COLOR = "#4285F4"; // v1: 青 / v2: "#EA4335" 赤 / v3: "#34A853" 緑
-
-// コンテナ(インスタンス)が起動したタイミングで一意なIDを生成する。
-// オートスケールで何台に増えたかを見分けるために使う。
-const INSTANCE_ID = crypto.randomUUID().slice(0, 8);
-
-// stdout に1行JSONを吐くと Cloud Logging が構造化ログとして解釈する
-const log = (severity: string, message: string, extra: Record<string, unknown> = {}) => {
-  console.log(JSON.stringify({ severity, message, ...extra }));
-};
-
-const app = new Hono();
-
-app.get("/", (c) => {
-  log("INFO", "index accessed", { instance: INSTANCE_ID });
-  // K_SERVICE / K_REVISION は Cloud Run が自動で注入する環境変数
-  const service = process.env.K_SERVICE ?? "local";
-  const revision = process.env.K_REVISION ?? "local";
-  return c.html(`<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cloud Run Handson</title>
-  <style>
-    body {
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: #333;        /* BG_COLOR を書き間違えても文字が読めるようにする保険 */
-      background: ${BG_COLOR};
-      color: #fff;
-      font-family: sans-serif;
-    }
-    h1 { font-size: 3rem; margin: 0.5rem; }
-    table { margin-top: 2rem; border-collapse: collapse; }
-    td { padding: 0.3rem 1rem; border: 1px solid rgba(255,255,255,0.5); }
-  </style>
-</head>
-<body>
-  <h1>${MESSAGE}</h1>
-  <table>
-    <tr><td>Service</td><td>${service}</td></tr>
-    <tr><td>Revision</td><td>${revision}</td></tr>
-    <tr><td>Instance</td><td>${INSTANCE_ID}</td></tr>
-  </table>
-</body>
-</html>`);
-});
-
-// スクリプトから叩きやすいJSON版。カナリアの割合確認などに使う
-app.get("/api", (c) =>
-  c.json({
-    message: MESSAGE,
-    revision: process.env.K_REVISION ?? "local",
-    instance: INSTANCE_ID,
-  }),
-);
-
-// 1秒かかる重い処理のふり。負荷試験でオートスケールを観察するために使う
-app.get("/heavy", async (c) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return c.json({ instance: INSTANCE_ID });
-});
-
-// Pub/Sub push サブスクリプションの受け口(発展編で使用)
-app.post("/pubsub", async (c) => {
-  const envelope = await c.req.json().catch(() => ({}));
-  // 外部から任意のJSONが飛んでくるため、文字列以外は空扱いにする
-  const raw = envelope?.message?.data;
-  const data = typeof raw === "string" ? raw : "";
-  const text = data ? Buffer.from(data, "base64").toString("utf-8") : "(empty)";
-  log("INFO", `Pub/Sub message received: ${text}`);
-  return c.body(null, 204);
-});
-
-// 未捕捉の例外も1行JSONで出します。9章で severity フィルタを試す材料になります。
-app.onError((err, c) => {
-  log("ERROR", err.message, { stack: err.stack });
-  return c.json({ error: "internal server error" }, 500);
-});
-
-// Cloud Run は環境変数 PORT でリッスンすべきポートを渡してくる。
-// `??` は空文字を拾わないため、`||` で「空文字・数値でない値」もまとめて弾く。
-const port = Number(process.env.PORT) || 8080;
-const server = serve({ fetch: app.fetch, port }, () => {
-  log("INFO", `listening on port ${port}`);
-});
-
-// Cloud Run はインスタンス終了の10秒前に SIGTERM を送ります。
-// 受け取ってから新規受付を止めることで、処理中のリクエストを取りこぼしません。
-process.on("SIGTERM", () => {
-  log("INFO", "SIGTERM received, shutting down");
-  server.close(() => process.exit(0));
-});
-```
-
-`Dockerfile`
-
-```dockerfile
-FROM node:24-slim
-
-WORKDIR /app
-
-COPY package.json ./
-RUN npm install
-
-COPY . ./
-
-# Cloud Run が環境変数 PORT を注入します(既定 8080)。
-# 公式の container contract により、コンテナ側で PORT を設定してはいけません。
-# ローカルの docker run では未設定になるため、アプリ側で 8080 にフォールバックしています。
-
-# Node.js 24 の組み込み type stripping で TypeScript を直接実行する
-# (型注釈を剥がすだけで、型チェックは行われない)
-CMD ["node", "src/index.ts"]
-```
-
-`.dockerignore` — ローカルで `npm install` した場合に `node_modules` をイメージに混入させないためのファイルです。
-
-```
-node_modules
-```
 
 > **Dockerfile を上から読んでみましょう。** ベースイメージ(`FROM`)に依存関係を重ね(`RUN npm install`)、コードを載せ(`COPY`)、起動コマンドを決める(`CMD`)。この積み重ねがそのままイメージのレイヤーになります。`package.json` だけ先に COPY しているのは、コードを変更しても `npm install` のレイヤーキャッシュが効くようにするテクニックです(この後の章で効いてきます)。
 >
@@ -240,9 +120,10 @@ exit
 
 ## まとめ
 
+- エディタで編集 → 保存 → ターミナルで実行 → ブラウザで確認、の往復が今日の基本サイクル
 - Dockerfile → イメージ → コンテナ、の流れを一周した
 - イメージは不変。だから「どこでも同じに動く」し「前のバージョンに戻せる」
 - Cloud Run との約束は「環境変数 `PORT` を listen する」だけ
 
 今、あなたの手元(Cloud Shell)には動くイメージがあります。  
-次章で Cloud Run の仕組みを知り、5章でこれをそのままクラウドに載せます。
+次の5章で、これをそのまま Cloud Run にデプロイします。
