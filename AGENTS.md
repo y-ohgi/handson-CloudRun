@@ -245,14 +245,78 @@ AIコーディングエージェント共通の作業規約。特定のツール
 
 ### 構成
 
-- 本文は章ディレクトリ(`00_preparation`〜`99_cleanup`)の`README.md`に置く。発展編のみ`10_advanced/`配下に個別ファイルを持つ
-- `SUMMARY.md`が目次の唯一の正。章の追加・削除・改名・並べ替えを行ったら必ず同時に更新する
-- `tools/build-pdf.js`は`SUMMARY.md`をパースして章順とPDF内リンクを決めるため、`SUMMARY.md`に載っていないMarkdownはPDFに含まれない
-- `code/`は受講者がコピーして使うサンプルアプリ。変更したら参照元の章の本文と手順を同期させる
-- `support/`は当日運用のサポートアプリ。`.bookignore`によりGitBook本体のビルド対象外で、教材本体はこれに依存しない
+- honkitの資産(章本文、`SUMMARY.md`、`book.json`、`package.json`、`tools/`、`imgs/`、`_layouts/`)は`book/`配下に置く
+- 本文は章ディレクトリ(`book/00_preparation`〜`book/99_cleanup`)の`README.md`に置く
+- `book/SUMMARY.md`が目次の唯一の正。章の追加・削除・改名・並べ替えを行ったら必ず同時に更新する
+- `book/tools/build-pdf.js`は`book/SUMMARY.md`をパースして章順とPDF内リンクを決めるため、`SUMMARY.md`に載っていないMarkdownはPDFに含まれない
+- `code/`(リポジトリルート)は受講者がコピーして使うサンプルアプリ。変更したら参照元の章の本文と手順を同期させる
+- `support/`(リポジトリルート)は当日運用のサポートアプリ。`book/`の外にあるためGitBook本体のビルド対象外で、教材本体はこれに依存しない
 
 ### 検証
 
-- 表示確認は`npm run serve`、ビルド確認は`npm run build`
-- 本文または`SUMMARY.md`を変更したら`npm run pdf`で`handson-cloudrun.pdf`を再生成し、生成物も同じPRに含める。PlaywrightのChromiumが必要
+- 表示確認・ビルド確認は`book/`で`npm run serve`・`npm run build`を実行する
+- `handson-cloudrun.pdf`は`development`/`main`へのmerge時にGitHub Actions
+  (`.github/workflows/pdf.yml`)が再生成してcommitする。PRには含めない
+- ローカルでの見た目確認に`book/`で`npm run pdf`を使ってよい(Playwrightの
+  Chromiumが必要)。ただし生成物はcommitしない
 - 手順やコマンドを追加・変更する場合は、実行して通ることを確認してから書く。確認できない場合はその旨を本文ではなくPRに明示する
+
+### specsドキュメント
+
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan:
+specs/001-verify-handson-content/plan.md
+
+### Beads Issue Tracker
+
+This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
+
+#### Quick Reference
+
+```bash
+bd ready              # Find available work
+bd show <id>          # View issue details
+bd update <id> --claim  # Claim work
+bd close <id>         # Complete work
+```
+
+#### Rules
+
+- Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
+- Run `bd prime` for detailed command reference and session close protocol
+- Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
+
+**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
+
+#### Agent Context Profiles
+
+The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
+
+- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
+- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
+- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
+
+#### Session Completion
+
+This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
+
+1. **File issues for remaining work** - Create beads for anything that needs follow-up
+2. **Run quality gates** (if code changed) - Tests, linters, builds
+3. **Update issue status** - Close finished work, update in-progress items
+4. **Handle git/sync by active profile**:
+   ```bash
+   # Conservative/minimal/default: report status and proposed commands; wait for approval.
+   git status
+
+   # Team-maintainer opt-in only, unless current instructions forbid it:
+   git pull --rebase
+   bd dolt push
+   git push
+   git status
+   ```
+5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
+
+**Critical rules:**
+- Explicit user or orchestrator instructions override this Beads block.
+- Do not commit or push without clear authority from the active profile or the current user request.
+- If a required sync or push is blocked, stop and report the exact command and error.

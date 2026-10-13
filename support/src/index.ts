@@ -22,22 +22,22 @@ const normalizeBookUrl = (url: string) => {
 
 const GITBOOK_URL = normalizeBookUrl(process.env.GITBOOK_URL ?? "/book/");
 
-// 同梱 GitBook の静的ファイルの場所。ローカル開発ではリポジトリルートの _book を使う
-const BOOK_DIR = process.env.BOOK_DIR ?? "../_book";
+// 同梱 GitBook の静的ファイルの場所。ローカル開発では book/_book を使う
+const BOOK_DIR = process.env.BOOK_DIR ?? "../book/_book";
 
 // 進捗報告の選択肢。GitBook の SUMMARY.md の章立てに合わせる
 const CHAPTERS = [
   { id: "ch0", label: "0. 事前準備" },
   { id: "ch1", label: "1. AWSとGoogle Cloud" },
-  { id: "ch2", label: "2. Dockerとコンテナ起動" },
-  { id: "ch3", label: "3. Cloud Runとは" },
-  { id: "ch4", label: "4. デプロイ" },
-  { id: "ch5", label: "5. 更新とロールバック" },
-  { id: "ch6", label: "6. カナリアリリース" },
-  { id: "ch7", label: "7. オートスケール" },
-  { id: "ch8", label: "8. ログとメトリクス" },
-  { id: "ch9", label: "9. ソースデプロイ" },
-  { id: "ch10", label: "10. 発展編" },
+  { id: "ch2", label: "2. Cloud Runとは" },
+  { id: "ch3", label: "3. Google Cloudのセットアップ" },
+  { id: "ch4", label: "4. Dockerとコンテナ起動" },
+  { id: "ch5", label: "5. デプロイ" },
+  { id: "ch6", label: "6. 更新とロールバック" },
+  { id: "ch7", label: "7. カナリアリリース" },
+  { id: "ch8", label: "8. オートスケール" },
+  { id: "ch9", label: "9. ログとメトリクス" },
+  { id: "ch10", label: "10. ソースデプロイ" },
   { id: "done", label: "🎉 完了" },
 ] as const;
 

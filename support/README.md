@@ -10,7 +10,7 @@ GitBook 本体はこのアプリに依存しません(単体で配布・閲覧�
 
 ## 技術スタック
 
-ハンズオン本編と同じ **TypeScript + Hono + Cloud Run** です。つまり**このサポートアプリ自体が、ハンズオンで学ぶ構成そのもの**で動いています(WebSocket・セッションアフィニティ・`--max-instances 1` は発展編 10-2 で説明している内容です)。
+ハンズオン本編と同じ **TypeScript + Hono + Cloud Run** です。つまり**このサポートアプリ自体が、ハンズオンで学ぶ構成そのもの**で動いています。
 
 - 状態(参加者・進捗・チャット履歴)はインスタンスのメモリ上に保持します
 - そのため `--max-instances 1` でのデプロイが前提です
@@ -72,7 +72,7 @@ gcloud artifacts docker images delete ${IMAGE} --delete-tags --quiet
 
 このアプリのデプロイ手順が作るリソースは、この2つ(`handson-support` サービスと `handson/support` イメージ)だけです。サービスアカウントや Pub/Sub は作りません。
 
-> **注意:** Artifact Registry のリポジトリ(本編の4章で作る `handson`)はハンズオン本編の `handson/app` イメージと共用しているため、ここでは削除しません。リポジトリごと消すと受講者向けの手順で作ったイメージも一緒に消えます。プロジェクトまるごと片付ける場合は本編の「99. 後片付け」を参照してください。
+> **注意:** Artifact Registry のリポジトリ(本編の5章で作る `handson`)はハンズオン本編の `handson/app` イメージと共用しているため、ここでは削除しません。リポジトリごと消すと受講者向けの手順で作ったイメージも一緒に消えます。プロジェクトまるごと片付ける場合は本編の「99. 後片付け」を参照してください。
 
 ## 設定(環境変数)
 
@@ -80,7 +80,7 @@ gcloud artifacts docker images delete ${IMAGE} --delete-tags --quiet
 |---|---|---|
 | `PORT` | `8080` | リッスンポート(Cloud Run が注入) |
 | `GITBOOK_URL` | `/book/` | iframe に表示する URL。GitHub Pages 等の外部ホスティングに差し替え可能(その場合、埋め込み先が iframe 表示を許可している必要があります)。スキームを省略した場合は補完されます(`localhost:4000` → `http://`、それ以外のホスト → `https://`) |
-| `BOOK_DIR` | `../_book`(Docker では `./book`) | 同梱 GitBook の静的ファイルのパス |
+| `BOOK_DIR` | `../book/_book`(Docker では `./book`) | 同梱 GitBook の静的ファイルのパス |
 
 ## 章立てを変えたとき
 
