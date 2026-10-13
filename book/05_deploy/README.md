@@ -1,4 +1,4 @@
-# 4. Cloud Runへデプロイする
+# 5. Cloud Runへデプロイする
 
 2章で作ったイメージを Artifact Registry (GAR)に push し、Cloud Run にデプロイして、世界中からアクセスできる HTTPS URL を手に入れます。
 
@@ -74,12 +74,12 @@ gcloud run deploy handson-app \
 
 30秒ほどで完了し、`Service URL: https://handson-app-<プロジェクト番号>.asia-northeast1.run.app` のような URL が表示されます。
 
-> **成功していれば:** 出力の最後に `Service [handson-app] revision [handson-app-00001-xxx] has been deployed and is serving 100 percent of traffic.` と Service URL が表示されます。URL は `サービス名-プロジェクト番号.リージョン.run.app` という決まった形式です。あとから `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` でいつでも取り直せますが、こちらは `handson-app-<ランダム文字列>-an.a.run.app` という古い形式の URL を返します。**どちらも同じ Service を指す有効な URL** なので、見た目が違っても気にしなくて大丈夫です(6章以降では `describe` で取得した URL をそのまま使います)。
+> **成功していれば:** 出力の最後に `Service [handson-app] revision [handson-app-00001-xxx] has been deployed and is serving 100 percent of traffic.` と Service URL が表示されます。URL は `サービス名-プロジェクト番号.リージョン.run.app` という決まった形式です。あとから `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` でいつでも取り直せますが、こちらは `handson-app-<ランダム文字列>-an.a.run.app` という古い形式の URL を返します。**どちらも同じ Service を指す有効な URL** なので、見た目が違っても気にしなくて大丈夫です(7章以降では `describe` で取得した URL をそのまま使います)。
 > **詰まったら:** まず `gcloud run services list --region ${REGION}` で Service が作られているか確認してください。作られていなければエラーの原因を切り分けます。`Image not found` や `manifest unknown` の場合は「2. イメージにタグを付けて push する」の push が完了していないので、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` を実行し、`TAGS` 列に `v1` が付いた行があるかを確認してください。`--region` や `--image` が空で怒られる場合は「0. 環境変数の準備」を再実行します。設定を間違えた場合も、同じ `gcloud run deploy` コマンドを何度でも実行し直して大丈夫です(新しいリビジョンが作られて上書きされます)。
 
 ## 4. アクセスして確認する
 
-![4章でやったことの流れ](imgs/deploy-flow.svg)
+![5章でやったことの流れ](imgs/deploy-flow.svg)
 
 表示された URL をブラウザで開いてください。  
 **2章で Cloud Shell の中で見たのと同じ青い画面が、今度は本物のインターネット越しに表示されます。**
@@ -94,12 +94,12 @@ Service の一覧、リビジョン、メトリクス、ログがすべて1画�
 
 > **[要作図] 図3: この章でやったことの流れ**
 >
-> - **目的:** 4章で打った3コマンドが、どこからどこへ何を運んだのかを1枚で振り返れるようにする。5章以降で何度も戻ってくる基準図になる
+> - **目的:** 5章で打った3コマンドが、どこからどこへ何を運んだのかを1枚で振り返れるようにする。6章以降で何度も戻ってくる基準図になる
 > - **描き方:** 手元のコード(`~/cloudrun-handson/app`)→ `docker build` でイメージ →`docker push` で Artifact Registry → `gcloud run deploy` で Cloud Run サービス → `*.run.app` の HTTPS URL
 > - **各ステップに添える情報:** そのステップで登場する Google Cloud のサービス名と、AWS での対応(Artifact Registry ↔ ECR など)
-> - **補足:** Cloud Run の箱の中に「リビジョン 00001」を小さく描いておくと、5章のリビジョンの話に自然につながる
-> - **レイアウトの制約:** 9章のソースデプロイでは `docker build` と `docker push` の2ステップがプラットフォーム側へ移ります。9章の図3b と**並べて差分が読める**ように、箱の位置とレイアウトを固定してください
-> - **完成後の扱い:** `04_deploy/imgs/deploy-flow.svg` として保存し、**見出しの直下**に `![4章でやったことの流れ](imgs/deploy-flow.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
+> - **補足:** Cloud Run の箱の中に「リビジョン 00001」を小さく描いておくと、6章のリビジョンの話に自然につながる
+> - **レイアウトの制約:** 10章のソースデプロイでは `docker build` と `docker push` の2ステップがプラットフォーム側へ移ります。10章の図3b と**並べて差分が読める**ように、箱の位置とレイアウトを固定してください
+> - **完成後の扱い:** `05_deploy/imgs/deploy-flow.svg` として保存し、**見出しの直下**に `![5章でやったことの流れ](imgs/deploy-flow.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
 > - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図です。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
 
 ## ふりかえり: 何をしなかったか

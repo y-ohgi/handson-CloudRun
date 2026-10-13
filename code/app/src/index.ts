@@ -85,7 +85,7 @@ app.post("/pubsub", async (c) => {
   return c.body(null, 204);
 });
 
-// 未捕捉の例外も1行JSONで出します。8章で severity フィルタを試す材料になります。
+// 未捕捉の例外も1行JSONで出します。9章で severity フィルタを試す材料になります。
 app.onError((err, c) => {
   log("ERROR", err.message, { stack: err.stack });
   return c.json({ error: "internal server error" }, 500);

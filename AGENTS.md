@@ -246,7 +246,7 @@ AIコーディングエージェント共通の作業規約。特定のツール
 ### 構成
 
 - honkitの資産(章本文、`SUMMARY.md`、`book.json`、`package.json`、`tools/`、`imgs/`、`_layouts/`)は`book/`配下に置く
-- 本文は章ディレクトリ(`book/00_preparation`〜`book/99_cleanup`)の`README.md`に置く。発展編のみ`book/10_advanced/`配下に個別ファイルを持つ
+- 本文は章ディレクトリ(`book/00_preparation`〜`book/99_cleanup`)の`README.md`に置く
 - `book/SUMMARY.md`が目次の唯一の正。章の追加・削除・改名・並べ替えを行ったら必ず同時に更新する
 - `book/tools/build-pdf.js`は`book/SUMMARY.md`をパースして章順とPDF内リンクを決めるため、`SUMMARY.md`に載っていないMarkdownはPDFに含まれない
 - `code/`(リポジトリルート)は受講者がコピーして使うサンプルアプリ。変更したら参照元の章の本文と手順を同期させる

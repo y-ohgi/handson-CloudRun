@@ -14,31 +14,19 @@ gcloud projects delete ${PROJECT_ID}
 
 ## 個別に削除する場合
 
-既存プロジェクトを使った場合はこちら。Cloud Shell を開き直していると `${REGION}` などの環境変数が消えているので、先に [4章の「環境変数の準備」](../04_deploy/README.md)を実行し直してください。
+既存プロジェクトを使った場合はこちら。Cloud Shell を開き直していると `${REGION}` などの環境変数が消えているので、先に [5章の「環境変数の準備」](../05_deploy/README.md)を実行し直してください。
 
 ```bash
 # Cloud Run Service
 gcloud run services delete handson-app --region ${REGION} --quiet
-gcloud run services delete handson-app-src --region ${REGION} --quiet   # 9章を実施した場合
-gcloud run services delete handson-chat --region ${REGION} --quiet      # 10-2を実施した場合
-
-# Cloud Scheduler とサービスアカウント(10-3を実施した場合)
-gcloud scheduler jobs delete handson-job-schedule --location ${REGION} --quiet
-gcloud iam service-accounts delete "handson-scheduler@${PROJECT_ID}.iam.gserviceaccount.com" --quiet
-
-# Cloud Run Job(10-3を実施した場合)
-gcloud run jobs delete handson-job --region ${REGION} --quiet
-
-# Pub/Sub(10-1を実施した場合)
-gcloud pubsub subscriptions delete handson-sub
-gcloud pubsub topics delete handson-topic
+gcloud run services delete handson-app-src --region ${REGION} --quiet   # 10章を実施した場合
 
 # Artifact Registry(イメージの保管料がかかるため忘れずに)
 gcloud artifacts repositories delete ${REPO} --location ${REGION} --quiet
-# 9章のソースデプロイは cloud-run-source-deploy というリポジトリを自動で作るため、こちらも削除します
+# 10章のソースデプロイは cloud-run-source-deploy というリポジトリを自動で作るため、こちらも削除します
 gcloud artifacts repositories delete cloud-run-source-deploy --location ${REGION} --quiet
 
-# 9章のソースデプロイは Cloud Build 用のバケットも自動で作ります(アップロードしたソースが残ります)
+# 10章のソースデプロイは Cloud Build 用のバケットも自動で作ります(アップロードしたソースが残ります)
 gcloud storage rm --recursive gs://${PROJECT_ID}_cloudbuild --quiet
 ```
 

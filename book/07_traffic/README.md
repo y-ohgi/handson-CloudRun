@@ -1,4 +1,4 @@
-# 6. カナリアリリースとタグ付きURL
+# 7. カナリアリリースとタグ付きURL
 
 前章のトラフィック制御を一歩進めて、**新バージョンを10%のユーザーにだけ出すカナリアリリース**と、**トラフィックを流さずに本番環境で動作確認できるタグ付きURL**を体験します。
 
@@ -37,7 +37,7 @@ gcloud run deploy handson-app \
 ```
 
 出力の最後に、このリビジョン専用のタグ付きURLが表示されます(`--no-traffic` のときは `Service URL:` の行は出ません)。  
-本番URLは4章で取得したものと同じです。
+本番URLは5章で取得したものと同じです。
 
 - 本番URL: `https://handson-app-<プロジェクト番号>.asia-northeast1.run.app` → **まだ赤(v2)のまま**
 - タグ付きURL: `https://staging---handson-app-xxxxx-an.a.run.app` → **緑(v3)**
@@ -47,7 +47,7 @@ gcloud run deploy handson-app \
 ステージング環境を別に組む代わりに、本番 Service の中に検証チャネルを持てるということです。
 
 > **成功していれば:** 出力に `serving 0 percent of traffic` と `The revision can be reached directly at https://staging---...` の2点が出ます。タグ付きURLは緑(v3)、本番URLは赤(v2)のままです。URLを見失ったら `gcloud run services describe handson-app --region ${REGION}` の出力で本番URLとタグ付きURLの両方を確認できます。なお**リビジョン名の番号は 00003 にならないことがあります**。番号の採番はデプロイ回数と一致せず、`handson-app-00005-xxx` のように飛ぶことがあります(リビジョンを見分けるのは末尾のランダム文字列です)。番号が飛んでいても失敗ではありません。
-> **詰まったら:** 本番URLまで緑になってしまった場合は `--no-traffic` が効いていません(タイプミスや行末の `\` の抜けが原因です)。`gcloud run revisions list --service handson-app --region ${REGION}` で v2 のリビジョン名を確認し、5章の手順で `--to-revisions <v2のリビジョン名>=100` を実行して赤に戻してから、`--no-traffic --tag staging` を付けてデプロイし直してください。タグ付きURLが 404 を返す場合は、`gcloud run services describe` に出ている URL をそのままコピーし直します(`staging---` の3連ハイフンが崩れやすい箇所です)。`docker push` からのやり直しが必要な場合は `cd ~/cloudrun-handson/app` と 4章の「0. 環境変数の準備」を先に確認してください。
+> **詰まったら:** 本番URLまで緑になってしまった場合は `--no-traffic` が効いていません(タイプミスや行末の `\` の抜けが原因です)。`gcloud run revisions list --service handson-app --region ${REGION}` で v2 のリビジョン名を確認し、6章の手順で `--to-revisions <v2のリビジョン名>=100` を実行して赤に戻してから、`--no-traffic --tag staging` を付けてデプロイし直してください。タグ付きURLが 404 を返す場合は、`gcloud run services describe` に出ている URL をそのままコピーし直します(`staging---` の3連ハイフンが崩れやすい箇所です)。`docker push` からのやり直しが必要な場合は `cd ~/cloudrun-handson/app` と 5章の「0. 環境変数の準備」を先に確認してください。
 
 <!-- 引用ブロックの結合を防ぐ区切り -->
 
@@ -59,7 +59,7 @@ gcloud run deploy handson-app \
 >   - タグ付きURL(`staging---handson-app-...run.app`)→ v3 へ(トラフィック割当は 0%)
 > - **要点:** v3 は「デプロイ済みだがリリースされていない」状態にあること。**デプロイ(コードを載せる)とリリース(ユーザーに出す)が別の操作**であることを図で言い切る
 > - **続きのコマ(任意):** カナリア時に本番URLからの矢印が 90% / 10% に分かれる図を並べると、次の節にそのままつながる
-> - **完成後の扱い:** `06_traffic/imgs/deploy-release-separation.svg` として保存し、**見出しの直下**に `![デプロイとリリースの分離](imgs/deploy-release-separation.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
+> - **完成後の扱い:** `07_traffic/imgs/deploy-release-separation.svg` として保存し、**見出しの直下**に `![デプロイとリリースの分離](imgs/deploy-release-separation.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
 > - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図です。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
 
 ## 3. 10%だけ流す(カナリアリリース)
@@ -84,7 +84,7 @@ for i in $(seq 1 20); do curl -s ${URL}/api | jq -r .revision; done | sort | uni
 リビジョン名が2種類表示され、`18 handson-app-00002-vjk` のように v2 のリビジョンが18回・v3 のリビジョンが2回、という比率になるはずです。  
 ブラウザを何度もリロードして「たまに緑が出る」のを見るのも楽しいです。
 
-> 実務ではこの状態でエラーレートやレイテンシのメトリクス(8章)を監視し、問題なければ段階的に割合を増やしていきます。
+> 実務ではこの状態でエラーレートやレイテンシのメトリクス(9章)を監視し、問題なければ段階的に割合を増やしていきます。
 
 <!-- 引用ブロックの結合を防ぐ区切り -->
 
@@ -99,7 +99,7 @@ gcloud run services update-traffic handson-app \
   --to-latest
 ```
 
-> `--to-latest` は「いま動いているリビジョンに固定する」という意味ではなく、**`LATEST`(=最新リビジョン)に100%割り当てる**という設定です。そのため、この状態で次のデプロイを行うと、新しく作られたリビジョンがそのまま `LATEST` になってトラフィックを受け取ります(4〜5章で体験した普通のデプロイ挙動に戻る、ということです)。
+> `--to-latest` は「いま動いているリビジョンに固定する」という意味ではなく、**`LATEST`(=最新リビジョン)に100%割り当てる**という設定です。そのため、この状態で次のデプロイを行うと、新しく作られたリビジョンがそのまま `LATEST` になってトラフィックを受け取ります(5〜6章で体験した普通のデプロイ挙動に戻る、ということです)。
 
 ブラウザで全リロードが緑(v3)になれば完了です。  
 もし v3 に問題が見つかっていたら?——前章でやった通り、v2 に一瞬で戻せます。

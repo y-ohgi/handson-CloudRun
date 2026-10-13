@@ -1,4 +1,4 @@
-# 7. オートスケールを観察する
+# 8. オートスケールを観察する
 
 Cloud Run の非機能まわりの主役、オートスケールを実際に負荷をかけて観察します。  
 あわせてコールドスタートとその対策も体験します。
@@ -29,7 +29,7 @@ Cloud Run は**同時に処理しているリクエスト数(concurrency)とCPU�
 > - **要点:** 右の台数を「5台」と描き切らないこと。オートスケーラーは目標60%以下に保とうとするため実際は**5台より多くなる**。「式では5台、実測は上限の10台まで増えた」と図中に注記を入れて、**台数は当てるものではなく観察するもの**という本文の姿勢と揃える
 > - **注意:** 「実測は上限の10台」は負荷対象リビジョンの台数(active 9 + idle 1)の1回の実測値。当日の値は変わるので、図7 と同様に図中に「実測例」と明記する
 > - **比較(任意):** 同じ50本を標準の Lambda で受けた場合(1リクエスト=1環境で50環境)を薄く添えると、コンテナ側の効率が際立つ
-> - **完成後の扱い:** `07_scaling/imgs/concurrency-and-instances.svg` として保存し、**見出しの直下**に `![concurrency とインスタンス数の関係](imgs/concurrency-and-instances.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
+> - **完成後の扱い:** `08_scaling/imgs/concurrency-and-instances.svg` として保存し、**見出しの直下**に `![concurrency とインスタンス数の関係](imgs/concurrency-and-instances.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
 > - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図です。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
 
 ## 1. 観察しやすいように設定を変える
@@ -122,7 +122,7 @@ for i in $(seq 1 30); do curl -s ${URL}/api | jq -r .instance; done | sort | uni
 負荷を止めてから数分〜15分ほど待って同じコマンドを打つと、1台(やがて0台)に戻ります。
 
 > **成功していれば:** `node ~/load.mjs` の最後に `done: success=<数百〜数千> failure=0`(起動中のリクエストが少数失敗することはあります)が表示され、`sort | uniq -c` の出力に **2つ以上の instance ID** が並びます。コンソールの「コンテナ インスタンスの数」もゼロ(または1台)から複数台へ跳ね上がっています。台数は実行ごとに変わるので、5台でなくても失敗ではありません。
-> **詰まったら:** `Cannot find module '/home/xxx/load.mjs'` と出る場合は `~/load.mjs` が作られていません。「2. 負荷をかける」の `cat > ~/load.mjs <<'EOF'` から `EOF` までをもう一度そのまま貼り付けて作り直してください(上書きされるので何度実行しても大丈夫です)。`Invalid URL` と出る、または `${URL}` が空の場合は Cloud Shell の再接続で環境変数が消えているので、[4章の「0. 環境変数の準備」](../04_deploy/README.md)を再実行したうえで `URL=$(gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)')` を実行し直し、`echo ${URL}` で URL が表示されることを確認します。instance ID が1種類しか出ない場合は concurrency の変更が効いていない可能性があるので、`gcloud run services describe handson-app --region ${REGION} --format 'value(spec.template.spec.containerConcurrency)'` が `10` を返すか確認し、違っていれば「1. 観察しやすいように設定を変える」を再実行してから負荷をかけ直してください。
+> **詰まったら:** `Cannot find module '/home/xxx/load.mjs'` と出る場合は `~/load.mjs` が作られていません。「2. 負荷をかける」の `cat > ~/load.mjs <<'EOF'` から `EOF` までをもう一度そのまま貼り付けて作り直してください(上書きされるので何度実行しても大丈夫です)。`Invalid URL` と出る、または `${URL}` が空の場合は Cloud Shell の再接続で環境変数が消えているので、[5章の「0. 環境変数の準備」](../05_deploy/README.md)を再実行したうえで `URL=$(gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)')` を実行し直し、`echo ${URL}` で URL が表示されることを確認します。instance ID が1種類しか出ない場合は concurrency の変更が効いていない可能性があるので、`gcloud run services describe handson-app --region ${REGION} --format 'value(spec.template.spec.containerConcurrency)'` が `10` を返すか確認し、違っていれば「1. 観察しやすいように設定を変える」を再実行してから負荷をかけ直してください。
 
 ## 4. コールドスタートと min-instances
 
@@ -141,7 +141,7 @@ for i in $(seq 1 30); do curl -s ${URL}/api | jq -r .instance; done | sort | uni
 >   - 16分後の1発目が 1.45秒かかった(コールドスタート)。**0台まで縮小したこと自体は `instance_count = 0` として記録できていない**ので、図では0台の点を破線にして「推定」と明記する
 > - **要点:** 「最大15分アイドル保持」の帯を横向きに塗って、**その間は0台にならない**ことを視覚的に示す
 > - **注意:** これは1回の実測値。当日の値は変わるので、図中に「実測例」と明記する
-> - **完成後の扱い:** `07_scaling/imgs/scale-in-timeline.svg` として保存し、**見出しの直下**に `![負荷をかけてから0台に戻るまでのタイムライン](imgs/scale-in-timeline.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
+> - **完成後の扱い:** `08_scaling/imgs/scale-in-timeline.svg` として保存し、**見出しの直下**に `![負荷をかけてから0台に戻るまでのタイムライン](imgs/scale-in-timeline.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
 > - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図です。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
 
 Cloud Run は最大15分ほどインスタンスをアイドルのまま残すので、0台に戻るのを待つには**15分以上**放置する必要があります。  
@@ -172,7 +172,7 @@ gcloud run services update handson-app \
 ```
 
 > **成功していれば:** 1回目の `curl` の `time_total` が2回目より明確に大きくなります(このアプリなら1回目が1秒〜1.5秒、2回目は数十ms程度)。`--min-instances` の更新はどちらも新しいリビジョン名を出力して完了し、`gcloud run revisions list --service handson-app --region ${REGION}` の行が増えます。
-> **詰まったら:** 1回目と2回目で差が出ない場合は、まだインスタンスがアイドルのまま残っています(Cloud Run は最大15分保持します)。時間を置いて試すか、差が出なくても「温まっていた」ということなので先へ進んでください。リージョンの入力を求められたり `--region` が空だと言われる場合は Cloud Shell の再接続で環境変数が消えているので、[4章の「0. 環境変数の準備」](../04_deploy/README.md)を再実行します。更新が途中で失敗した場合は、同じコマンドをそのまま再実行すれば復旧します。**最後の `--min-instances 0` を実行し忘れるとアイドル時も課金が続きます。**不安なら上のコマンドをもう一度実行して構いません(同じ設定への更新は何度でも安全です)。
+> **詰まったら:** 1回目と2回目で差が出ない場合は、まだインスタンスがアイドルのまま残っています(Cloud Run は最大15分保持します)。時間を置いて試すか、差が出なくても「温まっていた」ということなので先へ進んでください。リージョンの入力を求められたり `--region` が空だと言われる場合は Cloud Shell の再接続で環境変数が消えているので、[5章の「0. 環境変数の準備」](../05_deploy/README.md)を再実行します。更新が途中で失敗した場合は、同じコマンドをそのまま再実行すれば復旧します。**最後の `--min-instances 0` を実行し忘れるとアイドル時も課金が続きます。**不安なら上のコマンドをもう一度実行して構いません(同じ設定への更新は何度でも安全です)。
 
 ## まとめ
 
