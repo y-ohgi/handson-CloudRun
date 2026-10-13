@@ -6,12 +6,12 @@
 ## 座学パート
 
 * [1. AWSとGoogle Cloudの考え方の違い](01_aws_and_googlecloud/README.md)
-* [2. Dockerのおさらいとコンテナ起動](02_docker/README.md)
-* [3. Cloud Runとは](03_cloudrun/README.md)
+* [2. Cloud Runとは](02_cloudrun/README.md)
 
 ## ハンズオンパート
 
-* [4. Cloud Shellとエディタの使い方](04_cloudshell_editor/README.md)
+* [3. Google Cloudのセットアップ](03_google_cloud_setup/README.md)
+* [4. Dockerのおさらいとコンテナ起動](04_docker/README.md)
 * [5. Cloud Runへデプロイする](05_deploy/README.md)
 * [6. 更新とロールバック](06_revision/README.md)
 * [7. カナリアリリースとタグ付きURL](07_traffic/README.md)
