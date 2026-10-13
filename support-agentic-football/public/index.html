@@ -308,8 +308,6 @@
       $("joinOverlay").classList.add("hidden");
       send({ type: "join", id: myId, name: myName });
     };
-    $("nameInput").onkeydown = function (e) { if (e.key === "Enter") $("joinBtn").click(); };
-
     $("chatForm").onsubmit = function (e) {
       e.preventDefault();
       var text = $("chatInput").value.trim();
