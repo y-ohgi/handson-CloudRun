@@ -29,9 +29,9 @@ const BOOK_DIR = process.env.BOOK_DIR ?? "../book/_book";
 const CHAPTERS = [
   { id: "ch0", label: "0. 事前準備" },
   { id: "ch1", label: "1. AWSとGoogle Cloud" },
-  { id: "ch2", label: "2. Dockerとコンテナ起動" },
-  { id: "ch3", label: "3. Cloud Runとは" },
-  { id: "ch4", label: "4. Cloud Shellとエディタ" },
+  { id: "ch2", label: "2. Cloud Runとは" },
+  { id: "ch3", label: "3. Google Cloudのセットアップ" },
+  { id: "ch4", label: "4. Dockerとコンテナ起動" },
   { id: "ch5", label: "5. デプロイ" },
   { id: "ch6", label: "6. 更新とロールバック" },
   { id: "ch7", label: "7. カナリアリリース" },

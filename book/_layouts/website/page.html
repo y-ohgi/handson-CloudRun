@@ -22,3 +22,27 @@
     <meta property="og:url" content="{{ siteBaseURL }}{{ ogPath }}">
     <meta name="twitter:card" content="summary_large_image">
 {% endblock %}
+
+{#
+  honkit (kramed -> cheerio) が本文HTMLを内部で再パース・再出力する際、
+  Markdownの行末スペース2つによる改行(本来は単独の <br>)が <br></br> という
+  不正なHTMLとして出力されてしまう(honkit 6.2.2の @honkit/html / modifyHTML の
+  既知の問題)。HTML5のパース仕様では </br> は単独の <br> の再出現として扱われる
+  ため、ブラウザ上では2つの隣接する <br> 要素になり、改行が2行分になる。
+  CSSの隣接セレクタ(br + br)はテキストノードを無視して直前の要素を見るため、
+  1つの段落に複数の改行が含まれると2つ目以降で誤判定する(本来の改行まで消える)。
+  そのため、DOM上で本当に隣接している(間に何もない) <br> のペアだけを
+  クライアント側JSで判定し、後ろ側を取り除く。
+#}
+{% block javascript %}
+    {{ super() }}
+    <script>
+        document.querySelectorAll("br").forEach(function (br) {
+            if (!br.isConnected) return;
+            var next = br.nextSibling;
+            if (next && next.nodeType === 1 && next.tagName === "BR") {
+                next.remove();
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,8 +1,9 @@
 # 99. 後片付け
 
-お疲れさまでした!課金が発生し続けるリソースを片付けます。
+お疲れさまでした！  
+リソースの片付けを行います。
 
-## おすすめ: プロジェクトごと削除
+## 1. おすすめ: プロジェクトごと削除
 
 ハンズオン専用プロジェクトで進めた場合は、これが一番確実です。
 
@@ -12,7 +13,7 @@ gcloud projects delete ${PROJECT_ID}
 
 (30日間は復元可能な状態で保留されたあと、完全に削除されます)
 
-## 個別に削除する場合
+## 2. 個別に削除する場合
 
 既存プロジェクトを使った場合はこちら。Cloud Shell を開き直していると `${REGION}` などの環境変数が消えているので、先に [5章の「環境変数の準備」](../05_deploy/README.md)を実行し直してください。
 
@@ -27,14 +28,15 @@ gcloud artifacts repositories delete ${REPO} --location ${REGION} --quiet
 gcloud artifacts repositories delete cloud-run-source-deploy --location ${REGION} --quiet
 
 # 10章のソースデプロイは Cloud Build 用のバケットも自動で作ります(アップロードしたソースが残ります)
+#   このバケットは `--region` に追従せず US マルチリージョンに作られるので、`gcloud storage ls` で探すときはリージョンで絞らないでください。
 gcloud storage rm --recursive gs://${PROJECT_ID}_cloudbuild --quiet
 ```
 
-> このバケットは `--region` に追従せず US マルチリージョンに作られるので、`gcloud storage ls` で探すときはリージョンで絞らないでください。
-
 <!-- 引用ブロックの結合を防ぐ区切り -->
 
-> **課金ポイントの整理:** Cloud Run はスケールtoゼロなので、`min-instances` を0に戻してあれば放置してもほぼ課金されません(1以上のままだとアイドル状態でも課金され続けます)。継続課金になり得るのは **Artifact Registry のストレージ**(無料枠は課金アカウントあたり0.5GB/月)、**min-instances**、そして **Cloud Scheduler のジョブ**(無料枠は課金アカウントあたり3ジョブ/月)です。
+### 課金ポイントの整理
+Cloud Run はスケールtoゼロなので、`min-instances` を0に戻してあれば放置してもほぼ課金されません(1以上のままだとアイドル状態でも課金され続けます)。  
+継続課金になり得るのは **Artifact Registry のストレージ**(無料枠は課金アカウントあたり0.5GB/月)、**min-instances**、そして **Cloud Scheduler のジョブ**(無料枠は課金アカウントあたり3ジョブ/月)です。
 
 <!-- 引用ブロックの結合を防ぐ区切り -->
 

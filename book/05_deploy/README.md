@@ -1,6 +1,6 @@
 # 5. Cloud Runへデプロイする
 
-2章で作ったイメージを Artifact Registry (GAR)に push し、Cloud Run にデプロイして、世界中からアクセスできる HTTPS URL を手に入れます。
+4章で作ったイメージを Artifact Registry (GAR)に push し、Cloud Run にデプロイして、世界中からアクセスできる HTTPS URL を手に入れます。
 
 ## 0. 環境変数の準備
 
@@ -38,7 +38,7 @@ gcloud auth configure-docker ${REGION}-docker.pkg.dev
 ## 2. イメージにタグを付けて push する
 
 GAR のイメージパスは `リージョン-docker.pkg.dev/プロジェクト/リポジトリ/イメージ名:タグ` という形式です。  
-2章で作ったイメージにこのパスでタグを付け直して push します。
+4章で作ったイメージにこのパスでタグを付け直して push します。
 
 ```bash
 cd ~/cloudrun-handson/app
@@ -55,7 +55,7 @@ gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REP
 [コンソールの Artifact Registry](https://console.cloud.google.com/artifacts) からも見えます。
 
 > **成功していれば:** `docker push` の最後が `v1: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list` の出力に `.../handson/app` の行が1つ表示され、`TAGS` 列が `v1` になっています。
-> **詰まったら:** `An image does not exist locally with the tag: handson-app` と出た場合は2章のイメージが手元にありません。`cd ~/cloudrun-handson/app && docker build -t handson-app:v1 .` でビルドし直してから、タグ付けと push をやり直してください(手元のイメージ一覧は `docker images` で確認できます)。`denied` や `unauthorized` が出る場合は `gcloud auth configure-docker ${REGION}-docker.pkg.dev` を実行してから `docker push ${IMAGE}:v1` を再実行します。`echo ${IMAGE}` が空、または `-docker.pkg.dev//` のように途中が抜けている場合は「0. 環境変数の準備」を再実行してください。
+> **詰まったら:** `An image does not exist locally with the tag: handson-app` と出た場合は4章のイメージが手元にありません。`cd ~/cloudrun-handson/app && docker build -t handson-app:v1 .` でビルドし直してから、タグ付けと push をやり直してください(手元のイメージ一覧は `docker images` で確認できます)。`denied` や `unauthorized` が出る場合は `gcloud auth configure-docker ${REGION}-docker.pkg.dev` を実行してから `docker push ${IMAGE}:v1` を再実行します。`echo ${IMAGE}` が空、または `-docker.pkg.dev//` のように途中が抜けている場合は「0. 環境変数の準備」を再実行してください。
 
 ## 3. Cloud Run にデプロイする
 
@@ -82,9 +82,9 @@ gcloud run deploy handson-app \
 ![5章でやったことの流れ](imgs/deploy-flow.svg)
 
 表示された URL をブラウザで開いてください。  
-**2章で Cloud Shell の中で見たのと同じ青い画面が、今度は本物のインターネット越しに表示されます。**
+**4章で Cloud Shell の中で見たのと同じ青い画面が、今度は本物のインターネット越しに表示されます。**
 
-2章との違いを見てください:
+4章との違いを見てください:
 
 - `Service` が `handson-app` に、`Revision` が `handson-app-00001-xxx` になっている(Cloud Run が注入する環境変数 `K_SERVICE` / `K_REVISION` をアプリが表示している)
 - URL が最初から **HTTPS**。証明書の発行も更新も何もしていない
