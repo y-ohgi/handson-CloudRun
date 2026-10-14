@@ -17,7 +17,7 @@
 * [7. カナリアリリースとタグ付きURL](07_traffic/README.md)
 * [8. オートスケールを観察する](08_scaling/README.md)
 * [9. ログとメトリクスをのぞく](09_observability/README.md)
-* [10. 締め: Dockerfileすら書かないデプロイ](10_source_deploy/README.md)
+* [10. ソースデプロイ](10_source_deploy/README.md)
 
 ## おわりに
 

@@ -9,8 +9,8 @@
 `src/index.ts` を再度書き換えます。
 
 ```typescript
-const MESSAGE = "Hello, Cloud Run v3!";
-const BG_COLOR = "#34A853"; // 緑
+const MESSAGE = process.env.MESSAGE || "Hello, Cloud Run v3!";
+const BG_COLOR = process.env.BG_COLOR || "#34A853"; // 緑
 ```
 
 ビルドと push まで行います(まだ deploy はしません)。

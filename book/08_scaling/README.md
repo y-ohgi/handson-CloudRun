@@ -156,7 +156,7 @@ for i in $(seq 1 30); do curl -s ${URL}/api | jq -r .instance; done | sort | uni
 -->
 
 Cloud Run は最大15分ほどインスタンスをアイドルのまま残すので、0台に戻るのを待つには**15分以上**放置する必要があります。  
-待っている間は[9章](../09_observability/README.md)・[10章](../10_source_deploy/README.md)を先に進めて、最後にここへ戻って下の `curl` を打つのがおすすめです(講師の説明を聞いたあとでも構いません)。  
+待っている間は[9章](../09_observability/README.md)・[10章](../10_source_deploy/README.md)を先に進めて、最後にここへ戻って下の `curl` を打つのがおすすめです。  
 それでも1回目と2回目に差が出ないことがありますが、直前の負荷でインスタンスが温まったまま残っているだけなので失敗ではありません。
 
 ```bash
