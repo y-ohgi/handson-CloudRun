@@ -3,10 +3,12 @@ import { Hono } from "hono";
 import crypto from "node:crypto";
 
 // ================================================================
-// ハンズオンで書き換えるのはこの2行です
+// ハンズオンで書き換えるのはこの2行の既定値です
+// 環境変数 MESSAGE / BG_COLOR が設定されていれば、そちらが優先されます
+// (空文字は未設定とみなして既定値を使う)
 // ================================================================
-const MESSAGE = "Hello, Cloud Run!";
-const BG_COLOR = "#4285F4"; // v1: 青 / v2: "#EA4335" 赤 / v3: "#34A853" 緑
+const MESSAGE = process.env.MESSAGE || "Hello, Cloud Run!";
+const BG_COLOR = process.env.BG_COLOR || "#4285F4"; // v1: 青 / v2: "#EA4335" 赤 / v3: "#34A853" 緑
 
 // コンテナ(インスタンス)が起動したタイミングで一意なIDを生成する。
 // オートスケールで何台に増えたかを見分けるために使う。
