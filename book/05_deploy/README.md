@@ -82,6 +82,10 @@ gcloud run deploy handson-app \
 > **成功していれば:** 出力の最後に `Service [handson-app] revision [handson-app-00001-xxx] has been deployed and is serving 100 percent of traffic.` と Service URL が表示されます。URL は `サービス名-プロジェクト番号.リージョン.run.app` という決まった形式です。あとから `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` でいつでも取り直せますが、こちらは `handson-app-<ランダム文字列>-an.a.run.app` という古い形式の URL を返します。**どちらも同じ Service を指す有効な URL** なので、見た目が違っても気にしなくて大丈夫です(7章以降では `describe` で取得した URL をそのまま使います)。  
 > **詰まったら:** まず `gcloud run services list --region ${REGION}` で Service が作られているか確認してください。作られていなければエラーの原因を切り分けます。`Image not found` や `manifest unknown` の場合は「2. イメージにタグを付けて push する」の push が完了していないので、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` を実行し、`TAGS` 列に `v1` が付いた行があるかを確認してください。`--region` や `--image` が空で怒られる場合は「0. 環境変数の準備」を再実行します。設定を間違えた場合も、同じ `gcloud run deploy` コマンドを何度でも実行し直して大丈夫です(新しいリビジョンが作られて上書きされます)。
 
+いまデプロイした Service は、2章で触れた2つの課金モデルのうち既定の **request-based billing**(リクエスト処理中だけ CPU が割り当てられ、その分だけ課金される方式)で動いています。  
+常時処理があるワークロード向けの **instance-based billing** に切り替えるには、`gcloud run deploy` に `--no-cpu-throttling` を付けて CPU を常時割り当てます(作成済みの Service でも `gcloud run services update` で切り替えられます)。  
+今日のハンズオンでは切り替えません。
+
 ## 4. アクセスして確認する
 
 ![5章でやったことの流れ](imgs/deploy-flow.svg)
