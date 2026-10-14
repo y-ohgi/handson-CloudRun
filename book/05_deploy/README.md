@@ -37,7 +37,7 @@ docker コマンドが GAR に push できるよう、認証ヘルパーを設�
 gcloud auth configure-docker ${REGION}-docker.pkg.dev
 ```
 
-> **成功していれば:** リポジトリ作成が `Created repository [handson].` で終わり、`gcloud artifacts repositories list --location ${REGION}` に `handson` が1行表示されます。認証ヘルパーの設定は `Docker configuration file updated.` で終わります。すでに設定済みの環境では `gcloud credential helpers already registered correctly.` と表示されますが、こちらも成功です。
+> **成功していれば:** リポジトリ作成が `Created repository [handson].` で終わり、`gcloud artifacts repositories list --location ${REGION}` に `handson` が1行表示されます。認証ヘルパーの設定は `Docker configuration file updated.` で終わります。すでに設定済みの環境では `gcloud credential helpers already registered correctly.` と表示されますが、こちらも成功です。  
 > **詰まったら:** `ALREADY_EXISTS` は作成済みという意味なので、そのまま次へ進んで構いません。`PERMISSION_DENIED` や API 無効のエラーが出た場合は `gcloud services enable artifactregistry.googleapis.com run.googleapis.com` を実行してから作成コマンドを再実行してください。`${REPO}` や `${REGION}` が空文字で展開されている(コマンドが `create --location=` のように見える)場合は、Cloud Shell の再接続で環境変数が消えています。「0. 環境変数の準備」を再実行してください。
 
 ## 2. イメージにタグを付けて push する
@@ -59,7 +59,7 @@ gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REP
 
 [コンソールの Artifact Registry](https://console.cloud.google.com/artifacts) からも見えます。
 
-> **成功していれば:** `docker push` の最後が `v1: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list` の出力に `.../handson/app` の行が1つ表示され、`TAGS` 列が `v1` になっています。
+> **成功していれば:** `docker push` の最後が `v1: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list` の出力に `.../handson/app` の行が1つ表示され、`TAGS` 列が `v1` になっています。  
 > **詰まったら:** `An image does not exist locally with the tag: handson-app` と出た場合は4章のイメージが手元にありません。`cd ~/cloudrun-handson/app && docker build -t handson-app:v1 .` でビルドし直してから、タグ付けと push をやり直してください(手元のイメージ一覧は `docker images` で確認できます)。`denied` や `unauthorized` が出る場合は `gcloud auth configure-docker ${REGION}-docker.pkg.dev` を実行してから `docker push ${IMAGE}:v1` を再実行します。`echo ${IMAGE}` が空、または `-docker.pkg.dev//` のように途中が抜けている場合は「0. 環境変数の準備」を再実行してください。
 
 ## 3. Cloud Run にデプロイする
@@ -79,7 +79,7 @@ gcloud run deploy handson-app \
 
 30秒ほどで完了し、`Service URL: https://handson-app-<プロジェクト番号>.asia-northeast1.run.app` のような URL が表示されます。
 
-> **成功していれば:** 出力の最後に `Service [handson-app] revision [handson-app-00001-xxx] has been deployed and is serving 100 percent of traffic.` と Service URL が表示されます。URL は `サービス名-プロジェクト番号.リージョン.run.app` という決まった形式です。あとから `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` でいつでも取り直せますが、こちらは `handson-app-<ランダム文字列>-an.a.run.app` という古い形式の URL を返します。**どちらも同じ Service を指す有効な URL** なので、見た目が違っても気にしなくて大丈夫です(7章以降では `describe` で取得した URL をそのまま使います)。
+> **成功していれば:** 出力の最後に `Service [handson-app] revision [handson-app-00001-xxx] has been deployed and is serving 100 percent of traffic.` と Service URL が表示されます。URL は `サービス名-プロジェクト番号.リージョン.run.app` という決まった形式です。あとから `gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)'` でいつでも取り直せますが、こちらは `handson-app-<ランダム文字列>-an.a.run.app` という古い形式の URL を返します。**どちらも同じ Service を指す有効な URL** なので、見た目が違っても気にしなくて大丈夫です(7章以降では `describe` で取得した URL をそのまま使います)。  
 > **詰まったら:** まず `gcloud run services list --region ${REGION}` で Service が作られているか確認してください。作られていなければエラーの原因を切り分けます。`Image not found` や `manifest unknown` の場合は「2. イメージにタグを付けて push する」の push が完了していないので、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` を実行し、`TAGS` 列に `v1` が付いた行があるかを確認してください。`--region` や `--image` が空で怒られる場合は「0. 環境変数の準備」を再実行します。設定を間違えた場合も、同じ `gcloud run deploy` コマンドを何度でも実行し直して大丈夫です(新しいリビジョンが作られて上書きされます)。
 
 ## 4. アクセスして確認する
