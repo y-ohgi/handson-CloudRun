@@ -15,11 +15,11 @@ Web版: [y-ohgi.com/handson-CloudRun](https://y-ohgi.com/handson-CloudRun/)
 
 ## 対象者
 
-- AWS を実務で利用したことがある方
+- **AWS を実務で利用したことがある方**
   - Google Cloud は未経験、もしくは BigQuery などを少し触った程度
-- コンテナ技術は知識として知っている方
+- **コンテナ技術は知識として知っている方**
   - Docker・devcontainer・ECS・Kubernetes
-- クラウドベンダーの設計思想の違いを学びたい方
+- **クラウドベンダーの設計思想の違いを学びたい方**
   - AWS と Google Cloud の違いをサービス名の対応ではなく、設計思想の違いとして理解したい方
 
 ## 進め方
