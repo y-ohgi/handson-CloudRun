@@ -12,19 +12,36 @@ Google Cloud のプロジェクトを作り、今日使う分だけAPIを有効�
 4. 課金が有効になっていることを確認([課金ページ](https://console.cloud.google.com/billing))
   - クレジットカードの登録が必要です。
 
-> **このハンズオンではハンズオン専用プロジェクトを推奨します。**  ハンズオン後にプロジェクトごと削除すれば、消し忘れによる課金の心配がありません。
+**このハンズオンではハンズオン専用プロジェクトを推奨します。**  
+ハンズオン後にプロジェクトごと削除すれば、消し忘れによる課金の心配がありません。
 
-別のプロジェクトが選ばれたまま進むと、この先のコマンドがすべて無関係なプロジェクトに対して実行されてしまいます。画面上部のプロジェクトセレクタで、今作ったプロジェクトが選ばれていることを確認してください。
+別のプロジェクトが選ばれたまま進むと、この先のコマンドがすべて無関係なプロジェクトに対して実行されてしまいます。  
+画面上部のプロジェクトセレクタで、今作ったプロジェクトが選ばれていることを確認してください。
 
-## 2. Cloud Shell エディタを開く
+![project-selector](./imgs/project-selector.png)
+
+## 2. Cloud Shellを開く
 
 [shell.cloud.google.com](https://shell.cloud.google.com/) を開くか、コンソール右上のターミナルアイコンから Cloud Shell を起動し、「エディタを開く」をクリックします。
 
-Cloud Shell は Google Cloud が無料で使える開発環境で、AWS の CloudShell に相当します。  
-今日必要なものは最初から揃っています。
+![cloud shell](./imgs/launch-cloudshell.png)
 
-### ブラウザで動くコードエディタ
-ファイルの編集・保存がそのままブラウザで完結します。今日は主にこれとターミナルを行き来します(使い方は4章で扱います)。
+Cloud Shell は Google Cloud が無料で使える開発環境で、AWS の CloudShell に相当します。  
+
+## 3. Cloud Shell エディタを開く
+Cloud Shellからエディタを開くと、VSCodeベースのエディタが使用可能です。  
+ファイルの編集・保存がそのままブラウザで完結します。  
+ハンズオンではこのエディタを使用して進めていきます。
+
+初回起動時にプロジェクトとリージョンを聞かれます。  
+今回使用するプロジェクトと、デフォルトリージョンを `asia-northeast1` (東京リージョン)を選択します。
+![editor-settings](./imgs/editor-settings.png)
+
+順調に進むとエディタが使用可能になります。  
+VSCodeを普段から使っている方なら直感的に使用可能だと思います。  
+今回欲しいのはエディタとTerminalなので、Terminalの起動も行います。  
+以下のように、コマンドパレットから `> create new terminal` と入力するとTerminalが画面下部に出力されます。
+![editor](./imgs/editor.png)
 
 ### Docker
 `docker` CLI が最初からインストールされています。  
@@ -36,12 +53,63 @@ Cloud Shell は Google Cloud が無料で使える開発環境で、AWS の Clou
 ### 5GB の永続ホームディレクトリ
 永続するのは `$HOME` だけです。それ以外への変更はセッション終了で失われます。
 
-> **Cloud Shell を普段からよく使っている人へ:** 週あたりの利用時間クォータ(デフォルト50時間)があり、使い切るとリセット時刻まで一切使えません。  
-> 当日その場での回避策がほぼないので、ターミナルの[セッション情報]→[使用量の割り当て]で、**残りが4時間以上あること**を事前に確認してください(残り時間とリセット日時がダイアログに表示されます)。
+> **Cloud Shell を普段からよく使っている人へ**  
+> 週あたりの利用時間クォータ(デフォルト50時間)があり、使い切るとリセット時刻まで一切使えません。  
 
-## 3. APIを有効化する
 
-Cloud Shell のターミナルで、今日使うAPIをまとめて有効化します。  
+## 4. 動作確認
+
+```bash
+gcloud config get-value project
+docker version
+```
+
+プロジェクトIDが表示され、`docker version` がエラーにならなければ準備完了です。
+
+`(unset)` と表示された場合や、作った覚えのないプロジェクトIDが表示された場合は、`gcloud` に今日使うプロジェクトが設定されていません。次のコマンドでプロジェクトを設定してから、もう一度 `gcloud config get-value project` を実行してください。
+
+```bash
+gcloud config set project <プロジェクトID>
+```
+
+## 5. 動作確認
+
+```bash
+gcloud config get-value project
+docker version
+```
+
+プロジェクトIDが表示され、`docker version` がエラーにならなければ準備完了です。
+
+`(unset)` と表示された場合や、作った覚えのないプロジェクトIDが表示された場合は、`gcloud` に今日使うプロジェクトが設定されていません。次のコマンドでプロジェクトを設定してから、もう一度 `gcloud config get-value project` を実行してください。
+
+```bash
+gcloud config set project <プロジェクトID>
+```
+
+プロジェクトIDはコンソール上部のプロジェクトセレクタで確認できます。  
+「1. Google Cloud プロジェクトを作る」で付けたプロジェクト名とは別に、`sandbox-123456` のように自動採番されたIDです。
+
+### 覚えておくと速いショートカット
+必須ではありませんが、知っておくと操作が速くなります。
+
+| 操作 | ショートカット |
+|---|---|
+| コマンドパレットを開く | `Cmd+Shift+P` / `Ctrl+Shift+P` |
+| ファイルを名前で開く | `Cmd+P` / `Ctrl+P` |
+| ファイル内を検索 | `Cmd+F` / `Ctrl+F` |
+| プロジェクト全体を検索 | `Cmd+Shift+F` / `Ctrl+Shift+F` |
+
+このハンズオンの基本サイクルは、ここからずっとこの繰り返しになります。
+
+1. エディタでファイルを編集する
+2. 保存する(`Cmd+S` / `Ctrl+S`)
+3. ターミナルでコマンドを実行する(`docker build`、`gcloud run deploy` など)
+4. 結果をブラウザやターミナルの出力で確認する
+
+## 6. APIを有効化する
+
+起動したTerminalから、今日使うAPIをまとめて有効化します。  
 数分かかることがあるので先に有効化を行います。
 
 ```bash
@@ -61,44 +129,10 @@ gcloud services enable \
 
 ### AWSとの違い
 Google Cloud では各サービスの API を明示的に有効化してから使います。  
-AWS のようにすべてのサービスが最初から呼べる状態ではなく、プロジェクトごとに使うサービスをオプトインする思想です。
-
-## 4. サンプルコードを手元に用意する
-
-今日使うサンプルコードをこのリポジトリから取得します。  
-やり直すときは、このブロックをそのまま再実行すれば初期状態に戻ります(自分で書き換えた `~/cloudrun-handson` の内容は消えます)。
-
-```bash
-rm -rf /tmp/handson-CloudRun
-git clone --depth 1 https://github.com/y-ohgi/handson-CloudRun.git /tmp/handson-CloudRun
-rm -rf ~/cloudrun-handson
-mv /tmp/handson-CloudRun/code ~/cloudrun-handson
-rm -rf /tmp/handson-CloudRun
-```
-
-**成功していれば** `ls ~/cloudrun-handson` で `app` ディレクトリが見えます。ここが今日ずっと作業する場所です。
-
-## 5. 動作確認
-
-```bash
-gcloud config get-value project
-docker version
-```
-
-プロジェクトIDが表示され、`docker version` がエラーにならなければ準備完了です。
-
-`(unset)` と表示された場合や、作った覚えのないプロジェクトIDが表示された場合は、`gcloud` に今日使うプロジェクトが設定されていません。次のコマンドでプロジェクトを設定してから、もう一度 `gcloud config get-value project` を実行してください。
-
-```bash
-gcloud config set project <プロジェクトID>
-```
-
-> プロジェクトIDはコンソール上部のプロジェクトセレクタで確認できます。「1. Google Cloud プロジェクトを作る」で付けたプロジェクト名とは別に、`sandbox-123456` のように自動採番されたIDです。
+AWS のようにすべてのサービスが最初から呼べる状態ではなく、プロジェクトごとに使うサービスをオプトイン(/オプトアウト)する思想です。
 
 ## まとめ
 
-- Google Cloud のプロジェクトを作成し、今日使うAPIを有効化した
-- サンプルコードを `~/cloudrun-handson/app` に用意した
-- ここから先はこの環境の上で、エディタとターミナルを行き来しながら進めます
-
-次の4章で、実際にエディタを開いてコンテナイメージを作っていきます。
+- Cloud Shell / Cloud Shell エディタの有効化をした。
+- Google Cloud のプロジェクトを作成し、今日使うAPIを有効化した。
+- ここから先はこのCloud Shell エディタを利用してハンズオンを進めていきます。
