@@ -1,6 +1,6 @@
 # 5. Cloud Runへデプロイする
 
-4章で作ったイメージを Artifact Registry (GAR)に push し、Cloud Run にデプロイして、世界中からアクセスできる HTTPS URL を手に入れます。
+4章で作ったイメージを Artifact Registry に push し、Cloud Run にデプロイして、世界中からアクセスできる HTTPS URL を手に入れます。
 
 ## 0. 環境変数の準備
 
@@ -31,7 +31,7 @@ gcloud artifacts repositories create ${REPO} \
   --description="Cloud Run handson"
 ```
 
-docker コマンドが GAR に push できるよう、認証ヘルパーを設定します(ECR の `aws ecr get-login-password` に相当。こちらは一度設定すれば、push のたびにトークンを取り直す必要はありません)。
+docker コマンドが Artifact Registry に push できるよう、認証ヘルパーを設定します(ECR の `aws ecr get-login-password` に相当。こちらは一度設定すれば、push のたびにトークンを取り直す必要はありません)。
 
 ```bash
 gcloud auth configure-docker ${REGION}-docker.pkg.dev
@@ -42,7 +42,7 @@ gcloud auth configure-docker ${REGION}-docker.pkg.dev
 
 ## 2. イメージにタグを付けて push する
 
-GAR のイメージパスは `リージョン-docker.pkg.dev/プロジェクト/リポジトリ/イメージ名:タグ` という形式です。  
+Artifact Registry のイメージパスは `リージョン-docker.pkg.dev/プロジェクト/リポジトリ/イメージ名:タグ` という形式です。  
 4章で作ったイメージにこのパスでタグを付け直して push します。
 
 ```bash
@@ -51,6 +51,7 @@ docker tag handson-app:v1 ${IMAGE}:v1
 docker push ${IMAGE}:v1
 ```
 
+初回の push はイメージ全体を転送するため、目安として数十秒から1分ほどかかります。  
 push できたか確認してください。
 
 ```bash
