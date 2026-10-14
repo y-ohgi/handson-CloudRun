@@ -65,7 +65,7 @@ gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REP
 ## 3. Cloud Run にデプロイする
 
 いよいよ本番です。  
-**このコマンド1つで、ECS なら ALB・ターゲットグループ・ACM 証明書・サービス・タスク定義を組み立てていた作業がすべて終わります。**
+**このコマンド1つで、ECS なら ALB・ターゲットグループ・ACM 証明書・サービス・タスク定義を組み立てていた作業がすべて終わります**(1章の発展コラムで触れた ECS Express Mode を除く)。
 
 ```bash
 gcloud run deploy handson-app \
