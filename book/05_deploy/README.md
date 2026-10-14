@@ -13,6 +13,11 @@ export REPO=handson
 export IMAGE=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/app
 ```
 
+> **成功していれば:** `echo ${IMAGE}` で `asia-northeast1-docker.pkg.dev/<プロジェクトID>/handson/app` の形が表示されます(`<プロジェクトID>` の部分には自分のプロジェクトIDが入ります)。  
+> **詰まったら:** `asia-northeast1-docker.pkg.dev//handson/app` のようにプロジェクトIDの部分が抜けている場合は、`gcloud` にプロジェクトが設定されていません。`gcloud config set project <プロジェクトID>` を実行してから、この節のコードブロックを再実行してください(プロジェクトIDの確認方法は3章の「5. 動作確認」を参照)。
+
+<!-- 引用ブロックの結合を防ぐ区切り -->
+
 > `asia-northeast1` = 東京です。AWS の `ap-northeast-1` と対応が覚えやすいですね。
 
 ## 1. Artifact Registry にリポジトリを作る

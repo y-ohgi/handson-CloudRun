@@ -83,6 +83,14 @@ docker version
 
 プロジェクトIDが表示され、`docker version` がエラーにならなければ準備完了です。
 
+`(unset)` と表示された場合や、作った覚えのないプロジェクトIDが表示された場合は、`gcloud` に今日使うプロジェクトが設定されていません。次のコマンドでプロジェクトを設定してから、もう一度 `gcloud config get-value project` を実行してください。
+
+```bash
+gcloud config set project <プロジェクトID>
+```
+
+> プロジェクトIDはコンソール上部のプロジェクトセレクタで確認できます。「1. Google Cloud プロジェクトを作る」で付けたプロジェクト名とは別に、`sandbox-123456` のように自動採番されたIDです。
+
 ## まとめ
 
 - Google Cloud のプロジェクトを作成し、今日使うAPIを有効化した
