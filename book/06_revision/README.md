@@ -122,15 +122,35 @@ gcloud run services update-traffic handson-app \
 
 次章では、このトラフィック制御をもっと攻めた使い方——カナリアリリースに使います。
 
-## Tips: 画面から環境変数で上書きする
+## Tips: 環境変数で上書きする
 
-`MESSAGE` と `BG_COLOR` は環境変数から読んでいるので、イメージを作り直さなくても Cloud Run の画面から上書きできます。
+`MESSAGE` と `BG_COLOR` は環境変数から読んでいるので、イメージを作り直さなくても上書きできます。  
+画面からでもコマンドからでも設定できます。どちらか一方を試してください。
+
+### 画面から設定する
 
 1. [Cloud Run](https://console.cloud.google.com/run) の「サービス」から `handson-app` を選び、「新しいリビジョンの編集とデプロイ」をクリック
 2. 「コンテナ」タブの「変数とシークレット」で、環境変数を追加
     - 名前 `MESSAGE` / 値 `Hello from env!`
     - 名前 `BG_COLOR` / 値 `#FBBC04`(黄)
 3. 「デプロイ」をクリック
+
+### コマンドから設定する
+
+`gcloud run deploy` に `--update-env-vars` を付けると、デプロイと同時に環境変数を設定できます。
+
+```bash
+gcloud run deploy handson-app \
+  --image ${IMAGE}:v2 \
+  --region ${REGION} \
+  --update-env-vars MESSAGE="Hello from env!",BG_COLOR="#FBBC04"
+```
+
+- `--update-env-vars` は指定した変数だけを追加・上書きし、ほかの環境変数はそのまま残します
+- 似たフラグの `--set-env-vars` は、既存の環境変数をすべて消してから設定します
+- `#` はシェルでコメントの始まりとして扱われるので、`"#FBBC04"` のようにクォートで囲みます
+
+### 確認する
 
 デプロイが終わったらブラウザをリロードしてください。  
 画面が黄色になり、Revision も新しい名前に変わります。  
