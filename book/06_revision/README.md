@@ -1,16 +1,19 @@
 # 6. 更新とロールバック
 
 アプリを変更して2回目のデプロイを行い、「リビジョン」がどう積み重なるかを見ます。  
-その後、**本番障害を想定して30秒でロールバック**します。
+その後、 **本番障害を想定してロールバック** を体験します。
 
 ## 1. アプリを変更する (v2)
 
-`src/index.ts` の上部にある2行を書き換えます。
+`src/index.ts` の上部にある2行の既定値(`||` の右側)を書き換えます。
 
 ```typescript
-const MESSAGE = "Hello, Cloud Run v2!";
-const BG_COLOR = "#EA4335"; // 赤
+const MESSAGE = process.env.MESSAGE || "Hello, Cloud Run v2!";
+const BG_COLOR = process.env.BG_COLOR || "#EA4335"; // 赤
 ```
+
+`MESSAGE` と `BG_COLOR` は環境変数から読み、設定されていなければこの既定値を使います。  
+環境変数として外から渡せることは、章の最後の Tips で試します。
 
 ## 2. ビルドして push して deploy
 
