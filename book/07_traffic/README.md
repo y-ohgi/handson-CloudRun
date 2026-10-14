@@ -2,27 +2,14 @@
 
 前章のトラフィック制御を一歩進めて、**新バージョンを10%のユーザーにだけ出すカナリアリリース**と、**トラフィックを流さずに本番環境で動作確認できるタグ付きURL**を体験します。
 
-> **AWSとの比較:** これを ECS でやるには CodeDeploy のブルー/グリーン+ALB の加重ターゲットグループの設定が必要でした(検証用リスナーは任意ですが、リリース前検証をしたいなら実質必要になります)。Cloud Run では **Service に元から組み込まれた機能**です。
+> **AWSとの比較**  
+> これを ECS でやるには CodeDeploy のブルー/グリーン+ALB の加重ターゲットグループの設定が必要でした(検証用リスナーは任意ですが、リリース前検証をしたいなら実質必要になります)。Cloud Run では **Service に元から組み込まれた機能**です。
 
 ## 1. v3 を作る
 
-`src/index.ts` を再度書き換えます。
-
-```typescript
-const MESSAGE = process.env.MESSAGE || "Hello, Cloud Run v3!";
-const BG_COLOR = process.env.BG_COLOR || "#34A853"; // 緑
-```
-
-ビルドと push まで行います(まだ deploy はしません)。
-
-```bash
-cd ~/cloudrun-handson/app
-docker build -t ${IMAGE}:v3 .
-docker push ${IMAGE}:v3
-```
-
-#### 成功していれば
-`docker push` の最後が `v3: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` の `TAGS` 列に `v3` が含まれます。
+今回はイメージを作り直さず、6章のTipsで試した環境変数でメッセージと背景を変えたものを v3 とします。  
+イメージは v2 のまま、`MESSAGE` を `Hello, Cloud Run v3`、`BG_COLOR` を緑(`#34A853`)にします。  
+デプロイは次の「2. トラフィックを流さずにデプロイする」でまとめて行います。
 
 ## 2. トラフィックを流さずにデプロイする
 
@@ -33,10 +20,11 @@ docker push ${IMAGE}:v3
 
 ```bash
 gcloud run deploy handson-app \
-  --image ${IMAGE}:v3 \
+  --image ${IMAGE}:v2 \
   --region ${REGION} \
   --no-traffic \
-  --tag staging
+  --tag staging \
+  --update-env-vars '^@^MESSAGE=Hello, Cloud Run v3@BG_COLOR=#34A853'
 ```
 
 出力の最後に、このリビジョン専用のタグ付きURLが表示されます(`--no-traffic` のときは `Service URL:` の行は出ません)。  
@@ -50,7 +38,9 @@ gcloud run deploy handson-app \
 ステージング環境を別に組む代わりに、本番 Service の中に検証チャネルを持てるということです。
 
 #### 成功していれば
-出力に `serving 0 percent of traffic` と `The revision can be reached directly at https://staging---...` の2点が出ます。タグ付きURLは緑(v3)、本番URLは赤(v2)のままです。URLを見失ったら `gcloud run services describe handson-app --region ${REGION}` の出力で本番URLとタグ付きURLの両方を確認できます。なお**リビジョン名の番号は 00003 にならないことがあります**。番号の採番はデプロイ回数と一致せず、`handson-app-00005-xxx` のように飛ぶことがあります(リビジョンを見分けるのは末尾のランダム文字列です)。番号が飛んでいても失敗ではありません。
+出力に `serving 0 percent of traffic` と `The revision can be reached directly at https://staging---...` の2点が出ます。  
+タグ付きURLは緑(v3)、本番URLは赤(v2)のままです。URLを見失ったら `gcloud run services describe handson-app --region ${REGION}` の出力で本番URLとタグ付きURLの両方を確認できます。  
+なお**リビジョン名の番号は 00003 にならないことがあります**。番号の採番はデプロイ回数と一致せず、`handson-app-00005-xxx` のように飛ぶことがあります(リビジョンを見分けるのは末尾のランダム文字列です)。番号が飛んでいても失敗ではありません。
 
 <!--
 > **[要作図] 図5: デプロイとリリースの分離**
@@ -90,7 +80,8 @@ for i in $(seq 1 20); do curl -s ${URL}/api | jq -r .revision; done | sort | uni
 > 実務ではこの状態でエラーレートやレイテンシのメトリクス(9章)を監視し、問題なければ段階的に割合を増やしていきます。
 
 #### 成功していれば
-`gcloud run services describe handson-app --region ${REGION}` の Traffic 欄が `90% handson-app-00002-xxx` と `10% handson-app-000xx-xxx`(その下に `staging: https://staging---...` が付きます)に分かれ、20回の集計でも v3 のリビジョン名が数回混ざります。10%の乱数なので v3 のリビジョン名が0回や4回になることもあり、比率が多少ずれても失敗ではありません。
+`gcloud run services describe handson-app --region ${REGION}` の Traffic 欄が `90% handson-app-00002-xxx` と `10% handson-app-000xx-xxx`(その下に `staging: https://staging---...` が付きます)に分かれ、20回の集計でも v3 のリビジョン名が数回混ざります。  
+10%の乱数なので v3 のリビジョン名が0回や4回になることもあり、比率が多少ずれても失敗ではありません。
 
 ## 4. 100%に昇格する
 
@@ -100,13 +91,16 @@ gcloud run services update-traffic handson-app \
   --to-latest
 ```
 
-> `--to-latest` は「いま動いているリビジョンに固定する」という意味ではなく、**`LATEST`(=最新リビジョン)に100%割り当てる**という設定です。そのため、この状態で次のデプロイを行うと、新しく作られたリビジョンがそのまま `LATEST` になってトラフィックを受け取ります(5〜6章で体験した普通のデプロイ挙動に戻る、ということです)。
+> `--to-latest` は「いま動いているリビジョンに固定する」という意味ではなく、**`LATEST`(=最新リビジョン)に100%割り当てる**という設定です。  
+> そのため、この状態で次のデプロイを行うと、新しく作られたリビジョンがそのまま `LATEST` になってトラフィックを受け取ります(5〜6章で体験した普通のデプロイ挙動に戻る、ということです)。
 
 ブラウザで全リロードが緑(v3)になれば完了です。  
 もし v3 に問題が見つかっていたら?——前章でやった通り、v2 に一瞬で戻せます。
 
 #### 成功していれば
-Traffic 欄に `100% LATEST (currently handson-app-000xx-xxx)` が現れ、上の for ループを再実行すると20回すべて v3 のリビジョン名になります。`staging` タグ自体は残るので、Traffic 欄には `0% (currently -) handson-app-000xx-xxx` と `staging (Adding):` / `staging (Deleting): https://staging---...` という行も並びます。**これは表示上の見え方で、トラフィックは 100% 最新リビジョンに向いています**(for ループの結果が20回すべて同じ v3 のリビジョン名ならそれが答えです)。
+Traffic 欄に `100% LATEST (currently handson-app-000xx-xxx)` が現れ、上の for ループを再実行すると20回すべて v3 のリビジョン名になります。  
+`staging` タグ自体は残るので、Traffic 欄には `0% (currently -) handson-app-000xx-xxx` と `staging (Adding):` / `staging (Deleting): https://staging---...` という行も並びます。  
+**これは表示上の見え方で、トラフィックは 100% 最新リビジョンに向いています**(for ループの結果が20回すべて同じ v3 のリビジョン名ならそれが答えです)。
 
 ## まとめ
 
