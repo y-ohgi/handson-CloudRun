@@ -47,10 +47,8 @@ gcloud run services update handson-app \
   --max-instances 10
 ```
 
-> **成功していれば:** `gcloud run services update` の出力に新しいリビジョン名(`handson-app-000xx-xxx`)が出て完了し、`gcloud run services describe handson-app --region ${REGION} --format 'value(spec.template.spec.containerConcurrency)'` が `10` を返します。  
-> **詰まったら:** 値が `10` に変わっていない場合はコマンドのタイプミスです。上の `update` をそのまま再実行してください(同じ設定への更新は何度実行しても結果は同じです)。`${REGION}` が空、またはリージョンの入力を求められる場合は Cloud Shell の再接続で環境変数が消えているので、[5章の「0. 環境変数の準備」](../05_deploy/README.md)を再実行します。
-
-<!-- 引用ブロックの結合を防ぐ区切り -->
+#### 成功していれば
+`gcloud run services update` の出力に新しいリビジョン名(`handson-app-000xx-xxx`)が出て完了し、`gcloud run services describe handson-app --region ${REGION} --format 'value(spec.template.spec.containerConcurrency)'` が `10` を返します。
 
 > この操作でも新しいリビジョンが作られます。リビジョン=イメージ+**設定**のスナップショットだからです。
 
@@ -130,8 +128,8 @@ for i in $(seq 1 30); do curl -s ${URL}/api | jq -r .instance; done | sort | uni
 複数の instance ID が出てくれば、リクエストが複数台に分散している証拠です。  
 負荷を止めてから数分〜15分ほど待って同じコマンドを打つと、1台(やがて0台)に戻ります。
 
-> **成功していれば:** `node ~/load.mjs` の最後に `done: success=<数百〜数千> failure=0`(起動中のリクエストが少数失敗することはあります)が表示され、`sort | uniq -c` の出力に **2つ以上の instance ID** が並びます。コンソールの「コンテナ インスタンスの数」もゼロ(または1台)から複数台へ跳ね上がっています。台数は実行ごとに変わるので、5台でなくても失敗ではありません。  
-> **詰まったら:** `Cannot find module '/home/xxx/load.mjs'` と出る場合は `~/load.mjs` が作られていません。「2. 負荷をかける」の `cat > ~/load.mjs <<'EOF'` から `EOF` までをもう一度そのまま貼り付けて作り直してください(上書きされるので何度実行しても大丈夫です)。`Invalid URL` と出る、または `${URL}` が空の場合は Cloud Shell の再接続で環境変数が消えているので、[5章の「0. 環境変数の準備」](../05_deploy/README.md)を再実行したうえで `URL=$(gcloud run services describe handson-app --region ${REGION} --format 'value(status.url)')` を実行し直し、`echo ${URL}` で URL が表示されることを確認します。instance ID が1種類しか出ない場合は concurrency の変更が効いていない可能性があるので、`gcloud run services describe handson-app --region ${REGION} --format 'value(spec.template.spec.containerConcurrency)'` が `10` を返すか確認し、違っていれば「1. 観察しやすいように設定を変える」を再実行してから負荷をかけ直してください。
+#### 成功していれば
+`node ~/load.mjs` の最後に `done: success=<数百〜数千> failure=0`(起動中のリクエストが少数失敗することはあります)が表示され、`sort | uniq -c` の出力に **2つ以上の instance ID** が並びます。コンソールの「コンテナ インスタンスの数」もゼロ(または1台)から複数台へ跳ね上がっています。台数は実行ごとに変わるので、5台でなくても失敗ではありません。
 
 ## 4. コールドスタートと min-instances
 
@@ -183,8 +181,8 @@ gcloud run services update handson-app \
   --min-instances 0
 ```
 
-> **成功していれば:** 1回目の `curl` の `time_total` が2回目より明確に大きくなります(このアプリなら1回目が1秒〜1.5秒、2回目は数十ms程度)。`--min-instances` の更新はどちらも新しいリビジョン名を出力して完了し、`gcloud run revisions list --service handson-app --region ${REGION}` の行が増えます。  
-> **詰まったら:** 1回目と2回目で差が出ない場合は、まだインスタンスがアイドルのまま残っています(Cloud Run は最大15分保持します)。時間を置いて試すか、差が出なくても「温まっていた」ということなので先へ進んでください。リージョンの入力を求められたり `--region` が空だと言われる場合は Cloud Shell の再接続で環境変数が消えているので、[5章の「0. 環境変数の準備」](../05_deploy/README.md)を再実行します。更新が途中で失敗した場合は、同じコマンドをそのまま再実行すれば復旧します。**最後の `--min-instances 0` を実行し忘れるとアイドル時も課金が続きます。**不安なら上のコマンドをもう一度実行して構いません(同じ設定への更新は何度でも安全です)。
+#### 成功していれば
+1回目の `curl` の `time_total` が2回目より明確に大きくなります(このアプリなら1回目が1秒〜1.5秒、2回目は数十ms程度)。`--min-instances` の更新はどちらも新しいリビジョン名を出力して完了し、`gcloud run revisions list --service handson-app --region ${REGION}` の行が増えます。
 
 ## まとめ
 
