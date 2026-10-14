@@ -50,10 +50,6 @@ gcloud storage rm --recursive gs://${PROJECT_ID}_cloudbuild --quiet   # 10章を
 Cloud Run はスケールtoゼロなので、`min-instances` を0に戻してあれば放置してもほぼ課金されません(1以上のままだとアイドル状態でも課金され続けます)。  
 継続課金になり得るのは **Artifact Registry のストレージ**(無料枠は課金アカウントあたり0.5GB/月)と **min-instances** です。
 
-<!-- 引用ブロックの結合を防ぐ区切り -->
-
-> **講師の方へ:** 当日のサポートアプリ(`handson-support`)は上の一覧に含まれていません。`--min-instances 1` で動かしているためアイドル状態でも課金が続くので、リポジトリの `support/README.md` の「後片付け」節も実行してください(受講者の方はこの節は不要です)。
-
 ## 消し忘れが心配な人へ
 
 [課金レポート](https://console.cloud.google.com/billing)で数日後に確認するか、予算アラート(Budgets & alerts)を設定しておくと安心です。AWS の Budgets と同じ感覚で使えます。
