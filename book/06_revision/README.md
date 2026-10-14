@@ -50,7 +50,19 @@ gcloud run deploy handson-app \
 
 - `--update-env-vars` は指定した変数だけを追加・上書きし、ほかの環境変数はそのまま残します
 - 似たフラグの `--set-env-vars` は、既存の環境変数をすべて消してから設定します
-- `#` はシェルでコメントの始まりとして扱われるので、`"#FBBC04"` のようにクォートで囲みます
+- 先頭の `^@^` は、変数どうしの区切り文字をカンマから `@` に変える指定です
+  - gcloud は値をカンマで区切って読むため、`Hello, Cloud Run!` のようにカンマを含む値はそのままだと途中で分かれ、`Bad syntax for dict arg` のエラーになります
+  - 区切り文字には、どの値にも出てこない文字を選びます(値に `@` が入るなら `^:^` などにする)
+- 引数全体をシングルクォートで囲むのは、`#`・`!`・空白をシェルに解釈させず、そのまま gcloud に渡すためです
+
+カンマを含む値を設定する例です。
+
+```bash
+gcloud run deploy handson-app \
+  --image ${IMAGE}:v2 \
+  --region ${REGION} \
+  --update-env-vars '^@^MESSAGE=Hello, Cloud Run!@BG_COLOR=#FBBC04'
+```
 
 デプロイが終わったらブラウザをリロードしてください。  
 画面が黄色になり、Revision も新しい名前に変わります。  
