@@ -20,7 +20,7 @@ gcloud run deploy handson-app-src \
 数分待つと、別の Service `handson-app-src` として同じアプリが公開されます。
 
 #### 成功していれば
-ビルドとデプロイに数分かかったあと、`Service URL: https://handson-app-src-...` が表示されます。開くと5章と同じレイアウトの画面が出ますが、**色とメッセージは緑の v3** です(7章で `src/index.ts` を v3 に書き換えたまま進めているので、ソースからビルドされるのは v3 のコードです)。`Service` の欄が `handson-app-src` になっていることも確認してください。初回はビルド済みイメージの置き場として `cloud-run-source-deploy` という Artifact Registry リポジトリが自動で作られます(確認を求められたらそのまま進めてください)。途中で出力が止まって見えても、ビルド待ちなので待って大丈夫です。
+ビルドとデプロイに数分かかったあと、`Service URL: https://handson-app-src-...` が表示されます。開くと5章と同じレイアウトの画面が出ますが、**色とメッセージは赤の v2** です(6章で書き換えた `src/index.ts` からビルドされます。7章の v3 は `handson-app` に設定した環境変数で作ったもので、別の Service である `handson-app-src` には引き継がれません)。`Service` の欄が `handson-app-src` になっていることも確認してください。初回はビルド済みイメージの置き場として `cloud-run-source-deploy` という Artifact Registry リポジトリが自動で作られます(確認を求められたらそのまま進めてください)。途中で出力が止まって見えても、ビルド待ちなので待って大丈夫です。
 
 <!--
 > **[要作図] 図3b: 図3 との差分(ソースデプロイ)**
