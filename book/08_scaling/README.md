@@ -47,6 +47,11 @@ gcloud run services update handson-app \
   --max-instances 10
 ```
 
+> **成功していれば:** `gcloud run services update` の出力に新しいリビジョン名(`handson-app-000xx-xxx`)が出て完了し、`gcloud run services describe handson-app --region ${REGION} --format 'value(spec.template.spec.containerConcurrency)'` が `10` を返します。  
+> **詰まったら:** 値が `10` に変わっていない場合はコマンドのタイプミスです。上の `update` をそのまま再実行してください(同じ設定への更新は何度実行しても結果は同じです)。`${REGION}` が空、またはリージョンの入力を求められる場合は Cloud Shell の再接続で環境変数が消えているので、[5章の「0. 環境変数の準備」](../05_deploy/README.md)を再実行します。
+
+<!-- 引用ブロックの結合を防ぐ区切り -->
+
 > この操作でも新しいリビジョンが作られます。リビジョン=イメージ+**設定**のスナップショットだからです。
 
 ## 2. 負荷をかける
@@ -151,7 +156,8 @@ for i in $(seq 1 30); do curl -s ${URL}/api | jq -r .instance; done | sort | uni
 -->
 
 Cloud Run は最大15分ほどインスタンスをアイドルのまま残すので、0台に戻るのを待つには**15分以上**放置する必要があります。  
-講師の説明を聞いたあとなど、しばらく間を置いてから1発目のレスポンスタイムを計ってみてください。
+待っている間は[9章](../09_observability/README.md)・[10章](../10_source_deploy/README.md)を先に進めて、最後にここへ戻って下の `curl` を打つのがおすすめです(講師の説明を聞いたあとでも構いません)。  
+それでも1回目と2回目に差が出ないことがありますが、直前の負荷でインスタンスが温まったまま残っているだけなので失敗ではありません。
 
 ```bash
 curl -s -o /dev/null -w "time_total: %{time_total}s\n" ${URL}/
