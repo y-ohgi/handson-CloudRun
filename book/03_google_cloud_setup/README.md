@@ -65,11 +65,15 @@ AWS のようにすべてのサービスが最初から呼べる状態ではな�
 
 ## 4. サンプルコードを手元に用意する
 
-今日使うサンプルコードをこのリポジトリから取得します。
+今日使うサンプルコードをこのリポジトリから取得します。  
+やり直すときは、このブロックをそのまま再実行すれば初期状態に戻ります(自分で書き換えた `~/cloudrun-handson` の内容は消えます)。
 
 ```bash
-git clone https://github.com/y-ohgi/handson-CloudRun.git
-mv handson-CloudRun/code cloudrun-handson
+rm -rf /tmp/handson-CloudRun
+git clone --depth 1 https://github.com/y-ohgi/handson-CloudRun.git /tmp/handson-CloudRun
+rm -rf ~/cloudrun-handson
+mv /tmp/handson-CloudRun/code ~/cloudrun-handson
+rm -rf /tmp/handson-CloudRun
 ```
 
 **成功していれば** `ls ~/cloudrun-handson` で `app` ディレクトリが見えます。ここが今日ずっと作業する場所です。
@@ -82,6 +86,14 @@ docker version
 ```
 
 プロジェクトIDが表示され、`docker version` がエラーにならなければ準備完了です。
+
+`(unset)` と表示された場合や、作った覚えのないプロジェクトIDが表示された場合は、`gcloud` に今日使うプロジェクトが設定されていません。次のコマンドでプロジェクトを設定してから、もう一度 `gcloud config get-value project` を実行してください。
+
+```bash
+gcloud config set project <プロジェクトID>
+```
+
+> プロジェクトIDはコンソール上部のプロジェクトセレクタで確認できます。「1. Google Cloud プロジェクトを作る」で付けたプロジェクト名とは別に、`sandbox-123456` のように自動採番されたIDです。
 
 ## まとめ
 

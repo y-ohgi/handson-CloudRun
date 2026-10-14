@@ -21,6 +21,9 @@ docker build -t ${IMAGE}:v3 .
 docker push ${IMAGE}:v3
 ```
 
+> **成功していれば:** `docker push` の最後が `v3: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` の `TAGS` 列に `v3` が含まれます。  
+> **詰まったら:** `denied` や `unauthorized` が出る場合は `gcloud auth configure-docker ${REGION}-docker.pkg.dev` を実行してから `docker push ${IMAGE}:v3` を再実行します。`echo ${IMAGE}` が空、または `-docker.pkg.dev//` のように途中が抜けている場合は5章の「0. 環境変数の準備」を再実行してください。
+
 ## 2. トラフィックを流さずにデプロイする
 
 ![デプロイとリリースの分離](imgs/deploy-release-separation.svg)
@@ -46,11 +49,10 @@ gcloud run deploy handson-app \
 **本番と同じ環境・同じ設定で、リリース前のバージョンだけを検証できるURL**が手に入りました。  
 ステージング環境を別に組む代わりに、本番 Service の中に検証チャネルを持てるということです。
 
-> **成功していれば:** 出力に `serving 0 percent of traffic` と `The revision can be reached directly at https://staging---...` の2点が出ます。タグ付きURLは緑(v3)、本番URLは赤(v2)のままです。URLを見失ったら `gcloud run services describe handson-app --region ${REGION}` の出力で本番URLとタグ付きURLの両方を確認できます。なお**リビジョン名の番号は 00003 にならないことがあります**。番号の採番はデプロイ回数と一致せず、`handson-app-00005-xxx` のように飛ぶことがあります(リビジョンを見分けるのは末尾のランダム文字列です)。番号が飛んでいても失敗ではありません。
-> **詰まったら:** 本番URLまで緑になってしまった場合は `--no-traffic` が効いていません(タイプミスや行末の `\` の抜けが原因です)。`gcloud run revisions list --service handson-app --region ${REGION}` で v2 のリビジョン名を確認し、6章の手順で `--to-revisions <v2のリビジョン名>=100` を実行して赤に戻してから、`--no-traffic --tag staging` を付けてデプロイし直してください。タグ付きURLが 404 を返す場合は、`gcloud run services describe` に出ている URL をそのままコピーし直します(`staging---` の3連ハイフンが崩れやすい箇所です)。`docker push` からのやり直しが必要な場合は `cd ~/cloudrun-handson/app` と 5章の「0. 環境変数の準備」を先に確認してください。
+> **成功していれば:** 出力に `serving 0 percent of traffic` と `The revision can be reached directly at https://staging---...` の2点が出ます。タグ付きURLは緑(v3)、本番URLは赤(v2)のままです。URLを見失ったら `gcloud run services describe handson-app --region ${REGION}` の出力で本番URLとタグ付きURLの両方を確認できます。なお**リビジョン名の番号は 00003 にならないことがあります**。番号の採番はデプロイ回数と一致せず、`handson-app-00005-xxx` のように飛ぶことがあります(リビジョンを見分けるのは末尾のランダム文字列です)。番号が飛んでいても失敗ではありません。  
+> **詰まったら:** 本番URLまで緑になってしまった場合は `--no-traffic` が効いていません(タイプミスや行末の `\` の抜けが原因です)。`gcloud run revisions list --service handson-app --region ${REGION}` で v2 のリビジョン名を確認し、6章の手順で `--to-revisions <v2のリビジョン名>=100` を実行して赤に戻してから、`--no-traffic --tag staging` を付けてデプロイし直してください。タグ付きURLが 404 を返す場合は、`gcloud run services describe` に出ている URL をそのままコピーし直します(`staging---` の3連ハイフンが崩れやすい箇所です)。`Image not found` や `manifest unknown` が出る場合は v3 の push が完了していません。`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` で `TAGS` 列に `v3` があるかを確認し、なければ「1. v3 を作る」からやり直してください。`docker push` からのやり直しが必要な場合は `cd ~/cloudrun-handson/app` と 5章の「0. 環境変数の準備」を先に確認してください。
 
-<!-- 引用ブロックの結合を防ぐ区切り -->
-
+<!--
 > **[要作図] 図5: デプロイとリリースの分離**
 >
 > - **目的:** 「1つの Service の中に本番チャネルと検証チャネルが同居する」構造を見せる。ステージング環境を別に建てる発想との違いが要点
@@ -61,6 +63,7 @@ gcloud run deploy handson-app \
 > - **続きのコマ(任意):** カナリア時に本番URLからの矢印が 90% / 10% に分かれる図を並べると、次の節にそのままつながる
 > - **完成後の扱い:** `07_traffic/imgs/deploy-release-separation.svg` として保存し、**見出しの直下**に `![デプロイとリリースの分離](imgs/deploy-release-separation.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
 > - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図です。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
+-->
 
 ## 3. 10%だけ流す(カナリアリリース)
 
@@ -88,7 +91,7 @@ for i in $(seq 1 20); do curl -s ${URL}/api | jq -r .revision; done | sort | uni
 
 <!-- 引用ブロックの結合を防ぐ区切り -->
 
-> **成功していれば:** `gcloud run services describe handson-app --region ${REGION}` の Traffic 欄が `90% handson-app-00002-xxx` と `10% handson-app-000xx-xxx`(その下に `staging: https://staging---...` が付きます)に分かれ、20回の集計でも v3 のリビジョン名が数回混ざります。10%の乱数なので v3 のリビジョン名が0回や4回になることもあり、比率が多少ずれても失敗ではありません。
+> **成功していれば:** `gcloud run services describe handson-app --region ${REGION}` の Traffic 欄が `90% handson-app-00002-xxx` と `10% handson-app-000xx-xxx`(その下に `staging: https://staging---...` が付きます)に分かれ、20回の集計でも v3 のリビジョン名が数回混ざります。10%の乱数なので v3 のリビジョン名が0回や4回になることもあり、比率が多少ずれても失敗ではありません。  
 > **詰まったら:** 切り替え直後は反映に数秒かかるため、集計が v2 のリビジョン名だけだった場合はもう一度 for ループを実行してください。`jq: command not found` の場合は `for i in $(seq 1 20); do curl -s ${URL}/api; echo; done` で生の JSON を見れば十分です。`URL` が空(`curl` が使い方を表示する)場合は `echo ${URL}` を確認し、`describe` のコマンドを再実行して代入し直します。`Tag 'staging' not found` と出た場合は「2. トラフィックを流さずにデプロイする」のタグ付きデプロイが成功していないので、そちらをやり直してください。
 
 ## 4. 100%に昇格する
@@ -104,7 +107,7 @@ gcloud run services update-traffic handson-app \
 ブラウザで全リロードが緑(v3)になれば完了です。  
 もし v3 に問題が見つかっていたら?——前章でやった通り、v2 に一瞬で戻せます。
 
-> **成功していれば:** Traffic 欄に `100% LATEST (currently handson-app-000xx-xxx)` が現れ、上の for ループを再実行すると20回すべて v3 のリビジョン名になります。`staging` タグ自体は残るので、Traffic 欄には `0% (currently -) handson-app-000xx-xxx` と `staging (Adding):` / `staging (Deleting): https://staging---...` という行も並びます。**これは表示上の見え方で、トラフィックは 100% 最新リビジョンに向いています**(for ループの結果が20回すべて同じ v3 のリビジョン名ならそれが答えです)。
+> **成功していれば:** Traffic 欄に `100% LATEST (currently handson-app-000xx-xxx)` が現れ、上の for ループを再実行すると20回すべて v3 のリビジョン名になります。`staging` タグ自体は残るので、Traffic 欄には `0% (currently -) handson-app-000xx-xxx` と `staging (Adding):` / `staging (Deleting): https://staging---...` という行も並びます。**これは表示上の見え方で、トラフィックは 100% 最新リビジョンに向いています**(for ループの結果が20回すべて同じ v3 のリビジョン名ならそれが答えです)。  
 > **詰まったら:** まだ赤が混ざる場合は10〜20秒待って再度集計してください(切り替えは瞬時ではありません)。それでも混ざるなら `gcloud run services update-traffic handson-app --region ${REGION} --to-latest` を再実行します。何度実行しても結果は同じです。最新リビジョンが v3 でない場合は `gcloud run revisions list --service handson-app --region ${REGION}` で3つ並んでいるかを確認し、足りなければ「2. トラフィックを流さずにデプロイする」からやり直してください。
 
 ## まとめ
