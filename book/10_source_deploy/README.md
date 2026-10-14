@@ -23,8 +23,7 @@ gcloud run deploy handson-app-src \
 >
 > **詰まったら:** `${REGION}` が空だとエラーになります。Cloud Shell を開き直した場合は [5章の「0. 環境変数の準備」](../05_deploy/README.md)を再実行してください。`cd ~/cloudrun-handson/app` の位置で実行しているか、`ls` に `package.json` があるかも確認してください。失敗したら**同じコマンドをもう一度実行して構いません**(何度実行しても新しいリビジョンが増えるだけです)。デプロイできたかどうかは `gcloud run services list --region ${REGION}` で確認できます。
 
-<!-- 引用ブロックの結合を防ぐ区切り -->
-
+<!--
 > **[要作図] 図3b: 図3 との差分(ソースデプロイ)**
 >
 > - **目的:** 5章の図3 と同じ構図を使い、`docker build` と `docker push` の2ステップがプラットフォーム側へ移ったことを差分として見せる
@@ -32,6 +31,7 @@ gcloud run deploy handson-app-src \
 > - **要点:** 図3(5章)と**同一のレイアウト・同一の箱の位置**にすること。並べて見せて差分が読めることが唯一の要件
 > - **完成後の扱い:** `10_source_deploy/imgs/source-deploy-diff.svg` として保存し、**見出しの直下**に `![ソースデプロイでプラットフォーム側へ移るステップ](imgs/source-deploy-diff.svg)` として差し込む(見出し → 画像 → 本文の順。キャプション文は付けない)
 > - **現在の状態:** 上に差し込まれているのは draw.io で作図した完成図です。SVG に編集元の XML を埋め込んであるため、**このファイルをそのまま draw.io で開いて編集できます**
+-->
 
 このディレクトリには Dockerfile があるのでそれが使われますが、**Dockerfile を消しても動きます**。  
 その場合は [Google Cloud の Buildpacks](https://cloud.google.com/docs/buildpacks/nodejs) が `package.json` を見て「Node.js アプリだな」と判断し、`scripts.start`(この教材では `node src/index.ts`)を起動コマンドにした良い感じのイメージを自動生成します。
