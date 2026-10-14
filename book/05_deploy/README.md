@@ -1,6 +1,6 @@
 # 5. Cloud Runへデプロイする
 
-4章で作ったイメージを Artifact Registry (GAR)に push し、Cloud Run にデプロイして、世界中からアクセスできる HTTPS URL を手に入れます。
+4章で作ったイメージを Artifact Registry に push し、Cloud Run にデプロイして、世界中からアクセスできる HTTPS URL を手に入れます。
 
 ## 0. 環境変数の準備
 
@@ -31,7 +31,7 @@ gcloud artifacts repositories create ${REPO} \
   --description="Cloud Run handson"
 ```
 
-docker コマンドが GAR に push できるよう、認証ヘルパーを設定します(ECR の `aws ecr get-login-password` に相当。こちらは一度設定すれば、push のたびにトークンを取り直す必要はありません)。
+docker コマンドが Artifact Registry に push できるよう、認証ヘルパーを設定します(ECR の `aws ecr get-login-password` に相当。こちらは一度設定すれば、push のたびにトークンを取り直す必要はありません)。
 
 ```bash
 gcloud auth configure-docker ${REGION}-docker.pkg.dev
@@ -42,7 +42,7 @@ gcloud auth configure-docker ${REGION}-docker.pkg.dev
 
 ## 2. イメージにタグを付けて push する
 
-GAR のイメージパスは `リージョン-docker.pkg.dev/プロジェクト/リポジトリ/イメージ名:タグ` という形式です。  
+Artifact Registry のイメージパスは `リージョン-docker.pkg.dev/プロジェクト/リポジトリ/イメージ名:タグ` という形式です。  
 4章で作ったイメージにこのパスでタグを付け直して push します。
 
 ```bash
@@ -51,6 +51,7 @@ docker tag handson-app:v1 ${IMAGE}:v1
 docker push ${IMAGE}:v1
 ```
 
+初回の push はイメージ全体を転送するため、目安として数十秒から1分ほどかかります。  
 push できたか確認してください。
 
 ```bash
@@ -65,7 +66,7 @@ gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REP
 ## 3. Cloud Run にデプロイする
 
 いよいよ本番です。  
-**このコマンド1つで、ECS なら ALB・ターゲットグループ・ACM 証明書・サービス・タスク定義を組み立てていた作業がすべて終わります。**
+**このコマンド1つで、ECS なら ALB・ターゲットグループ・ACM 証明書・サービス・タスク定義を組み立てていた作業がすべて終わります**(1章の発展コラムで触れた ECS Express Mode を除く)。
 
 ```bash
 gcloud run deploy handson-app \
@@ -123,5 +124,9 @@ Service の一覧、リビジョン、メトリクス、ログがすべて1画�
 - TLS 証明書を発行しなかった
 - タスク定義(CPU/メモリ/ポート)を書かなかった ※デフォルト値で開始し、必要なら後から変える
 - キャパシティ(台数)を決めなかった
+- タスク実行ロール・タスクロールを分けて作らなかった ※Service には既定のサービスアカウント(Compute Engine のデフォルトサービスアカウント)が1つ付くだけ(1章の対比)
+
+最後の1つは確認できます。  
+`gcloud run services describe handson-app --region ${REGION} --format 'value(spec.template.spec.serviceAccountName)'` を実行すると、`<プロジェクト番号>-compute@developer.gserviceaccount.com` の形のサービスアカウントが1つだけ表示されます(コンソールでは Service の詳細画面の「セキュリティ」タブで同じものが見えます)。
 
 1章で話した「ビルディングブロック vs SaaS的アプローチ」が、これで体感できたはずです。

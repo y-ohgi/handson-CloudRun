@@ -54,6 +54,8 @@ Google Cloud のマネージドサービスは、どちらかというと **SaaS
 
 ### 注記: 1コマンドで立つ経路は AWS にもある
 
+> **発展コラム:** AWS 側にも1コマンドで立つ経路があります。急ぐ場合はこの節を読み飛ばして、次の「運用で向き合うプロダクトの数」へ進んで構いません。
+
 ここまで部品の数を並べましたが、「最初の1コマンドで公開できるか」はもう両クラウドの差ではありません。  
 2025年11月に GA した **ECS Express Mode** は、1回の API 呼び出しで ECS クラスタ・タスク定義・サービス・ALB(HTTPSリスナー・リスナールール・ターゲットグループ)・セキュリティグループ・サービスリンクロール・Application Auto Scaling・ロググループ・メトリクスアラーム・ACM証明書 を作り、`https://<service>.ecs.<region>.on.aws` の HTTPS URL を返します([AWS: Resources created by Amazon ECS Express Mode services](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/express-service-work.html))。  
 用意するのはコンテナイメージと IAM ロール2つだけで、Express Mode 自体に追加料金はありません。

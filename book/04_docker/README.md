@@ -72,13 +72,13 @@ Hono は Web 標準 API ベースの軽量な Web フレームワークです(Ho
 
 ### 1. サンプルコードを開く
 
-エディタの左のファイルツリーから `cloudrun-handson/app` を開きます。`package.json`・`src/index.ts`・`Dockerfile`・`.dockerignore` の4つが入っています。
+エディタの左のファイルツリーから `cloudrun-handson/app` を開きます。直下に `package.json`・`Dockerfile`・`.dockerignore` の3ファイルと `src/` フォルダがあり、`src/` の中に `index.ts` が入っています。
 
 ```bash
 cd ~/cloudrun-handson/app
 ```
 
-`src/index.ts` — 小さなWebサーバーです。アクセスすると「メッセージ・リビジョン名・インスタンスID」を表示します。
+`src/index.ts` — 小さなWebサーバーです。アクセスすると「メッセージ・リビジョン名・インスタンスID」を表示します(インスタンスは、リクエストを処理するコンテナの実体です。8章で扱います)。
 
 > **Dockerfile を上から読んでみましょう。** ベースイメージ(`FROM`)に依存関係を重ね(`RUN npm install`)、コードを載せ(`COPY`)、起動コマンドを決める(`CMD`)。この積み重ねがそのままイメージのレイヤーになります。`package.json` だけ先に COPY しているのは、コードを変更しても `npm install` のレイヤーキャッシュが効くようにするテクニックです(この後の章で効いてきます)。
 >
