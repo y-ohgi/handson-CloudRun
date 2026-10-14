@@ -1,11 +1,13 @@
 # 8. オートスケールを観察する
 
 6〜7章ではリビジョンを積み重ね、どのバージョンに何%流すかを切り替えました。  
+
 この章で見るのはインスタンスの数、リクエストが増えたときに何台で受けるかです。  
 Cloud Run の非機能まわりの主役、オートスケールを実際に負荷をかけて観察します。  
+
 あわせてコールドスタートとその対策も体験します。
 
-> オートスケールや非機能要件の背景を体系的に知りたい人は [クラウドを今から学ぶには](https://speakerdeck.com/y0hgi/kuraudowojin-karaxue-buniha) も参照してください。
+<!-- >> オートスケールや非機能要件の背景を体系的に知りたい人は [クラウドを今から学ぶには](https://speakerdeck.com/y0hgi/kuraudowojin-karaxue-buniha) も参照してください。 -->
 
 ## Cloud Run のスケールの仕組み
 
@@ -182,7 +184,8 @@ gcloud run services update handson-app \
 ```
 
 #### 成功していれば
-1回目の `curl` の `time_total` が2回目より明確に大きくなります(このアプリなら1回目が1秒〜1.5秒、2回目は数十ms程度)。`--min-instances` の更新はどちらも新しいリビジョン名を出力して完了し、`gcloud run revisions list --service handson-app --region ${REGION}` の行が増えます。
+1回目の `curl` の `time_total` が2回目より明確に大きくなります(このアプリなら1回目が1秒〜1.5秒、2回目は数十ms程度)。  
+`--min-instances` の更新はどちらも新しいリビジョン名を出力して完了し、`gcloud run revisions list --service handson-app --region ${REGION}` の行が増えます。
 
 ## まとめ
 
