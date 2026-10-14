@@ -124,5 +124,9 @@ Service の一覧、リビジョン、メトリクス、ログがすべて1画�
 - TLS 証明書を発行しなかった
 - タスク定義(CPU/メモリ/ポート)を書かなかった ※デフォルト値で開始し、必要なら後から変える
 - キャパシティ(台数)を決めなかった
+- タスク実行ロール・タスクロールを分けて作らなかった ※Service には既定のサービスアカウント(Compute Engine のデフォルトサービスアカウント)が1つ付くだけ(1章の対比)
+
+最後の1つは確認できます。  
+`gcloud run services describe handson-app --region ${REGION} --format 'value(spec.template.spec.serviceAccountName)'` を実行すると、`<プロジェクト番号>-compute@developer.gserviceaccount.com` の形のサービスアカウントが1つだけ表示されます(コンソールでは Service の詳細画面の「セキュリティ」タブで同じものが見えます)。
 
 1章で話した「ビルディングブロック vs SaaS的アプローチ」が、これで体感できたはずです。
