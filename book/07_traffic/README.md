@@ -21,6 +21,9 @@ docker build -t ${IMAGE}:v3 .
 docker push ${IMAGE}:v3
 ```
 
+> **成功していれば:** `docker push` の最後が `v3: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` の `TAGS` 列に `v3` が含まれます。  
+> **詰まったら:** `denied` や `unauthorized` が出る場合は `gcloud auth configure-docker ${REGION}-docker.pkg.dev` を実行してから `docker push ${IMAGE}:v3` を再実行します。`echo ${IMAGE}` が空、または `-docker.pkg.dev//` のように途中が抜けている場合は5章の「0. 環境変数の準備」を再実行してください。
+
 ## 2. トラフィックを流さずにデプロイする
 
 ![デプロイとリリースの分離](imgs/deploy-release-separation.svg)
@@ -47,7 +50,7 @@ gcloud run deploy handson-app \
 ステージング環境を別に組む代わりに、本番 Service の中に検証チャネルを持てるということです。
 
 > **成功していれば:** 出力に `serving 0 percent of traffic` と `The revision can be reached directly at https://staging---...` の2点が出ます。タグ付きURLは緑(v3)、本番URLは赤(v2)のままです。URLを見失ったら `gcloud run services describe handson-app --region ${REGION}` の出力で本番URLとタグ付きURLの両方を確認できます。なお**リビジョン名の番号は 00003 にならないことがあります**。番号の採番はデプロイ回数と一致せず、`handson-app-00005-xxx` のように飛ぶことがあります(リビジョンを見分けるのは末尾のランダム文字列です)。番号が飛んでいても失敗ではありません。  
-> **詰まったら:** 本番URLまで緑になってしまった場合は `--no-traffic` が効いていません(タイプミスや行末の `\` の抜けが原因です)。`gcloud run revisions list --service handson-app --region ${REGION}` で v2 のリビジョン名を確認し、6章の手順で `--to-revisions <v2のリビジョン名>=100` を実行して赤に戻してから、`--no-traffic --tag staging` を付けてデプロイし直してください。タグ付きURLが 404 を返す場合は、`gcloud run services describe` に出ている URL をそのままコピーし直します(`staging---` の3連ハイフンが崩れやすい箇所です)。`docker push` からのやり直しが必要な場合は `cd ~/cloudrun-handson/app` と 5章の「0. 環境変数の準備」を先に確認してください。
+> **詰まったら:** 本番URLまで緑になってしまった場合は `--no-traffic` が効いていません(タイプミスや行末の `\` の抜けが原因です)。`gcloud run revisions list --service handson-app --region ${REGION}` で v2 のリビジョン名を確認し、6章の手順で `--to-revisions <v2のリビジョン名>=100` を実行して赤に戻してから、`--no-traffic --tag staging` を付けてデプロイし直してください。タグ付きURLが 404 を返す場合は、`gcloud run services describe` に出ている URL をそのままコピーし直します(`staging---` の3連ハイフンが崩れやすい箇所です)。`Image not found` や `manifest unknown` が出る場合は v3 の push が完了していません。`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` で `TAGS` 列に `v3` があるかを確認し、なければ「1. v3 を作る」からやり直してください。`docker push` からのやり直しが必要な場合は `cd ~/cloudrun-handson/app` と 5章の「0. 環境変数の準備」を先に確認してください。
 
 <!--
 > **[要作図] 図5: デプロイとリリースの分離**
