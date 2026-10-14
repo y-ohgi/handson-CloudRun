@@ -2,7 +2,7 @@
 
 AWS を実務で使っているエンジニアに向けた、Google Cloud / Cloud Run のハンズオン教材です。
 
-- **Web版**: [y-ohgi.com/handson-CloudRun](https://y-ohgi.com/handson-CloudRun/)
+- **Web版**: [y-ohgi.com/introduction-CloudRun](https://y-ohgi.com/introduction-CloudRun/)
 - **PDF版**: [handson-cloudrun.pdf](handson-cloudrun.pdf)(A4・全章収録)
 
 ## リポジトリ構成

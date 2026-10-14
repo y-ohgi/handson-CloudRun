@@ -2,7 +2,7 @@
 
 AWS を実務で使っているエンジニアに向けた、Google Cloud / Cloud Run のハンズオン教材です。
 
-<!-- Web版: [y-ohgi.com/handson-CloudRun](https://y-ohgi.com/handson-CloudRun/) -->
+Web版: [y-ohgi.com/introduction-CloudRun](https://y-ohgi.com/introduction-CloudRun/)
 
 ## この教材のゴール
 
@@ -47,7 +47,7 @@ npm run serve  # http://localhost:4000
 
 ## PDF で読む・配布する
 
-全章を1冊にまとめた [handson-cloudrun.pdf](https://github.com/y-ohgi/handson-CloudRun/blob/main/handson-cloudrun.pdf)(A4)を同梱しています。  
+全章を1冊にまとめた [handson-cloudrun.pdf](https://github.com/y-ohgi/introduction-CloudRun/blob/main/handson-cloudrun.pdf)(A4)を同梱しています。  
 当日ネットワークが不安定な場合の保険や、事前配布に使ってください。
 
 教材の更新が development / main へ merge されると、GitHub Actions が自動で再生成します。  
@@ -59,8 +59,8 @@ npm run pdf
 
 ## 当日用サポートアプリ
 
-[`support/`](https://github.com/y-ohgi/handson-CloudRun/tree/main/support) に、この GitBook を iframe 表示しつつ「チャット・進捗共有・ヘルプ要請」ができるリアルタイムのサポートアプリがあります(TypeScript + Hono + WebSocket 製で、それ自体を Cloud Run で動かします)。  
-イベントで使う場合は [support/README.md](https://github.com/y-ohgi/handson-CloudRun/blob/main/support/README.md) を参照してください。  
+[`support/`](https://github.com/y-ohgi/introduction-CloudRun/tree/main/support) に、この GitBook を iframe 表示しつつ「チャット・進捗共有・ヘルプ要請」ができるリアルタイムのサポートアプリがあります(TypeScript + Hono + WebSocket 製で、それ自体を Cloud Run で動かします)。  
+イベントで使う場合は [support/README.md](https://github.com/y-ohgi/introduction-CloudRun/blob/main/support/README.md) を参照してください。  
 GitBook 単体での利用には不要です。
 
 ## 関連リンク
