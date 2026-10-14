@@ -10,7 +10,7 @@ const HEIGHT = 630;
 
 const TITLE = "AWSエンジニアのための\nCloud Run ハンズオン";
 const SUBTITLE = "Google Cloud / Cloud Run を、AWS との違いから学ぶ";
-const FOOTER = "y-ohgi.com/handson-CloudRun";
+const FOOTER = "y-ohgi.com/introduction-CloudRun";
 
 // Playwright はローカル・グローバルどちらにあってもよい
 const loadChromium = () => {
