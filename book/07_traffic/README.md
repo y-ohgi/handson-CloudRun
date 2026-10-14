@@ -7,23 +7,9 @@
 
 ## 1. v3 を作る
 
-`src/index.ts` を再度書き換えます。
-
-```typescript
-const MESSAGE = process.env.MESSAGE || "Hello, Cloud Run v3!";
-const BG_COLOR = process.env.BG_COLOR || "#34A853"; // 緑
-```
-
-ビルドと push まで行います(まだ deploy はしません)。
-
-```bash
-cd ~/cloudrun-handson/app
-docker build -t ${IMAGE}:v3 .
-docker push ${IMAGE}:v3
-```
-
-#### 成功していれば
-`docker push` の最後が `v3: digest: sha256:... size: ...` で終わり、`gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO} --include-tags` の `TAGS` 列に `v3` が含まれます。
+今回はイメージを作り直さず、6章のTipsで試した環境変数でメッセージと背景を変えたものを v3 とします。  
+イメージは v2 のまま、`MESSAGE` を `Hello, Cloud Run v3`、`BG_COLOR` を緑(`#34A853`)にします。  
+デプロイは次の「2. トラフィックを流さずにデプロイする」でまとめて行います。
 
 ## 2. トラフィックを流さずにデプロイする
 
@@ -34,10 +20,11 @@ docker push ${IMAGE}:v3
 
 ```bash
 gcloud run deploy handson-app \
-  --image ${IMAGE}:v3 \
+  --image ${IMAGE}:v2 \
   --region ${REGION} \
   --no-traffic \
-  --tag staging
+  --tag staging \
+  --update-env-vars '^@^MESSAGE=Hello, Cloud Run v3@BG_COLOR=#34A853'
 ```
 
 出力の最後に、このリビジョン専用のタグ付きURLが表示されます(`--no-traffic` のときは `Service URL:` の行は出ません)。  
