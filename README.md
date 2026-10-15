@@ -1,4 +1,4 @@
-# AWSエンジニアのための Cloud Run ハンズオン
+# 入門 Cloud Run
 
 AWS を実務で使っているエンジニアに向けた、Google Cloud / Cloud Run のハンズオン教材です。
 

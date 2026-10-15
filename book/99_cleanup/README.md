@@ -53,10 +53,3 @@ Cloud Run はスケールtoゼロなので、`min-instances` を0に戻してあ
 ## 消し忘れが心配な人へ
 
 [課金レポート](https://console.cloud.google.com/billing)で数日後に確認するか、予算アラート(Budgets & alerts)を設定しておくと安心です。AWS の Budgets と同じ感覚で使えます。
-
-## 続けて学びたい人へ
-
-- [Cloud Run 公式ドキュメント](https://cloud.google.com/run/docs?hl=ja) — 品質が高く日本語も充実
-- [introduction-docker](https://github.com/y-ohgi/introduction-docker) — Docker を基礎から
-- [クラウドを今から学ぶには](https://speakerdeck.com/y0hgi/kuraudowojin-karaxue-buniha) — 非機能要件の考え方
-- 次の一歩: Cloud Build トリガーで「git push したら自動デプロイ」、Secret Manager 連携、`--no-allow-unauthenticated` + IAM でのサービス間認証、Cloud SQL 接続あたりが実務への近道です
