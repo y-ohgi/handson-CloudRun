@@ -155,7 +155,7 @@ const doc = `<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>AWSエンジニアのための Cloud Run ハンズオン</title>
+<title>入門 Cloud Run</title>
 <style>
   @page { size: A4; }
   * { box-sizing: border-box; }
@@ -279,7 +279,7 @@ const doc = `<!DOCTYPE html>
 <body>
   <div class="cover">
     <div class="mark">☁️</div>
-    <h1>AWSエンジニアのための<br>Cloud Run ハンズオン</h1>
+    <h1>入門 Cloud Run</h1>
     <p>Google Cloud / Cloud Run を、AWS との違いから学ぶ</p>
     <div class="stack">TypeScript + Hono / Artifact Registry / Cloud Run</div>
   </div>
