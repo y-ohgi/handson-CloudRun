@@ -8,7 +8,7 @@ const OUT = process.env.OGP_OUT || path.join(ROOT, "imgs", "ogp.png");
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-const TITLE = "AWSエンジニアのための\nCloud Run ハンズオン";
+const TITLE = "入門 Cloud Run";
 const SUBTITLE = "Google Cloud / Cloud Run を、AWS との違いから学ぶ";
 const FOOTER = "y-ohgi.com/introduction-CloudRun";
 
