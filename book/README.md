@@ -1,8 +1,8 @@
-# AWSエンジニアのための Cloud Run ハンズオン
+# 入門 Cloud Run
 
 AWS を実務で使っているエンジニアに向けた、Google Cloud / Cloud Run のハンズオン教材です。
 
-Web版: [y-ohgi.com/introduction-CloudRun](https://y-ohgi.com/introduction-CloudRun/)
+<!-- Web版: [y-ohgi.com/introduction-CloudRun](https://y-ohgi.com/introduction-CloudRun/) -->
 
 ## この教材のゴール
 
@@ -24,15 +24,33 @@ Web版: [y-ohgi.com/introduction-CloudRun](https://y-ohgi.com/introduction-Cloud
 
 ## 進め方
 
-前半(1〜2章)は座学パートになります。  
-後半(3章〜)はブラウザ(Cloud Shell エディタと Google Cloud コンソール)だけで完結するハンズオンです。  
+- 前半(1〜2章)は座学パートになります。
+  - ハンズオン当日スライドもあるため、そちらも参照ください。
+  - [実践！Cloud Run ハンズオン！！ / Cloud Run handson - Speaker Deck](https://speakerdeck.com/y0hgi/cloud-run-handson)
+- 後半(3章〜)はハンズオンです。  
+  - ブラウザ(Cloud Shell エディタと Google Cloud コンソール)だけで完結します。
+  - 手元のPCへのアプリやCLIのインストールは不要です。
 
-手元のPCへのアプリやCLIのインストールは不要です。
+## 今回持ち帰って欲しい3つのポイント
+今回持ち帰って欲しいポイントと、ハンズオンが終わったら最後にまた返ってきて見直していただきたいポイントでもあります。
+
+1. **AWSはビルディングブロック、Google CloudはSaaS的アプローチ**
+  - Cloud Run は deploy 1コマンドの裏で、LB・証明書・スケーリング・ログ収集を「しなかった」
+2. **イメージの不変性がプラットフォームまで貫かれている**
+  - リビジョン・ロールバック・カナリアリリース・タグ付きURL
+3. **従量課金と常駐のダイヤルを回せる**
+  - スケールtoゼロ・オートスケール（min/max-instances）・concurrency（同時接続数/スロットリング）
+
+AWS や他のクラウドベンダーでもこの目線は使えます。  
+「この構成、Cloud Run 的な発想ならどう簡単にできるか?」「ECS・Lambda でなら?」のような別のクラウドの視点を知ることは、いま使っているクラウドをより良く使うことにつながります。
 
 ## かかる費用
 
 Cloud Run・Artifact Registry ともに無料枠が大きく、このハンズオンの範囲であればほぼ無料枠に収まります(数円〜数十円程度)。  
 心配な場合は最後の[後片付け](99_cleanup/README.md)を必ず実施するか、ハンズオン専用プロジェクトを作って終了後にプロジェクトごと削除してください。
+
+## Repository
+- [https://github.com/y-ohgi/introduction-CloudRun](https://github.com/y-ohgi/introduction-CloudRun)
 
 <!--
 ## この教材を手元で表示する
